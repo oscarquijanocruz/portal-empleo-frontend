@@ -1,0 +1,1 @@
+// Tarjeta individual de vacante

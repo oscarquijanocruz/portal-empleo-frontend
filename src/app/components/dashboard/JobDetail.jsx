@@ -1,0 +1,1 @@
+// Panel derecho con detalle
