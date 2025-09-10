@@ -27,7 +27,7 @@ function RegisterCandidatePage() {
     });
 
     if (res.ok) {
-      router.push("/candidates/success");
+      router.push("");
     }
   });
 
