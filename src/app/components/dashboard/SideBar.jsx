@@ -1,11 +1,11 @@
 /* Barra lateral izquierda */
 
 import Link from 'next/link';
-import NavLinks from "@/app/components/dashboard/nav-links";
+import NavLinks from "../dashboard/nav-links";
 //import MentoryLogo from '@/app/assets/menotry-logo';
 
 export default function SideBar() {
-  return(
+  return( 
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
       <Link
         className="mb-2 flex h-20 items-end justify-start rounded-md bg-gray-600 p-4 md:h-40"
@@ -20,7 +20,8 @@ export default function SideBar() {
         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
         <form>
           <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-            <div className="hidden md:block">Sign Out</div>
+            <div className="hidden md:block">Imagen</div>
+            <h1>Componente del usuario logeado</h1>
           </button>
         </form>
       </div>

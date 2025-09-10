@@ -1,5 +1,5 @@
 // Filtros (Filtro 1, 2, 3, 4)
-import Button from "@/app/components/ui/Button";
+
 
 export default function SearchFilters() {
   return (
@@ -15,15 +15,15 @@ export default function SearchFilters() {
 
       {/* Filtros */}
       <div className="flex flex-wrap items-center gap-2">
-        <Button className="bg-blue-900 text-white px-4 py-2 rounded-md">
+        <button className="bg-blue-900 text-white px-4 py-2 rounded-md">
           Filtro 1
-        </Button>
-        <Button className="bg-blue-200 text-blue-900 px-4 py-2 rounded-md">
+        </button>
+        <button className="bg-blue-200 text-blue-900 px-4 py-2 rounded-md">
           Filtro 2
-        </Button>
-        <Button className="bg-blue-700 text-white px-4 py-2 rounded-md">
+        </button>
+        <button className="bg-blue-700 text-white px-4 py-2 rounded-md">
           Filtro 3
-        </Button>
+        </button>
 
         {/* Empuja este link a la derecha */}
         <div className="ml-auto">
