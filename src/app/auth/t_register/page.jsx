@@ -15,7 +15,7 @@ function RegisterSelectionPage() {
           <div className="grid grid-cols-2 gap-4 mb-4">
 
             <Link
-              href="/auth/register"
+              href="/auth/register?type=candidato"
               className="rounded-lg p-6 flex flex-col items-center justify-center hover:bg-green-200 transition"
             >
               <User className="w-8 h-8 mb-2" />
@@ -23,7 +23,7 @@ function RegisterSelectionPage() {
             </Link>
 
             <Link
-              href="/auth/register-company"
+              href="/auth/register?type=empresa"
               className="rounded-lg p-6 flex flex-col items-center justify-center hover:bg-blue-200 transition"
             >
               <Briefcase className="w-8 h-8 mb-2" />
@@ -32,7 +32,7 @@ function RegisterSelectionPage() {
           </div>
 
           <Link
-            href="/auth/register-university"
+            href="/auth/register?type=universidad"
             className="rounded-lg p-6 flex flex-col items-center justify-center hover:bg-orange-200 transition"
           >
             <GraduationCap className="w-8 h-8 mb-2" />
