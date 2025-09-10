@@ -1,6 +1,6 @@
-
-export default function Home() {
+function HomePage(){
   return(
-    <h1>Portal de empleo Zavaleta</h1>
+    <div>HomePage</div>
   )
 }
+export default HomePage
