@@ -1,6 +1,6 @@
-import SideBar from "@/app/components/dashboard/Sidebar";
+import SideBar from '../components/dashboard/SideBar';
 
-export default function Layout({ children }) {
+export default function DashboardLayout({ children }) {
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
             <div className="w-full flex-none md:w-64">

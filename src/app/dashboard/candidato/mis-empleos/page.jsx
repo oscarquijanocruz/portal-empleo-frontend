@@ -1,5 +1,8 @@
+
 export default function MisEmpleosPage() {
     return(
-        <h1>Mis empleos</h1>
+        <div>
+            <h1>Mis Empleos</h1>
+        </div>
     )
 } 

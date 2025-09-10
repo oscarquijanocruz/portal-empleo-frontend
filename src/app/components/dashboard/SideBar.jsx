@@ -1,6 +1,7 @@
-// Barra lateral izquierda
+/* Barra lateral izquierda */
+
 import Link from 'next/link';
-import NavLinks from '@/app/components/dashboard/nav-links';
+import NavLinks from "@/app/components/dashboard/nav-links";
 //import MentoryLogo from '@/app/assets/menotry-logo';
 
 export default function SideBar() {

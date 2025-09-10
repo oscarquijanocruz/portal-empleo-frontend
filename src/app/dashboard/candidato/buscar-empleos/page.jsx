@@ -1,4 +1,5 @@
 
+
 export default function BuscarEmpleoPage() {
     return(
         <div>
