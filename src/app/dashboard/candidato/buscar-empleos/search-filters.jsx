@@ -1,5 +1,5 @@
 // Filtros (Filtro 1, 2, 3, 4)
-
+import { Search } from 'lucide-react';
 
 export default function SearchFilters() {
   return (
@@ -11,6 +11,7 @@ export default function SearchFilters() {
           placeholder="Busca tu trabajo ideal..."
           className="flex-1 outline-none bg-transparent"
         />
+          <Search size={16} />
       </div>
 
       {/* Filtros */}

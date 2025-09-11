@@ -1,1 +1,2 @@
-// Lista de vacantes
+// Lista de trabajos guardados y detalle del trabajo seleccionado
+
