@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import NavLinks from "../dashboard/nav-links";
-//import MentoryLogo from '@/app/assets/menotry-logo';
+//import MentoryLogo from '@/app/assets/mentory-logo';
 
 export default function SideBar() {
   return( 

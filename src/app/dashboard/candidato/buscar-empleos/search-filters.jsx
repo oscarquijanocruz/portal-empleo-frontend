@@ -16,13 +16,16 @@ export default function SearchFilters() {
       {/* Filtros */}
       <div className="flex flex-wrap items-center gap-2">
         <button className="bg-blue-900 text-white px-4 py-2 rounded-md">
-          Filtro 1
+          Modalidad
         </button>
-        <button className="bg-blue-200 text-blue-900 px-4 py-2 rounded-md">
-          Filtro 2
+        <button className="bg-blue-100 text-blue-900 px-4 py-2 rounded-md">
+          Sueldo
         </button>
-        <button className="bg-blue-700 text-white px-4 py-2 rounded-md">
-          Filtro 3
+        <button className="bg-blue-900 text-white px-4 py-2 rounded-md">
+          Tipo de contrato
+        </button>
+        <button className="bg-blue-900 text-white px-4 py-2 rounded-md">
+          Categoría
         </button>
 
         {/* Empuja este link a la derecha */}
