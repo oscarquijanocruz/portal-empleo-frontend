@@ -1,78 +1,154 @@
-// src/app/data/mockJobs.js
+
+// Datos simlados (reemplazar por el backend cuando este)
 export const mockJobs = [
   {
     id: 1,
-    title: "Desarrollador Frontend React",
-    company: "TechCorp México",
-    location: "Ciudad de México",
-    salary: "$25,000 - $35,000 MXN",
-    type: "Tiempo completo",
-    modality: "Remoto",
-    description: "Buscamos desarrollador Frontend con experiencia en React, Next.js y Tailwind CSS. Únete a nuestro equipo innovador.",
-    requirements: ["React", "Next.js", "JavaScript", "Tailwind CSS"],
-    posted: "Hace 2 días",
-    applications: 15,
-    isNew: true,
-    logo: "https://via.placeholder.com/48?text=TC"
+    titulo: "Desarrollador Frontend React",
+    empresa: "Tech Solutions",
+    ubicacion: "Ciudad de México",
+    modalidad: "Remoto",
+    jornada: "Tiempo completo",
+    salario: "45,000",
+    logo: "/api/placeholder/50/50",
+    descripcion: "Buscamos un desarrollador Frontend con experiencia en React...",
+    responsabilidades: [
+      "Diseñar, desarrollar y optimizar aplicaciones web",
+      "Colaborar con el equipo de diseño UX/UI",
+      "Realizar análisis de rendimiento",
+      "Participar en la creación de componentes reutilizables"
+    ],
+    requisitos: {
+      indispensables: [
+        "Licenciatura en Sistemas o experiencia equivalente",
+        "Manejo de herramientas como React, Next.js",
+        "Experiencia mínima de 3 años en desarrollo Frontend",
+        "Habilidades en comunicación y trabajo en equipo"
+      ],
+      deseables: [
+        "Conocimiento en TypeScript",
+        "Certificaciones en tecnologías web",
+        "Idiomas adicionales (inglés)"
+      ]
+    }
   },
   {
     id: 2,
-    title: "Diseñador UX/UI Senior",
-    company: "Design Studio",
-    location: "Guadalajara, Jalisco",
-    salary: "$30,000 - $40,000 MXN",
-    type: "Tiempo completo",
-    modality: "Híbrido",
-    description: "Diseñador senior para liderar proyectos de experiencia de usuario en aplicaciones web y móviles.",
-    requirements: ["Figma", "Adobe XD", "Prototyping", "User Research"],
-    posted: "Hace 1 día",
-    applications: 8,
-    isNew: true,
-    logo: "https://via.placeholder.com/48?text=DS"
+    titulo: "Diseñador UX/UI",
+    empresa: "Creative Studio",
+    ubicacion: "Guadalajara",
+    modalidad: "Híbrido",
+    jornada: "Tiempo completo",
+    salario: "38,000",
+    logo: "/api/placeholder/50/50",
+    descripcion: "Únete a nuestro equipo creativo como Diseñador UX/UI...",
+    responsabilidades: [
+      "Crear wireframes y prototipos",
+      "Diseñar interfaces de usuario atractivas",
+      "Realizar investigación de usuarios",
+      "Colaborar con desarrolladores"
+    ],
+    requisitos: {
+      indispensables: [
+        "Licenciatura en Diseño Gráfico o afín",
+        "Experiencia con Figma, Adobe XD",
+        "Portfolio demostrable",
+        "Conocimiento en principios de UX"
+      ],
+      deseables: [
+        "Experiencia en investigación UX",
+        "Conocimiento básico de HTML/CSS",
+        "Inglés conversacional"
+      ]
+    }
   },
   {
     id: 3,
-    title: "Analista de Datos",
-    company: "DataCorp",
-    location: "Monterrey, N.L.",
-    salary: "$28,000 - $38,000 MXN",
-    type: "Tiempo completo",
-    modality: "Presencial",
-    description: "Analizar grandes volúmenes de datos para generar insights que impulsen decisiones estratégicas.",
-    requirements: ["Python", "SQL", "Tableau", "Excel Avanzado"],
-    posted: "Hace 3 días",
-    applications: 22,
-    isNew: false,
-    logo: "https://via.placeholder.com/48?text=DC"
+    titulo: "Marketing Digital",
+    empresa: "Digital Agency",
+    ubicacion: "Monterrey",
+    modalidad: "Presencial",
+    jornada: "Tiempo completo",
+    salario: "32,000",
+    logo: "/api/placeholder/50/50",
+    descripcion: "Especialista en marketing digital para campañas innovadoras...",
+    responsabilidades: [
+      "Gestionar campañas en redes sociales",
+      "Análisis de métricas y KPIs",
+      "Creación de contenido digital",
+      "Optimización SEO/SEM"
+    ],
+    requisitos: {
+      indispensables: [
+        "Licenciatura en Marketing o Comunicación",
+        "Experiencia en Google Ads, Facebook Ads",
+        "Conocimiento en Analytics",
+        "Creatividad y pensamiento estratégico"
+      ],
+      deseables: [
+        "Certificaciones en Google",
+        "Experiencia en e-commerce",
+        "Conocimiento en herramientas de automatización"
+      ]
+    }
   },
   {
     id: 4,
-    title: "Marketing Digital Specialist",
-    company: "Growth Agency",
-    location: "Puebla, Puebla",
-    salary: "$20,000 - $30,000 MXN",
-    type: "Tiempo completo",
-    modality: "Remoto",
-    description: "Especialista en marketing digital para manejar campañas en redes sociales y Google Ads.",
-    requirements: ["Google Ads", "Facebook Ads", "Analytics", "SEO"],
-    posted: "Hace 5 días",
-    applications: 31,
-    isNew: false,
-    logo: "https://via.placeholder.com/48?text=GA"
+    titulo: "Actor Telenovela",
+    empresa: "Televisa",
+    ubicacion: "Monterrey",
+    modalidad: "Presencial",
+    jornada: "Tiempo completo",
+    salario: "32,000",
+    logo: "/api/placeholder/50/50",
+    descripcion: "Especialista en marketing digital para campañas innovadoras...",
+    responsabilidades: [
+      "Gestionar campañas en redes sociales",
+      "Análisis de métricas y KPIs",
+      "Creación de contenido digital",
+      "Optimización SEO/SEM"
+    ],
+    requisitos: {
+      indispensables: [
+        "Licenciatura en Marketing o Comunicación",
+        "Experiencia en Google Ads, Facebook Ads",
+        "Conocimiento en Analytics",
+        "Creatividad y pensamiento estratégico"
+      ],
+      deseables: [
+        "Certificaciones en Google",
+        "Experiencia en e-commerce",
+        "Conocimiento en herramientas de automatización"
+      ]
+    }
   },
   {
     id: 5,
-    title: "Desarrollador Backend Node.js",
-    company: "StartupTech",
-    location: "Querétaro, Qro.",
-    salary: "$32,000 - $45,000 MXN",
-    type: "Tiempo completo",
-    modality: "Remoto",
-    description: "Desarrollador backend para APIs REST y microservicios usando Node.js y bases de datos NoSQL.",
-    requirements: ["Node.js", "Express", "MongoDB", "AWS"],
-    posted: "Hace 1 semana",
-    applications: 18,
-    isNew: false,
-    logo: "https://via.placeholder.com/48?text=ST"
+    titulo: "Chef",
+    empresa: "Boston's",
+    ubicacion: "Monterrey",
+    modalidad: "Presencial",
+    jornada: "Tiempo completo",
+    salario: "32,000",
+    logo: "/api/placeholder/50/50",
+    descripcion: "Especialista en marketing digital para campañas innovadoras...",
+    responsabilidades: [
+      "Gestionar campañas en redes sociales",
+      "Análisis de métricas y KPIs",
+      "Creación de contenido digital",
+      "Optimización SEO/SEM"
+    ],
+    requisitos: {
+      indispensables: [
+        "Licenciatura en Marketing o Comunicación",
+        "Experiencia en Google Ads, Facebook Ads",
+        "Conocimiento en Analytics",
+        "Creatividad y pensamiento estratégico"
+      ],
+      deseables: [
+        "Certificaciones en Google",
+        "Experiencia en e-commerce",
+        "Conocimiento en herramientas de automatización"
+      ]
+    }
   }
 ];

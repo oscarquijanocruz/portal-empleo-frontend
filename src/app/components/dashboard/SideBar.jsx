@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import NavLinks from "../dashboard/nav-links";
+import { User2 } from 'lucide-react';
 //import MentoryLogo from '@/app/assets/mentory-logo';
 
 export default function SideBar() {
@@ -19,9 +20,14 @@ export default function SideBar() {
           <NavLinks />
         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
         <form>
-          <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-            <div className="hidden md:block">Imagen</div>
-            <h1>Componente del usuario logeado</h1>
+          <button className="flex h-[58px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
+            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <User2 size={26} className="text-blue-600" />
+              </div>
+            <div>
+              <p className="text-sm font-medium">Usuario</p>
+              <p className="text-xs text-gray-500">Puesto</p>
+            </div>
           </button>
         </form>
       </div>
