@@ -1,5 +1,5 @@
 'use client'
-import { Home, Search, Briefcase, Clock, MessageSquare } from 'lucide-react';
+import { Home, Search, Briefcase, Clock, MessageCircleMore } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -8,7 +8,7 @@ const menuItems = [
         { icon: Search, label: 'Buscar empleos', active: true },
         { icon: Briefcase, label: 'Mis Empleos', active: false },
         { icon: Clock, label: 'Mi actividad', active: false },
-        { icon: MessageSquare, label: 'Mensajes', active: false }
+        { icon: MessageCircleMore, label: 'Mensajes', active: false }
     ];
 
 const links = [
@@ -30,7 +30,7 @@ const links = [
 
   { name: 'Mensajes', 
     href: '/dashboard/candidato/mensajes',
-    icon: MessageSquare },
+    icon: MessageCircleMore },
 ];
 
 

@@ -1,9 +1,11 @@
 import SearchFilters from "../buscar-empleos/search-filters";
 import Select from "../../../components/ui/Select";
 import JobCard from "../../../components/dashboard/JobCard";
-//import JobDetail from "@/app/components/dashboard/JobDetail";
+import { useState } from "react";
 
 export default function BuscarEmpleoPage() {
+    
+
     return(
         <div className="p-6">
             <div>
