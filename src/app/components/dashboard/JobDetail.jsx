@@ -17,10 +17,10 @@ export default function JobDetail({ job }) {
     return(
         <div>
             {/* Header */}
-            <div className="flex items-start justify-between mb-6">
-                <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg flex items-center justify-center">
-                    <div className="w-8 h-8 bg-white rounded transform rotate-45"></div>
+            <div className="justify-between mb-6">
+                <div className="grid justify-center text-center items-center place-items-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg flex items-center justify-center items-center m-4">
+                    <div className="w-8 h-8 bg-white rounded transform rotate-45">Logo</div>
                 </div>
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">{job.titulo}</h1>
