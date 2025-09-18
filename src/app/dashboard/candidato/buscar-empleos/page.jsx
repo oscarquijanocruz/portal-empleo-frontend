@@ -2,65 +2,121 @@
 import SearchFilters from "../buscar-empleos/search-filters";
 import Select from "../../../components/ui/Select";
 import JobCard from "../../../components/dashboard/JobCard";
+import JobDetail from "../../../components/dashboard/JobDetail";
 import { useState, useMemo } from "react";
 import { mockJobs } from "../../../data/mockData";
-import JobDetail from "../../../components/dashboard/JobDetail";
-import { Bookmark, Info } from "lucide-react";
+import { useFavorites } from "../../../hooks/useFavorites";
+import { Bookmark } from "lucide-react";
 
 export default function BuscarEmpleoPage() {
   const [selectedJob, setSelectedJob] = useState(mockJobs[0]);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("para-ti");
   const [sortOrder, setSortOrder] = useState("recientes");
-  const [isStarred, setIsStarred] = useState(false);
+  
+  // ✅ Hook de favoritos
+  const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
-  const [showMasPagados, setShowMasPagados] = useState(false);
+  // ✅ Filtros mejorados
+  const [filters, setFilters] = useState({
+    modalidad: '',
+    sueldo: '',
+    tipoContrato: '',
+    categoria: ''
+  });
 
-  // Filtrar trabajos basado en barra de búsqueda
+  // Filtrar trabajos basado en búsqueda y filtros
   const filteredJobs = useMemo(() => {
-    if (!searchTerm.trim()) return mockJobs;
+    let jobs = [...mockJobs];
 
-    return mockJobs.filter(
-      (job) =>
-        job.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.empresa.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.ubicacion.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm]);
+    // Filtrar por término de búsqueda
+    if (searchTerm.trim()) {
+      jobs = jobs.filter(
+        (job) =>
+          job.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          job.empresa.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          job.ubicacion.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Aplicar filtros
+    if (filters.modalidad) {
+      jobs = jobs.filter(job => 
+        job.modalidad.toLowerCase() === filters.modalidad.toLowerCase()
+      );
+    }
+
+    if (filters.sueldo) {
+      const salarioFiltro = parseInt(filters.sueldo.replace(/[,$]/g, ''));
+      jobs = jobs.filter(job => {
+        const salarioJob = parseInt(job.salario.replace(/[,$]/g, ''));
+        return salarioJob >= salarioFiltro;
+      });
+    }
+
+    if (filters.tipoContrato) {
+      jobs = jobs.filter(job => 
+        job.jornada.toLowerCase().includes(filters.tipoContrato.toLowerCase())
+      );
+    }
+
+    // Ordenar trabajos
+    switch (sortOrder) {
+      case 'mejor-pagados':
+        return jobs.sort((a, b) => {
+          const salarioA = parseInt(a.salario.replace(/[,$]/g, ''));
+          const salarioB = parseInt(b.salario.replace(/[,$]/g, '')); 
+          return salarioB - salarioA; // de mayor a menor
+        });
+      case 'mas-relevantes':
+        // Modificar para que sea relevantes
+        return jobs;  
+      case 'recientes':
+        // Modificar para buscar el mas reciente (de momento solo lo invierte para posicionar el mas reciente)
+        return [...jobs].reverse();
+      default:
+        return jobs;
+    }
+
+    return jobs;
+  }, [searchTerm, filters, sortOrder]);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
   };
 
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
+
   const handleClearFilters = () => {
     setSearchTerm("");
+    setFilters({
+      modalidad: '',
+      sueldo: '',
+      tipoContrato: '',
+      categoria: ''
+    });
   };
 
   const handleJobSelect = (job) => {
     setSelectedJob(job);
   };
 
-  // Filtrar trabajos por ordenamiento en relevantes, mejor pagados...
-  const filteredJobsOrder = mockJobs.filter((job) => {
-    if (showMasPagados) {
-      // Filter for candidate messages
-      const masPagados =
-        job.salario ||
-        message.preview.toLowerCase().includes("enviar") ||
-        message.sender.position.toLowerCase().includes("desarrollador") ||
-        message.sender.position.toLowerCase().includes("ingeniero") ||
-        message.sender.position.toLowerCase().includes("freelancer");
-      return masPagados;
-    }
-  });
+  const handleSortChange = (newSort) => {
+    setSortOrder(newSort);
+  };
 
   return (
     <div className="h-full flex flex-col">
       <div>
-        {/* Barra de busqueda */}
+        {/* Barra de búsqueda */}
         <SearchFilters
           onSearch={handleSearch}
+          onFilterChange={handleFilterChange}
           clearFilters={handleClearFilters}
+          searchTerm={searchTerm}
+          filters={filters}
         />
       </div>
 
@@ -68,89 +124,89 @@ export default function BuscarEmpleoPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Lista de trabajos */}
         <div className="space-y-4">
-          {/* Tabs */}
-          <div className="flex space-x-6 mt-4s mb-4">
-            <button
-              onClick={() => setActiveTab("para-ti")}
-              className={`font-medium pb-2 transition-colors ${
-                activeTab === "para-ti"
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Para ti
-            </button>
-            <button
-              onClick={() => setActiveTab("populares")}
-              className={`font-medium pb-2 transition-colors ${
-                activeTab === "populares"
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Populares
-            </button>
-            {/* Filltrar por ordenamiento */}
-            <div className="ml-auto">
-              <Select job={filteredJobsOrder} />
-            </div>
-          </div>
-          {filteredJobs.length > 0 ? (
-            filteredJobs.map((job) => (
-              <div
-                key={job.id}
-                onClick={() => handleJobSelect(job)}
-                className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                  selectedJob.id === job.id
-                    ? "border-blue-300 bg-blue-50"
-                    : "border-gray-200 hover:border-gray-300"
+          {/* Tabs y controles */}
+          <div className="flex items-center justify-between mt-4 mb-4">
+            <div className="flex space-x-6">
+              <button
+                onClick={() => setActiveTab("para-ti")}
+                className={`font-medium pb-2 transition-colors ${
+                  activeTab === "para-ti"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
               >
-                {/* Contenido de la card aquí - similar al JobCard actual */}
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg flex items-center justify-center">
-                      <div className="w-6 h-6 bg-white rounded transform rotate-45"></div>
-                    </div>
-                    <div className="flex flex-col">
-                      <h3 className="font-semibold text-lg text-gray-900">
-                        {job.titulo}
-                      </h3>
-                      <p className="text-blue-600 text-md">{job.empresa}</p>
-                      <div className="flex space-x-2">
-                        <p className="text-gray-500 text-sm">
-                          {job.ubicacion}, {job.modalidad}, {job.jornada}
-                        </p>
-                        <p className="text-md text-gray-900">
-                          {" "}
-                          Salario: ${job.salario}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex space-x-2">
-                    <button
-                        onClick={() => setIsStarred(!isStarred)}
-                        className={`p-2 rounded-full text-black-400 hover:text-gray-600 ${
-                            isStarred ? 'text-yellow-500' : 'text-gray-400'
-                        }`}>
-                        <Bookmark size={22} fill={isStarred ? 'currentColor' : 'none'}  />
-                      </button>
-                    <button className="p-1 text-black-400 hover:text-gray-600">
-                      <Info size={22} />
-                    </button>
-                  </div>
-                </div>
+                Para ti ({filteredJobs.length})
+              </button>
+              <button
+                onClick={() => setActiveTab("favoritos")}
+                className={`font-medium pb-2 transition-colors ${
+                  activeTab === "favoritos"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Favoritos ({favorites.size})
+              </button>
+            </div>
+            
+            {/* Selector de ordenamiento */}
+            <div className="ml-auto">
+              <select 
+                value={sortOrder}
+                onChange={(e) => handleSortChange(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              >
+                <option value="recientes">Más recientes</option>
+                <option value="mejor-pagados">Mejor pagados</option>
+                <option value="mas-relevantes">Más relevantes</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Lista de trabajos */}
+          {activeTab === "para-ti" ? (
+            filteredJobs.length > 0 ? (
+              <JobCard 
+                jobs={filteredJobs}
+                selectedJob={selectedJob}
+                onJobSelect={handleJobSelect}
+                favorites={favorites}
+                onToggleFavorite={toggleFavorite}
+              />
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <p>No se encontraron trabajos</p>
+                {searchTerm && <p className="text-sm mt-2">con el término "{searchTerm}"</p>}
               </div>
-            ))
+            )
           ) : (
-            <div className="text-center py-8 text-gray-500">
-              No se encontraron trabajos con "{searchTerm}"
+            // Tab de favoritos
+            <div className="space-y-4">
+              {favorites.size > 0 ? (
+                <JobCard 
+                  jobs={mockJobs.filter(job => favorites.has(job.id))}
+                  selectedJob={selectedJob}
+                  onJobSelect={handleJobSelect}
+                  favorites={favorites}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <p>No tienes trabajos guardados</p>
+                  <p className="text-sm mt-2">Guarda trabajos haciendo clic en el ícono 🎗</p>
+                </div>
+              )}
             </div>
           )}
         </div>
+        
+        {/* Panel de detalles */}
         <div className="p-4 space-y-4">
-          <JobDetail job={selectedJob} />
+          <JobDetail 
+            job={selectedJob} 
+            isFavorite={isFavorite(selectedJob?.id)}
+            onToggleFavorite={() => toggleFavorite(selectedJob?.id)}
+          />
         </div>
       </div>
     </div>

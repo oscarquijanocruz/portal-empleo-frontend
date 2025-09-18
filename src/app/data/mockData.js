@@ -68,7 +68,7 @@ export const mockJobs = [
     ubicacion: "Monterrey",
     modalidad: "Presencial",
     jornada: "Tiempo completo",
-    salario: "32,000",
+    salario: "90,000",
     logo: "/api/placeholder/50/50",
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
@@ -98,7 +98,7 @@ export const mockJobs = [
     ubicacion: "Monterrey",
     modalidad: "Presencial",
     jornada: "Tiempo completo",
-    salario: "32,000",
+    salario: "14,000",
     logo: "/api/placeholder/50/50",
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
@@ -128,7 +128,37 @@ export const mockJobs = [
     ubicacion: "Monterrey",
     modalidad: "Presencial",
     jornada: "Tiempo completo",
-    salario: "32,000",
+    salario: "50,000",
+    logo: "/api/placeholder/50/50",
+    descripcion: "Especialista en marketing digital para campañas innovadoras...",
+    responsabilidades: [
+      "Gestionar campañas en redes sociales",
+      "Análisis de métricas y KPIs",
+      "Creación de contenido digital",
+      "Optimización SEO/SEM"
+    ],
+    requisitos: {
+      indispensables: [
+        "Licenciatura en Marketing o Comunicación",
+        "Experiencia en Google Ads, Facebook Ads",
+        "Conocimiento en Analytics",
+        "Creatividad y pensamiento estratégico"
+      ],
+      deseables: [
+        "Certificaciones en Google",
+        "Experiencia en e-commerce",
+        "Conocimiento en herramientas de automatización"
+      ]
+    }
+  },
+  {
+    id: 6,
+    titulo: "Bar Tender",
+    empresa: "Monster Pizza",
+    ubicacion: "Puebla",
+    modalidad: "Presencial",
+    jornada: "Medio tiempo ",
+    salario: "30,000",
     logo: "/api/placeholder/50/50",
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
