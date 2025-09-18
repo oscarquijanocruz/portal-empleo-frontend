@@ -2,17 +2,21 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 function RegisterEmpresa() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
     trigger,
   } = useForm();
 
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const onSubmit = handleSubmit(async (data) => {
     const res = await fetch("/api/users/register", {
@@ -297,14 +301,30 @@ function RegisterEmpresa() {
 
                 <div>
                   <label className="block text-gray-600 mb-1">Contraseña</label>
-                  <input
-                    type="password"
-                    {...register("password", {
-                      required: "Ingresa una contraseña",
-                    })}
-                    className="w-full p-3 border rounded-lg"
-                    placeholder="contraseña"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      {...register("password", {
+                        required: "Ingresa una contraseña",
+                        minLength: { value: 8, message: "Mínimo 8 caracteres" },
+                        pattern: {
+                          value:
+                            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%&*!]).{8,}$/,
+                          message:
+                            "Debe incluir mayúsculas, minúsculas, números y un carácter especial",
+                        },
+                      })}
+                      className="w-full p-3 border rounded-lg pr-10"
+                      placeholder="contraseña"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                   <p className="text-gray-400 text-xs mt-1">
                     Mínimo 8 caracteres, incluyendo mayúsculas, minúsculas,
                     números y al menos un carácter especial (@#$%&*)
@@ -320,17 +340,26 @@ function RegisterEmpresa() {
                   <label className="block text-gray-600 mb-1">
                     Verificación de Contraseña
                   </label>
-                  <input
-                    type="password"
-                    {...register("passwordConfirm", {
-                      required: "La contraseña debe ser la misma",
-                      validate: (value) =>
-                        value === watch("password") ||
-                        "Las contraseñas no coinciden",
-                    })}
-                    className="w-full p-3 border rounded-lg"
-                    placeholder="contraseña"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showConfirm ? "text" : "password"}
+                      {...register("passwordConfirm", {
+                        required: "Confirma tu contraseña",
+                        validate: (value) =>
+                          value === watch("password") ||
+                          "Las contraseñas no coinciden",
+                      })}
+                      className="w-full p-3 border rounded-lg pr-10"
+                      placeholder="contraseña"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirm(!showConfirm)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                    >
+                      {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                   {errors.passwordConfirm && (
                     <span className="text-red-500 text-sm">
                       {errors.passwordConfirm.message}
@@ -338,13 +367,16 @@ function RegisterEmpresa() {
                   )}
                 </div>
 
-                <div className="flex flex-col space-y-2 mt-2 items-start">
-                  <label className="flex items-center space-x-2">
+                <div className="flex flex-col mt-2 items-start">
+                  <label className="flex items-center">
                     <input
                       type="checkbox"
                       {...register("terminos", { required: true })}
+                      className="mr-2"
                     />
-                    <span>Acepto Terminos y Condiciones</span>
+                    <span className="whitespace-nowrap">
+                      Acepto Términos y Condiciones
+                    </span>
                   </label>
                 </div>
 
@@ -358,7 +390,7 @@ function RegisterEmpresa() {
                   </button>
                   <button
                     type="submit"
-                    className="bg-blue-700 text-white px-6 py-2 rounded-lg hover:bg-blue-800"
+                    className="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800"
                   >
                     Registrarme
                   </button>
