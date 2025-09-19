@@ -10,7 +10,7 @@ export const mockJobs = [
     jornada: "Tiempo completo",
     salario: "45,000",
     logo: "/api/placeholder/50/50",
-    descripcion: "Buscamos un desarrollador Frontend con experiencia en React...",
+    description: "Buscamos un desarrollador Frontend con experiencia en React...",
     responsabilidades: [
       "Diseñar, desarrollar y optimizar aplicaciones web",
       "Colaborar con el equipo de diseño UX/UI",
@@ -154,6 +154,35 @@ export const mockJobs = [
   {
     id: 6,
     titulo: "Bar Tender",
+    empresa: "Monster Pizza",
+    ubicacion: "Puebla",
+    modalidad: "Presencial",
+    jornada: "Medio tiempo ",
+    salario: "30,000",
+    logo: "/api/placeholder/50/50",
+    descripcion: "Especialista en marketing digital para campañas innovadoras...",
+    responsabilidades: [
+      "Gestionar campañas en redes sociales",
+      "Análisis de métricas y KPIs",
+      "Creación de contenido digital",
+      "Optimización SEO/SEM"
+    ],
+    requisitos: {
+      indispensables: [
+        "Licenciatura en Marketing o Comunicación",
+        "Experiencia en Google Ads, Facebook Ads",
+        "Conocimiento en Analytics",
+        "Creatividad y pensamiento estratégico"
+      ],
+      deseables: [
+        "Certificaciones en Google",
+        "Experiencia en e-commerce",
+        "Conocimiento en herramientas de automatización"
+      ]
+    }
+  },{
+    id: 7,
+    titulo: "Ingeniero en Software en React y nextJs, React, Nodejs, CSS, HTML, Javascript, JSDNAJSDHJSDHKAJHKFJSHJHK",
     empresa: "Monster Pizza",
     ubicacion: "Puebla",
     modalidad: "Presencial",

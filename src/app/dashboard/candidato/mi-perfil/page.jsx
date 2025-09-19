@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { User, Mail, Phone, MapPin, Briefcase, GraduationCap, Save, Upload, X } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Briefcase, GraduationCap, Save, Upload, X, Globe, UserCog } from 'lucide-react';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
 
 export default function EditarPerfilPage() {
   // Estado para los datos del formulario
   const [formData, setFormData] = useState({
-    // Información personal
+    // Bloque 1 - Información personal
     nombre: 'Miguel',
     apellido: 'Blanco',
     email: 'migue.blanco@email.com',
@@ -16,34 +16,66 @@ export default function EditarPerfilPage() {
     fechaNacimiento: '1995-05-15',
     genero: 'masculino',
     estadoCivil: 'soltero',
-    
     // Ubicación
-    direccion: 'Av. Reforma 123, Col. Centro',
     ciudad: 'Ciudad de México',
     estado: 'CDMX',
     codigoPostal: '06000',
     
-    // Información profesional
-    titulo: 'Desarrollador Frontend',
-    resumen: 'Desarrollador con 3 años de experiencia en React y Next.js, apasionado por crear interfaces de usuario intuitivas y eficientes.',
-    experiencia: '3 años',
-    salarioDeseado: '45000',
-    disponibilidad: 'inmediata',
-    modalidadPreferida: 'remoto',
-    
+    // Bloque 2 - Datos profesionales
     // Educación
     nivelEducativo: 'licenciatura',
     institucion: 'Universidad Nacional Autónoma de México',
     carrera: 'Ingeniería en Sistemas Computacionales',
     fechaGraduacion: '2018-06-15',
-    
-    // Habilidadess
+    //Resumen profesional
+    titulo: 'Desarrollador Frontend',
+    resumen: 'Desarrollador con 3 años de experiencia en React y Next.js, apasionado por crear interfaces de usuario intuitivas y eficientes.',
+    experiencia: '3 años',
+    disponibilidad: 'inmediata',
+    modalidadPreferida: 'remoto',
+    tipoPuesto: [
+      "Tecnología / Sistemas / Programación",
+      "Administración / Oficina",
+      "Ventas / Comercial",
+      "Atención a clientes / Call center",
+      "Contabilidad / Finanzas",
+      "Recursos humanos",
+      "Marketing / Publicidad / Comunicación",
+      "Logística / Transporte / Almacén",
+      "Ingeniería",
+      "Manufactura / Producción / Operarios",
+      "Salud / Medicina / Farmacia",
+      "Educación / Docencia",
+      "Diseño / Arte / Multimedia",
+      "Legal / Jurídico",
+      "Construcción / Arquitectura",
+      "Hotelería / Turismo / Restaurantes",
+      "Otros / Generales"
+    ],
+    tipoJornada: [
+      "Tiempo completo",
+      "Medio tiempo",
+      "Prácticas profesionales / Becario",
+      "Temporal / Proyecto",
+    ],
+    // Habilidades
     habilidades: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js'],
     idiomas: [
       { idioma: 'Español', nivel: 'Nativo' },
       { idioma: 'Inglés', nivel: 'Intermedio' }
     ],
     
+    //Bloque 3 - exp. laboral
+    nombreEmpresa: "Mentory",
+    cargo: "Gerente",
+    periodo: [
+      { anioEntrada: '2024', anioSalida: '2025' },
+      { anioEntrada: '2019', anioSalida: '2023' }
+    ],
+    descripcionAct: "Gerente",
+
+    //Bloque - Documentación 
+
     // Preferencias
     notificaciones: true,
     perfilPublico: true,
@@ -157,7 +189,7 @@ export default function EditarPerfilPage() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Correo electrónico</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
@@ -237,17 +269,6 @@ export default function EditarPerfilPage() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
-              <Input
-                type="text"
-                name="direccion"
-                value={formData.direccion}
-                onChange={handleInputChange}
-                placeholder="Calle, número, colonia"
-              />
-            </div>
-            
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Ciudad</label>
               <Input
@@ -283,99 +304,6 @@ export default function EditarPerfilPage() {
           </div>
         </div>
 
-        {/* Información Profesional */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <div className="flex items-center mb-6">
-            <Briefcase className="w-6 h-6 text-blue-600 mr-3" />
-            <h2 className="text-xl font-semibold text-gray-900">Información Profesional</h2>
-          </div>
-          
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Título Profesional</label>
-              <Input
-                type="text"
-                name="titulo"
-                value={formData.titulo}
-                onChange={handleInputChange}
-                placeholder="Tu título o puesto actual"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Resumen Profesional</label>
-              <textarea
-                name="resumen"
-                value={formData.resumen}
-                onChange={handleInputChange}
-                rows={4}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Describe tu experiencia y objetivos profesionales..."
-              />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Años de Experiencia</label>
-                <select
-                  name="experiencia"
-                  value={formData.experiencia}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="sin-experiencia">Sin experiencia</option>
-                  <option value="1 año">1 año</option>
-                  <option value="2 años">2 años</option>
-                  <option value="3 años">3 años</option>
-                  <option value="4 años">4 años</option>
-                  <option value="5+ años">5+ años</option>
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Salario Deseado (MXN)</label>
-                <Input
-                  type="number"
-                  name="salarioDeseado"
-                  value={formData.salarioDeseado}
-                  onChange={handleInputChange}
-                  placeholder="45000"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Disponibilidad</label>
-                <select
-                  name="disponibilidad"
-                  value={formData.disponibilidad}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="inmediata">Inmediata</option>
-                  <option value="1 semana">1 semana</option>
-                  <option value="2 semanas">2 semanas</option>
-                  <option value="1 mes">1 mes</option>
-                  <option value="2 meses">2 meses</option>
-                </select>
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Modalidad Preferida</label>
-              <select
-                name="modalidadPreferida"
-                value={formData.modalidadPreferida}
-                onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="presencial">Presencial</option>
-                <option value="remoto">Remoto</option>
-                <option value="hibrido">Híbrido</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
         {/* Educación */}
         <div className="bg-white rounded-lg shadow-sm border p-6">
           <div className="flex items-center mb-6">
@@ -383,7 +311,7 @@ export default function EditarPerfilPage() {
             <h2 className="text-xl font-semibold text-gray-900">Educación</h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Nivel Educativo</label>
               <select
@@ -433,49 +361,177 @@ export default function EditarPerfilPage() {
               />
             </div>
           </div>
-        </div>
 
-        {/* Habilidades */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Habilidades</h2>
+          {/* Datos Profesionales */}
+          <div className="flex items-center mb-6">
+            <Briefcase className="w-6 h-6 text-blue-600 mr-3" />
+            <h2 className="text-xl font-semibold text-gray-900">Información Profesional</h2>
+          </div>
           
-          <div className="mb-4">
-            <div className="flex gap-2">
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Título Profesional</label>
               <Input
                 type="text"
-                value={nuevaHabilidad}
-                onChange={(e) => setNuevaHabilidad(e.target.value)}
-                placeholder="Agregar nueva habilidad"
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), agregarHabilidad())}
+                name="titulo"
+                value={formData.titulo}
+                onChange={handleInputChange}
+                placeholder="Tu título o puesto actual"
               />
-              <Button onClick={agregarHabilidad} type="button">
-                Agregar
-              </Button>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Resumen Profesional</label>
+              <textarea
+                name="resumen"
+                value={formData.resumen}
+                onChange={handleInputChange}
+                rows={4}
+                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Describe tu experiencia y objetivos profesionales..."
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Años de Experiencia</label>
+                <select
+                  name="experiencia"
+                  value={formData.experiencia}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="sin-experiencia">Sin experiencia</option>
+                  <option value="1 año">1 año</option>
+                  <option value="2 años">2 años</option>
+                  <option value="3 años">3 años</option>
+                  <option value="4 años">4 años</option>
+                  <option value="5+ años">5+ años</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Disponibilidad</label>
+                <select
+                  name="disponibilidad"
+                  value={formData.disponibilidad}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="inmediata">Inmediata</option>
+                  <option value="1 semana">1 semana</option>
+                  <option value="2 semanas">2 semanas</option>
+                  <option value="1 mes">1 mes</option>
+                  <option value="2 meses">2 meses</option>
+                </select>
+              </div>
+            </div>
+            
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Modalidad Preferida</label>
+                <select
+                  name="modalidadPreferida"
+                  value={formData.modalidadPreferida}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="presencial">Presencial</option>
+                  <option value="remoto">Remoto</option>
+                  <option value="hibrido">Híbrido</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de puesto</label>
+                <select
+                  name="tipoPuesto"
+                  value={formData.tipoPuesto}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    <option value="categorias">Todas las categorías</option>
+                    <option value="tecnologia">Tecnología / Sistemas</option>
+                    <option value="administracion">Administración / Oficina</option>
+                    <option value="ventas">Ventas / Comercial</option>
+                    <option value="atencion">Atención a clientes</option>
+                    {/* <option value="finanzas">Contabilidad / Finanzas</option>
+                    <option value="rh">Recursos humanos</option>
+                    <option value="marketing">Marketing / Publicidad</option>
+                    <option value="logistica">Logística / Transporte</option>
+                    <option value="ingenieria">Ingeniería</option>
+                    <option value="manufactura">Manufactura / Producción</option>
+                    <option value="salud">Salud / Medicina</option>
+                    <option value="educacion">Educación / Docencia</option>
+                    <option value="diseno">Diseño / Arte</option>
+                    <option value="legal">Legal / Jurídico</option>
+                    <option value="construccion">Construcción / Arquitectura</option>
+                    <option value="turismo">Hotelería / Turismo</option>
+                    <option value="otros">Otros</option> */}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Jornada</label>
+                <select
+                  name="tipoJornada"
+                  value={formData.tipoJornada}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="presencial">Tiempo completo</option>
+                  <option value="remoto">Medio tiempo</option>
+                  <option value="hibrido">Prácticas profesionales / Becario</option>
+                  <option value="remoto">Temporal / Proyecto</option>
+                </select>
+              </div>
             </div>
           </div>
-          
-          <div className="flex flex-wrap gap-2">
-            {formData.habilidades.map((habilidad, index) => (
-              <span
-                key={index}
-                className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
-              >
-                {habilidad}
-                <button
-                  type="button"
-                  onClick={() => eliminarHabilidad(habilidad)}
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
-            ))}
-          </div>
-        </div>
 
-        {/* Idiomas */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Idiomas</h2>
+          {/* Habilidades */}
+          <div className='mb-6'>
+            <div className="flex items-center mb-6">
+              <UserCog className="w-6 h-6 text-blue-600 mr-3" />
+              <h2 className="text-xl font-semibold text-gray-900">Habilidades</h2>
+            </div>
+
+            <div className="mb-4">
+              <div className="flex gap-2">
+                <Input
+                  type="text"
+                  value={nuevaHabilidad}
+                  onChange={(e) => setNuevaHabilidad(e.target.value)}
+                  placeholder="Agregar nueva habilidad"
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), agregarHabilidad())}
+                />
+                <Button onClick={agregarHabilidad} type="button">
+                  Agregar
+                </Button>
+              </div>
+            </div>
+            
+            <div className="flex flex-wrap gap-2">
+              {formData.habilidades.map((habilidad, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
+                >
+                  {habilidad}
+                  <button
+                    type="button"
+                    onClick={() => eliminarHabilidad(habilidad)}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+          {/* Idiomas */}
+          <div className="flex items-center mb-6">
+            <Globe className="w-6 h-6 text-blue-600 mr-3" />
+            <h2 className="text-xl font-semibold text-gray-900">Idiomas</h2>
+          </div>
           
           <div className="mb-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">

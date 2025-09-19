@@ -1,134 +1,53 @@
 "use client";
 import SearchFilters from "../buscar-empleos/search-filters";
-import Select from "../../../components/ui/Select";
 import JobCard from "../../../components/dashboard/JobCard";
 import JobDetail from "../../../components/dashboard/JobDetail";
-import { useState, useMemo } from "react";
 import { mockJobs } from "../../../data/mockData";
 import { useFavorites } from "../../../hooks/useFavorites";
-import { Bookmark } from "lucide-react";
+import { useJobs } from "../../../hooks/useJobs";
 
 export default function BuscarEmpleoPage() {
-  const [selectedJob, setSelectedJob] = useState(mockJobs[0]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("para-ti");
-  const [sortOrder, setSortOrder] = useState("recientes");
-  
-  // ✅ Hook de favoritos
+  // ✅ Hook de trabajos con toda la lógica centralizada
+  const {
+    selectedJob,
+    searchTerm,
+    activeTab,
+    sortOrder,
+    filters,
+    filteredJobs,
+    handleSearch,
+    handleFilterChange,
+    handleClearFilters,
+    handleJobSelect,
+    handleSortChange,
+    handleTabChange
+  } = useJobs(mockJobs);
+
+  // ✅ Hook de favoritos (mantiene su lógica separada)
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
-
-  // ✅ Filtros mejorados
-  const [filters, setFilters] = useState({
-    modalidad: '',
-    sueldo: '',
-    tipoContrato: '',
-    categoria: ''
-  });
-
-  // Filtrar trabajos basado en búsqueda y filtros
-  const filteredJobs = useMemo(() => {
-    let jobs = [...mockJobs];
-
-    // Filtrar por término de búsqueda
-    if (searchTerm.trim()) {
-      jobs = jobs.filter(
-        (job) =>
-          job.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          job.empresa.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          job.ubicacion.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Aplicar filtros
-    if (filters.modalidad) {
-      jobs = jobs.filter(job => 
-        job.modalidad.toLowerCase() === filters.modalidad.toLowerCase()
-      );
-    }
-
-    if (filters.sueldo) {
-      const salarioFiltro = parseInt(filters.sueldo.replace(/[,$]/g, ''));
-      jobs = jobs.filter(job => {
-        const salarioJob = parseInt(job.salario.replace(/[,$]/g, ''));
-        return salarioJob >= salarioFiltro;
-      });
-    }
-
-    if (filters.tipoContrato) {
-      jobs = jobs.filter(job => 
-        job.jornada.toLowerCase().includes(filters.tipoContrato.toLowerCase())
-      );
-    }
-
-    // Ordenar trabajos
-    switch (sortOrder) {
-      case 'mejor-pagados':
-        return jobs.sort((a, b) => {
-          const salarioA = parseInt(a.salario.replace(/[,$]/g, ''));
-          const salarioB = parseInt(b.salario.replace(/[,$]/g, '')); 
-          return salarioB - salarioA; // de mayor a menor
-        });
-      case 'mas-relevantes':
-        // Modificar para que sea relevantes
-        return jobs;  
-      case 'recientes':
-        // Modificar para buscar el mas reciente (de momento solo lo invierte para posicionar el mas reciente)
-        return [...jobs].reverse();
-      default:
-        return jobs;
-    }
-
-    return jobs;
-  }, [searchTerm, filters, sortOrder]);
-
-  const handleSearch = (term) => {
-    setSearchTerm(term);
-  };
-
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-  };
-
-  const handleClearFilters = () => {
-    setSearchTerm("");
-    setFilters({
-      modalidad: '',
-      sueldo: '',
-      tipoContrato: '',
-      categoria: ''
-    });
-  };
-
-  const handleJobSelect = (job) => {
-    setSelectedJob(job);
-  };
-
-  const handleSortChange = (newSort) => {
-    setSortOrder(newSort);
-  };
 
   return (
     <div className="h-full flex flex-col">
-      <div>
-        {/* Barra de búsqueda */}
-        <SearchFilters
-          onSearch={handleSearch}
-          onFilterChange={handleFilterChange}
-          clearFilters={handleClearFilters}
-          searchTerm={searchTerm}
-          filters={filters}
-        />
-      </div>
-
       {/* Resultados */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Lista de trabajos */}
-        <div className="space-y-4">
+        <div className="space-y-4 p-2">
+          {/* Bar busqueda y filtros */}
+          <div>
+            {/* Barra de búsqueda */}
+            <SearchFilters
+              onSearch={handleSearch}
+              onFilterChange={handleFilterChange}
+              clearFilters={handleClearFilters}
+              searchTerm={searchTerm}
+              filters={filters}
+            />
+          </div>
           {/* Tabs y controles */}
           <div className="flex items-center justify-between mt-4 mb-4">
             <div className="flex space-x-6">
               <button
-                onClick={() => setActiveTab("para-ti")}
+                onClick={() => handleTabChange("para-ti")}
                 className={`font-medium pb-2 transition-colors ${
                   activeTab === "para-ti"
                     ? "text-blue-600 border-b-2 border-blue-600"
@@ -138,7 +57,7 @@ export default function BuscarEmpleoPage() {
                 Para ti ({filteredJobs.length})
               </button>
               <button
-                onClick={() => setActiveTab("favoritos")}
+                onClick={() => handleTabChange("favoritos")}
                 className={`font-medium pb-2 transition-colors ${
                   activeTab === "favoritos"
                     ? "text-blue-600 border-b-2 border-blue-600"

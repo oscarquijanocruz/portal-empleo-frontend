@@ -15,12 +15,12 @@ export default function JobDetail({ job }) {
     }
     
     return(
-        <div>
+        <div className='p-4'>
           <div className='space-y-4'>
               {/* Header */}
               <div className="justify-between mb-6">
                   <div className="grid justify-center text-center items-center place-items-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg flex items-center justify-center items-center m-4">
+                  <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg flex items-center justify-center m-4">
                       <div className="w-8 h-8 bg-white rounded transform rotate-45">Logo</div>
                   </div>
                   <div>
@@ -35,7 +35,7 @@ export default function JobDetail({ job }) {
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-3">Sobre la empresa</h2>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  {job.descripcion || "(Descripción breve de la empresa: quiénes son, qué hacen, su cultura y propósito. Ejemplo: Somos una empresa líder en el sector tecnológico con enfoque en soluciones digitales innovadoras.)"}
+                  {job.description || "(Descripción breve de la empresa: quiénes son, qué hacen, su cultura y propósito. Ejemplo: Somos una empresa líder en el sector tecnológico con enfoque en soluciones digitales innovadoras.)"}
                 </p>
               </div>
 

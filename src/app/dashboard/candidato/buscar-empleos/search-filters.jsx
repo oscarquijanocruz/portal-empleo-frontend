@@ -158,7 +158,7 @@ export default function SearchFilters({
           )}
           {Object.entries(localFilters).map(([key, value]) => 
             value && (
-              <span key={key} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
+              <span key={key} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
                 {key}: {value}
               </span>
             )

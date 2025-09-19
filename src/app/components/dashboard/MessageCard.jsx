@@ -47,7 +47,7 @@ export default function MessageCard({ messages, selectedMessage, onMessageSelect
             onClick={() => onMessageSelect(message)}
             className={`p-4 border-b border-gray-200 cursor-pointer transition-all hover:bg-gray-50 ${
               selectedMessage?.id === message.id
-                ? "bg-blue-50 border-l-4 border-l-blue-500"
+                ? "bg-blue-50 border-l-4 border-l-blue-900"
                 : ""
             }`}
           >
