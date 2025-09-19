@@ -182,11 +182,11 @@ export const mockJobs = [
     }
   },{
     id: 7,
-    titulo: "Ingeniero en Software en React y nextJs, React, Nodejs, CSS, HTML, Javascript, JSDNAJSDHJSDHKAJHKFJSHJHK",
+    titulo: "Ejecutivo de Trafico Terrestre - Aéreo (Turismo y Congresos)",
     empresa: "Monster Pizza",
     ubicacion: "Puebla",
     modalidad: "Presencial",
-    jornada: "Medio tiempo ",
+    jornada: "Por proyecto",
     salario: "30,000",
     logo: "/api/placeholder/50/50",
     descripcion: "Especialista en marketing digital para campañas innovadoras...",

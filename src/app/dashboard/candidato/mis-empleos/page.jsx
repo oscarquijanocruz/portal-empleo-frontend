@@ -148,6 +148,7 @@ export default function MisEmpleosPage({ job }) {
           )}
         </div>
         
+        
         {/* Panel de detalles */}
         <div className="p-4 space-y-4">
           {selectedJob ? (
