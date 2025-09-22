@@ -54,6 +54,12 @@ export const useJobs = (initialJobs = mockJobs) => {
       );
     }
 
+    if (filters.categoria) {
+      jobs = jobs.filter(job => 
+        job.categoria.toLowerCase().includes(filters.categoria.toLowerCase())
+      );
+    }
+
     // Ordenar trabajos
     switch (sortOrder) {
       case 'mejor-pagados':
