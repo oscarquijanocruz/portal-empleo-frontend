@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import NavLinks from "../dashboard/nav-links";
-import { User2 } from "lucide-react";
+import { User2, LogOut } from "lucide-react";
 //import MentoryLogo from '@/app/assets/mentory-logo';
 
 export default function SideBar() {
@@ -29,6 +29,10 @@ export default function SideBar() {
             <p className="text-xs text-gray-500">Puesto</p>
           </div>
         </Link>
+        <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-red-100 hover:text-red-600 md:flex-none md:justify-start md:p-2 md:px-3">
+            <LogOut className="w-6" />
+            <p className="hidden md:block">Cerrar sesión</p>
+        </button>
       </div>
     </div>
   );
