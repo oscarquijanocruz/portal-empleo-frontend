@@ -16,7 +16,7 @@ export default function JobDetail({ job }) {
     
     return(
         <div className='p-4'>
-          <div className='space-y-4'>
+          <div className='space-y-4 overflow-hidden overflow-y-auto'>
               {/* Header */}
               <div className="justify-between mb-6">
                   <div className="grid justify-center text-center items-center place-items-center">

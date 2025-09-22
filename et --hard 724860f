@@ -1,0 +1,30 @@
+[33m53c4f4d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: checkout: moving from main to main
+[33m53c4f4d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{1}: commit: Resolve merge conflicts
+[33mc865a8d[m HEAD@{2}: commit (merge): Resolve merge conflicts
+[33m008a5fc[m HEAD@{3}: checkout: moving from feature/dashboard-postulante to main
+[33m724860f[m[33m ([m[1;31morigin/feature/dashboard-postulante[m[33m, [m[1;32mfeature/dashboard-postulante[m[33m)[m HEAD@{4}: checkout: moving from main to feature/dashboard-postulante
+[33m008a5fc[m HEAD@{5}: reset: moving to HEAD
+[33m008a5fc[m HEAD@{6}: pull origin main: Fast-forward
+[33md5d005c[m HEAD@{7}: checkout: moving from feature/dashboard-postulante to main
+[33m724860f[m[33m ([m[1;31morigin/feature/dashboard-postulante[m[33m, [m[1;32mfeature/dashboard-postulante[m[33m)[m HEAD@{8}: commit: Guardando últimos cambios del dashboard postulante
+[33m5df1496[m HEAD@{9}: commit: terminado filtros, ordenamiento, mis empleos page, page mi perfil
+[33m53db792[m HEAD@{10}: commit: avances en el dashobard
+[33mc152a70[m HEAD@{11}: commit: Avance con mensajes page y fix a mis empleos page
+[33m16da31d[m HEAD@{12}: commit: checkpoint de funcionalidad de filtro y bar busqueda
+[33me45ec5b[m HEAD@{13}: commit: estructura mensajes y filtro de busqueda
+[33m6dc1022[m HEAD@{14}: commit: avance con bar busqueda
+[33m3af8122[m HEAD@{15}: commit: cardjobs terminado
+[33mbe386d9[m HEAD@{16}: commit: Avance con card job en dashboard
+[33m88b9330[m HEAD@{17}: checkout: moving from feature/dashboard-postulante to feature/dashboard-postulante
+[33m88b9330[m HEAD@{18}: commit: Avance en dashboard postulante
+[33md5c93bf[m HEAD@{19}: commit: Dashboard fixed con rutas hechas
+[33mc0b923c[m HEAD@{20}: commit: Dashboard candidato con bugs
+[33mb5a9249[m HEAD@{21}: commit: avance del dashboard candidato
+[33m28e4d57[m HEAD@{22}: commit: Estructura de archivos completa Dashboard candidatos
+[33md5d005c[m HEAD@{23}: checkout: moving from main to feature/dashboard-postulante
+[33md5d005c[m HEAD@{24}: pull origin main: Fast-forward
+[33m3c9c2a7[m HEAD@{25}: checkout: moving from main to main
+[33m3c9c2a7[m HEAD@{26}: commit: Más páginas principales y carpetas para la estructura
+[33m584872f[m HEAD@{27}: commit: Primer commit: proyecto limpio JS
+[33md5a6aa5[m HEAD@{28}: Branch: renamed refs/heads/master to refs/heads/main
+[33md5a6aa5[m HEAD@{30}: commit (initial): Initial commit from Create Next App
