@@ -87,7 +87,7 @@ export default function SearchFilters({
         <select 
           value={localFilters.modalidad}
           onChange={(e) => handleFilterChange('modalidad', e.target.value)}
-          className="bg-blue-900 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition-colors"
+          className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition-colors"
         >
           <option value="">Modalidad</option>
           <option value="Remoto">Remoto</option>
@@ -98,7 +98,7 @@ export default function SearchFilters({
         <select 
           value={localFilters.sueldo}
           onChange={(e) => handleFilterChange('sueldo', e.target.value)}
-          className="bg-blue-100 text-blue-900 px-4 py-2 rounded-md hover:bg-blue-200 transition-colors"
+          className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition-colors"
         >
           <option value="">Sueldo</option>
           <option value="15000">$15,000+</option>
@@ -110,7 +110,7 @@ export default function SearchFilters({
         <select 
           value={localFilters.tipoContrato}
           onChange={(e) => handleFilterChange('tipoContrato', e.target.value)}
-          className="bg-blue-900 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition-colors"
+          className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition-colors"
         >
           <option value="">Tipo de contrato</option>
           <option value="Tiempo completo">Tiempo completo</option>
@@ -122,7 +122,7 @@ export default function SearchFilters({
         <select 
           value={localFilters.categoria}
           onChange={(e) => handleFilterChange('categoria', e.target.value)}
-          className="bg-blue-900 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition-colors"
+          className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition-colors"
         >
           <option value="">Categoría</option>
           <option value="tecnologia">Tecnología</option>

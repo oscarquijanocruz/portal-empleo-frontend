@@ -5,67 +5,64 @@ import { useState } from "react";
 import { useJobs } from "../../../hooks/useJobs";
 import { useFavorites } from "../../../hooks/useFavorites";
 import { mockJobs } from "../../../data/mockData";
-
   
-const userJobs = [
-  // Estos podrían venir de una API o base de datos
-  {
-    id: 1,
-    titulo: "Desarrollador Frontend Senior",
-    empresa: "TechCorp",
-    ubicacion: "Ciudad de México",
-    modalidad: "Remoto",
-    jornada: "Tiempo completo",
-    salario: "45,000",
-    estado: "postulado", // postulado, en_revision, rechazado, aceptado
-    fechaPostulacion: "2024-01-15"
-  },
-  {
-    id: 2,
-    titulo: "UX/UI Designer",
-    empresa: "DesignStudio",
-    ubicacion: "Guadalajara",
-    modalidad: "Híbrido",
-    jornada: "Tiempo completo",
-    salario: "35,000",
-    estado: "en_revision",
-    fechaPostulacion: "2024-01-12"
-  },
-  {
-    id: 3,
-    titulo: "Chef",
-    empresa: "Pizzeria",
-    ubicacion: "Puebla",
-    modalidad: "Presencial",
-    jornada: "Tiempo completo",
-    salario: "35,000",
-    estado: "aceptado",
-    fechaPostulacion: "2024-01-12"
-  },
-  {
-    id: 4,
-    titulo: "UX/UI Designer",
-    empresa: "DesignStudio",
-    ubicacion: "Guadalajara",
-    modalidad: "Híbrido",
-    jornada: "Tiempo completo",
-    salario: "35,000",
-    estado: "rechazado",
-    fechaPostulacion: "2024-01-12"
-  },
-  // Agregar más trabajos aquí...
-];
+// const userJobs = [
+//   // Estos podrían venir de una API o base de datos
+//   {
+//     id: 1,
+//     titulo: "Desarrollador Frontend Senior",
+//     empresa: "TechCorp",
+//     ubicacion: "Ciudad de México",
+//     modalidad: "Remoto",
+//     jornada: "Tiempo completo",
+//     salario: "45,000",
+//     estado: "postulado", // postulado, en_revision, rechazado, aceptado
+//     fechaPostulacion: "2024-01-15"
+//   },
+//   {
+//     id: 2,
+//     titulo: "UX/UI Designer",
+//     empresa: "DesignStudio",
+//     ubicacion: "Guadalajara",
+//     modalidad: "Híbrido",
+//     jornada: "Tiempo completo",
+//     salario: "35,000",
+//     estado: "en_revision",
+//     fechaPostulacion: "2024-01-12"
+//   },
+//   {
+//     id: 3,
+//     titulo: "Chef",
+//     empresa: "Pizzeria",
+//     ubicacion: "Puebla",
+//     modalidad: "Presencial",
+//     jornada: "Tiempo completo",
+//     salario: "35,000",
+//     estado: "aceptado",
+//     fechaPostulacion: "2024-01-12"
+//   },
+//   {
+//     id: 4,
+//     titulo: "UX/UI Designer",
+//     empresa: "DesignStudio",
+//     ubicacion: "Guadalajara",
+//     modalidad: "Híbrido",
+//     jornada: "Tiempo completo",
+//     salario: "35,000",
+//     estado: "rechazado",
+//     fechaPostulacion: "2024-01-12"
+//   },
+// ];
 
 export default function MisEmpleosPage({ job }) {
-  const [activeTab, setActiveTab] = useState("postulados");
+  const [activeTab, setActiveTab] = useState("favoritos");
   
   // ✅ Usar el hook de jobs con datos específicos del usuario
   const {
     selectedJob,
     handleJobSelect,
-    filteredJobs,
     handleTabChange
-  } = useJobs(userJobs);
+  } = useJobs(mockJobs);
 
   // ✅ Hook de favoritos
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
@@ -74,17 +71,17 @@ export default function MisEmpleosPage({ job }) {
   const getJobsByTab = (tab) => {
     switch(tab) {
       case "favoritos":
-        return userJobs.filter(job => job.estado === "favorito");
+        return mockJobs.filter(job => favorites.has(job.id));
       case "postulados":
-        return userJobs.filter(job => job.estado === "postulado");
+        return mockJobs.filter(job => job.estado === "postulado");
       case "en_revision":
-        return userJobs.filter(job => job.estado === "en_revision");
+        return mockJobs.filter(job => job.estado === "en_revision");
       case "rechazados":
-        return userJobs.filter(job => job.estado === "rechazado");
+        return mockJobs.filter(job => job.estado === "rechazado");
       case "aceptados":
-        return userJobs.filter(job => job.estado === "aceptado");
+        return mockJobs.filter(job => job.estado === "aceptado");
       default:
-        return userJobs;
+        return mockJobs;
     }
   };
 
@@ -146,6 +143,19 @@ export default function MisEmpleosPage({ job }) {
               </p>
             </div>
           )}
+
+          {/* Tab favoritos */}
+          {favorites.length > 0 ? (
+            <JobCard 
+              jobs={mockJobs.filter(job => favorites.has(job.id))}
+              onJobSelect={handleJobSelect}
+              favorites={favorites}
+              onToggleFavorite={toggleFavorite}
+            />
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+            </div>
+          )}
         </div>
         
         
@@ -166,7 +176,7 @@ export default function MisEmpleosPage({ job }) {
                       ? "bg-green-100 text-green-800"
                       : "bg-red-100 text-red-800"
                   }`}>
-                    {selectedJob.estado.replace("_", " ").toUpperCase()}
+                    {selectedJob.estado} {/* {selectedJob.estado.replace("_", " ").toUpperCase()} */}
                   </span>
                 </div>
                 {selectedJob.fechaPostulacion && (
