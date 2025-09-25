@@ -43,7 +43,7 @@ export default function JobCard({
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3 w-full">
-                      <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg flex items-center justify-center">
+                      <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg flex items-center justify-center">
                         <div className="w-6 h-6 bg-white rounded transform rotate-45"></div>
                       </div>
                       <div className='flex-1 flex-col'>

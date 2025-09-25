@@ -28,7 +28,7 @@ export default function EditarPerfilPage() {
     carrera: 'Ingeniería en Sistemas Computacionales',
     fechaGraduacion: '2018-06-15',
     //Resumen profesional
-    titulo: 'Desarrollador Frontend',
+    cargo: 'Desarrollador Frontend',
     resumen: 'Desarrollador con 3 años de experiencia en React y Next.js, apasionado por crear interfaces de usuario intuitivas y eficientes.',
     experiencia: '3 años',
     disponibilidad: 'inmediata',
@@ -68,13 +68,28 @@ export default function EditarPerfilPage() {
     //Bloque 3 - exp. laboral
     nombreEmpresa: "Mentory",
     cargo: "Gerente",
+    resumen: 'Desarrollador con 3 años de experiencia en React y Next.js, apasionado por crear interfaces de usuario intuitivas y eficientes.',
     periodo: [
-      { anioEntrada: '2024', anioSalida: '2025' },
-      { anioEntrada: '2019', anioSalida: '2023' }
+      { anioEntrada: '2024', 
+        mesEntrada: [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+      ],
+       anioSalida: '2025',
+        mesSalida: [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        ], 
+      },
+
     ],
-    descripcionAct: "Gerente",
 
     //Bloque - Documentación 
+
 
     // Preferencias
     notificaciones: true,
@@ -370,14 +385,55 @@ export default function EditarPerfilPage() {
           
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Título Profesional</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Nombre de la Empresa</label>
               <Input
                 type="text"
                 name="titulo"
-                value={formData.titulo}
+                value={formData.nombreEmpresa}
                 onChange={handleInputChange}
                 placeholder="Tu título o puesto actual"
               />
+            </div>
+            
+            <div className='w-full'>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Cargo</label>
+              <Input
+                type="text"
+                name="titulo"
+                value={formData.cargo}
+                onChange={handleInputChange}
+                placeholder="Tu título o puesto actual"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Periodo</label>
+              <label >Entrada</label>
+              <select 
+                value={formData.periodo}
+                className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name="anioEntrada" id="anioEntrada">
+                  <option 
+                  value={formData.anioEntrada}>2024</option>
+              </select>
+              <select 
+                className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name="periodo" id="periodo">
+                  <option value="Enero">Enero</option>
+                  <option value="Febrero">Febrero</option>  
+              </select>
+              <label >Salida</label>
+              <select 
+              className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="anioSalida" id="anioSalida">
+                <option value="Enero">2025</option>
+              </select>
+              <select 
+              className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="periodo" id="periodo">
+                <option value="Enero">Enero</option>
+                <option value="Febrero">Febrero</option>  
+              </select>
             </div>
             
             <div>

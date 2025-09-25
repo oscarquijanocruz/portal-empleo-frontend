@@ -15,7 +15,7 @@ export default function JobDetail({ job }) {
     }
     
     return(
-        <div className='p-4'>
+        <div className='p-4 sticky top-0'>
           <div className='space-y-4 overflow-hidden overflow-y-auto'>
               {/* Header */}
               <div className="justify-between mb-6">

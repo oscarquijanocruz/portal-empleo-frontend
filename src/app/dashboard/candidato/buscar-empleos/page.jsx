@@ -4,6 +4,7 @@ import JobCard from "../../../components/dashboard/JobCard";
 import JobDetail from "../../../components/dashboard/JobDetail";
 import { mockJobs } from "../../../data/mockData";
 import { useFavorites } from "../../../hooks/useFavorites";
+import { useExplorer }  from "../../../hooks/useExplorer";
 import { useJobs } from "../../../hooks/useJobs";
 
 export default function BuscarEmpleoPage() {
@@ -23,8 +24,11 @@ export default function BuscarEmpleoPage() {
     handleTabChange
   } = useJobs(mockJobs);
 
-  // ✅ Hook de favoritos (mantiene su lógica separada)
+  //  Hook de favoritos (mantiene su lógica separada)
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
+
+  //  Hook de explorar trabajos (mantiene su lógica separada)
+  const { explorer } =  useExplorer(); // Hacer algoritmo
 
   return (
     <div className="h-full flex flex-col">
@@ -56,15 +60,17 @@ export default function BuscarEmpleoPage() {
               >
                 Para ti ({filteredJobs.length})
               </button>
+
+              {/* Tab de Explorar */}
               <button
-                onClick={() => handleTabChange("favoritos")}
+                onClick={() => handleTabChange("explorar")}
                 className={`font-medium pb-2 transition-colors ${
-                  activeTab === "favoritos"
+                  activeTab === "explorar"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-500 hover:text-gray-700"
                 }`}
               >
-                Favoritos ({favorites.size})
+                Explorar ({filteredJobs.length})
               </button>
             </div>
             
@@ -101,9 +107,9 @@ export default function BuscarEmpleoPage() {
           ) : (
             // Tab de favoritos
             <div className="space-y-4">
-              {favorites.size > 0 ? (
+              {filteredJobs.length > 0 ? (
                 <JobCard 
-                  jobs={mockJobs.filter(job => favorites.has(job.id))}
+                  jobs={filteredJobs}
                   selectedJob={selectedJob}
                   onJobSelect={handleJobSelect}
                   favorites={favorites}
@@ -111,8 +117,8 @@ export default function BuscarEmpleoPage() {
                 />
               ) : (
                 <div className="text-center py-8 text-gray-500">
-                  <p>No tienes trabajos guardados</p>
-                  <p className="text-sm mt-2">Guarda trabajos haciendo clic en el ícono 🎗</p>
+                  <p>No hay trabajos por el momento</p>
+                  <p className="text-sm mt-2">Aqui encontraras trabajos nuevos...</p>
                 </div>
               )}
             </div>
@@ -120,7 +126,7 @@ export default function BuscarEmpleoPage() {
         </div>
         
         {/* Panel de detalles */}
-        <div className="p-4 space-y-4">
+        <div className="p-1 space-y-4">
           <JobDetail 
             job={selectedJob} 
             isFavorite={isFavorite(selectedJob?.id)}

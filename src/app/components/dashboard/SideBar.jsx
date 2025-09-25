@@ -9,7 +9,7 @@ export default function SideBar() {
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
       <Link
-        className="mb-2 flex h-20 items-center justify-center rounded-md bg-gray-50 p-4 md:h-40"
+        className="mb-2 flex h-20 items-center justify-center rounded-md bg-gray-50 md:h-40"
         href="/"
       >
         <div className="w-full text-black md:w-full">
@@ -36,10 +36,13 @@ export default function SideBar() {
             <p className="text-xs text-gray-500">Puesto</p>
           </div>
         </Link>
-        <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-red-100 hover:text-red-600 md:flex-none md:justify-start md:p-2 md:px-3">
-            <LogOut className="w-6" />
-            <p className="hidden md:block">Cerrar sesión</p>
-        </button>
+        <Link
+          href="/auth/login"
+          className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-red-100 hover:text-red-600 md:flex-none md:justify-start md:p-2 md:px-3"
+        >
+              <LogOut className="w-6" />
+              <p className="hidden md:block">Cerrar sesión</p>
+        </Link>
       </div>
     </div>
   );
