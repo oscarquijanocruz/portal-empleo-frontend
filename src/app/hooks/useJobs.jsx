@@ -1,7 +1,7 @@
 //Logica de card jobs
 
 'use client'
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { mockJobs } from '../data/mockData';
 
 export const useJobs = (initialJobs = mockJobs) => {
@@ -109,8 +109,17 @@ export const useJobs = (initialJobs = mockJobs) => {
   }, []);
 
   // Reset selectedJob si no está en los trabajos filtrados
-  useMemo(() => {
-    if (selectedJob && !filteredJobs.find(job => job.id === selectedJob.id)) {
+  useEffect(() => {
+    if (!filteredJobs.length) {
+      if (selectedJob !== null) {
+        setSelectedJob(null);
+      }
+      return;
+    }
+
+    const jobInFilteredList = selectedJob && filteredJobs.find(job => job.id === selectedJob.id);
+
+    if (!jobInFilteredList) {
       setSelectedJob(filteredJobs[0] || null);
     }
   }, [filteredJobs, selectedJob]);
