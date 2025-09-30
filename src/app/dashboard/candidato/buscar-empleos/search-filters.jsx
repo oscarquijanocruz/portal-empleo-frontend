@@ -1,21 +1,21 @@
 // Filtros mejorados - VERSION CORREGIDA
-'use client'
-import { Search, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
+"use client";
+import { Search, X } from "lucide-react";
+import { useState, useEffect } from "react";
 
-export default function SearchFilters({ 
-  onSearch, 
-  onFilterChange, 
+export default function SearchFilters({
+  onSearch,
+  onFilterChange,
   clearFilters,
-  searchTerm = '',
-  filters = {}
+  searchTerm = "",
+  filters = {},
 }) {
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
   const [localFilters, setLocalFilters] = useState({
-    modalidad: filters.modalidad || '',
-    sueldo: filters.sueldo || '',
-    tipoContrato: filters.tipoContrato || '',
-    categoria: filters.categoria || ''
+    modalidad: filters.modalidad || "",
+    sueldo: filters.sueldo || "",
+    tipoContrato: filters.tipoContrato || "",
+    categoria: filters.categoria || "",
   });
 
   // Sincronizar con props cuando cambien
@@ -25,10 +25,10 @@ export default function SearchFilters({
 
   useEffect(() => {
     setLocalFilters({
-      modalidad: filters.modalidad || '',
-      sueldo: filters.sueldo || '',
-      tipoContrato: filters.tipoContrato || '',
-      categoria: filters.categoria || ''
+      modalidad: filters.modalidad || "",
+      sueldo: filters.sueldo || "",
+      tipoContrato: filters.tipoContrato || "",
+      categoria: filters.categoria || "",
     });
   }, [filters]);
 
@@ -45,22 +45,26 @@ export default function SearchFilters({
   };
 
   const handleClearFilters = () => {
-    setLocalSearchTerm('');
+    setLocalSearchTerm("");
     setLocalFilters({
-      modalidad: '',
-      sueldo: '',
-      tipoContrato: '',
-      categoria: ''
+      modalidad: "",
+      sueldo: "",
+      tipoContrato: "",
+      categoria: "",
     });
     clearFilters?.();
   };
 
-  const hasActiveFilters = localSearchTerm || Object.values(localFilters).some(f => f);
+  const hasActiveFilters =
+    localSearchTerm || Object.values(localFilters).some((f) => f);
 
   return (
     <div className="p-4 rounded-md mb-4">
       {/* Barra de búsqueda */}
-      <div className="flex items-center bg-white border rounded-md border-gray-200 px-4 py-3 mb-4 shadow-md">
+      <div
+        className="flex items-center bg-white border rounded-md border-gray-200 px-4 py-3 mb-4 shadow-md 
+        hover:border-gray-400 transition"
+      >
         <Search size={22} className="text-gray-400" />
         <input
           type="text"
@@ -70,10 +74,10 @@ export default function SearchFilters({
           onChange={handleSearchChange}
         />
         {localSearchTerm && (
-          <button 
+          <button
             onClick={() => {
-              setLocalSearchTerm('');
-              onSearch?.('');
+              setLocalSearchTerm("");
+              onSearch?.("");
             }}
             className="text-gray-500 hover:text-gray-700"
           >
@@ -84,9 +88,9 @@ export default function SearchFilters({
 
       {/* Filtros */}
       <div className="flex flex-wrap items-center gap-2">
-        <select 
+        <select
           value={localFilters.modalidad}
-          onChange={(e) => handleFilterChange('modalidad', e.target.value)}
+          onChange={(e) => handleFilterChange("modalidad", e.target.value)}
           className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
         >
           <option value="">Modalidad</option>
@@ -94,10 +98,10 @@ export default function SearchFilters({
           <option value="Híbrido">Híbrido</option>
           <option value="Presencial">Presencial</option>
         </select>
-        
-        <select 
+
+        <select
           value={localFilters.sueldo}
-          onChange={(e) => handleFilterChange('sueldo', e.target.value)}
+          onChange={(e) => handleFilterChange("sueldo", e.target.value)}
           className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
         >
           <option value="">Sueldo</option>
@@ -106,10 +110,10 @@ export default function SearchFilters({
           <option value="35000">$35,000+</option>
           <option value="45000">$45,000+</option>
         </select>
-        
-        <select 
+
+        <select
           value={localFilters.tipoContrato}
-          onChange={(e) => handleFilterChange('tipoContrato', e.target.value)}
+          onChange={(e) => handleFilterChange("tipoContrato", e.target.value)}
           className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
         >
           <option value="">Tipo de contrato</option>
@@ -118,10 +122,10 @@ export default function SearchFilters({
           <option value="Por proyecto">Por proyecto</option>
           <option value="Prácticas">Prácticas</option>
         </select>
-        
-        <select 
+
+        <select
           value={localFilters.categoria}
-          onChange={(e) => handleFilterChange('categoria', e.target.value)}
+          onChange={(e) => handleFilterChange("categoria", e.target.value)}
           className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
         >
           <option value="">Categoría</option>
@@ -137,7 +141,7 @@ export default function SearchFilters({
         {/* Botón limpiar filtros */}
         {hasActiveFilters && (
           <div className="ml-auto">
-            <button 
+            <button
               onClick={handleClearFilters}
               className="text-blue-600 text-sm hover:underline flex items-center gap-1"
             >
@@ -147,7 +151,7 @@ export default function SearchFilters({
           </div>
         )}
       </div>
-      
+
       {/* Mostrar filtros activos */}
       {hasActiveFilters && (
         <div className="mt-3 flex flex-wrap gap-2">
@@ -156,12 +160,16 @@ export default function SearchFilters({
               "{localSearchTerm}"
             </span>
           )}
-          {Object.entries(localFilters).map(([key, value]) => 
-            value && (
-              <span key={key} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
-                {key}: {value}
-              </span>
-            )
+          {Object.entries(localFilters).map(
+            ([key, value]) =>
+              value && (
+                <span
+                  key={key}
+                  className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"
+                >
+                  {key}: {value}
+                </span>
+              )
           )}
         </div>
       )}

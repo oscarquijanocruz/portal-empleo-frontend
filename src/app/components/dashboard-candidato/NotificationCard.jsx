@@ -106,7 +106,7 @@ export default function NotificationCard({
   return (
     <div
       className={`
-        relative p-4 border-l-4 border-b border-gray-200 cursor-pointer transition-all duration-200
+        relative p-4 cursor-pointer transition-all duration-200
         ${!notification.isRead ? 'shadow-sm' : ''}
         hover:shadow-md hover:scale-[1.01]
         ${isHovered ? 'shadow-md' : ''}

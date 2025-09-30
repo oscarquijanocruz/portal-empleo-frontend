@@ -186,18 +186,3 @@ export const notificationTypes = {
     color: "gray"
   }
 };
-
-export const priorityLevels = {
-  high: {
-    label: "Alta",
-    color: "red"
-  },
-  medium: {
-    label: "Media",
-    color: "yellow"
-  },
-  low: {
-    label: "Baja",
-    color: "gray"
-  }
-};

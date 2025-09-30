@@ -61,8 +61,9 @@ export default function NotificationFilters({
 
   return (
     <div className="bg-white border-b border-gray-200 flex-1">
-      {/* Mobile Filter Toggle */}
-      <div className="md:hidden p-4 border-b border-gray-200">
+
+      {/* Filter Content */}
+      <div className="p-4 border-b border-gray-200">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="flex items-center justify-between w-full p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
@@ -80,15 +81,12 @@ export default function NotificationFilters({
             ▼
           </span>
         </button>
-      </div>
-
-      {/* Filter Content */}
-      <div className={`${isExpanded ? 'block' : 'hidden'} md:block`}>
+        <div className={`${isExpanded ? 'block' : 'hidden'}`}>
         <div className="p-4">
           {/* Type Filters */}
           <div className="mb-4">
             <h3 className="text-sm font-medium text-gray-700 mb-3">Tipo de notificación</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {filterOptions.map((option) => (
                 <button
                   key={option.key}
@@ -132,6 +130,7 @@ export default function NotificationFilters({
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );
