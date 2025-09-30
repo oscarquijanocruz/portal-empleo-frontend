@@ -28,14 +28,14 @@ export default function BuscarEmpleoPage() {
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
   //  Hook de explorar trabajos (mantiene su lógica separada)
-  const { explorer } =  useExplorer(); // Hacer algoritmo
+  // const { explorer } =  useExplorer(); // Hacer algoritmo
 
   return (
     <div className="h-full flex flex-col">
       {/* Resultados */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Lista de trabajos */}
-        <div className="space-y-4 p-2">
+        <div className="bg-gray-100 space-y-4 p-4">
           {/* Bar busqueda y filtros */}
           <div>
             {/* Barra de búsqueda */}
@@ -79,7 +79,7 @@ export default function BuscarEmpleoPage() {
               <select 
                 value={sortOrder}
                 onChange={(e) => handleSortChange(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="bg-white px-3 py-2 border border-gray-300 rounded-lg text-sm"
               >
                 <option value="recientes">Más recientes</option>
                 <option value="mejor-pagados">Mejor pagados</option>
@@ -114,6 +114,7 @@ export default function BuscarEmpleoPage() {
                   onJobSelect={handleJobSelect}
                   favorites={favorites}
                   onToggleFavorite={toggleFavorite}
+
                 />
               ) : (
                 <div className="text-center py-8 text-gray-500">

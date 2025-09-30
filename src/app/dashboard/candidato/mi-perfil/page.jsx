@@ -1,9 +1,9 @@
 'use client';
-
 import { useState } from 'react';
-import { User, Mail, Phone, MapPin, Briefcase, GraduationCap, Save, Upload, X, Globe, UserCog } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Briefcase, GraduationCap, Save, Upload, X, Globe, UserCog, File } from 'lucide-react';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
+import SeccionPersonal from '../mi-perfil/components/SeccionPersonal';
 
 export default function EditarPerfilPage() {
   // Estado para los datos del formulario
@@ -11,7 +11,7 @@ export default function EditarPerfilPage() {
     // Bloque 1 - Información personal
     nombre: 'Miguel',
     apellido: 'Blanco',
-    email: 'migue.blanco@email.com',
+    email: 'miguel.blanco@email.com',
     telefono: '+52 55 1234 5678',
     fechaNacimiento: '1995-05-15',
     genero: 'masculino',
@@ -27,9 +27,7 @@ export default function EditarPerfilPage() {
     institucion: 'Universidad Nacional Autónoma de México',
     carrera: 'Ingeniería en Sistemas Computacionales',
     fechaGraduacion: '2018-06-15',
-    //Resumen profesional
-    cargo: 'Desarrollador Frontend',
-    resumen: 'Desarrollador con 3 años de experiencia en React y Next.js, apasionado por crear interfaces de usuario intuitivas y eficientes.',
+    // Preferencias de empleado
     experiencia: '3 años',
     disponibilidad: 'inmediata',
     modalidadPreferida: 'remoto',
@@ -100,6 +98,7 @@ export default function EditarPerfilPage() {
   const [nuevaHabilidad, setNuevaHabilidad] = useState('');
   const [nuevoIdioma, setNuevoIdioma] = useState({ idioma: '', nivel: '' });
   const [fotoPerfil, setFotoPerfil] = useState(null);
+  const [curriculumVitae, setCurriculumVitae] = useState(null);
 
   // Manejar cambios en los inputs
   const handleInputChange = (e) => {
@@ -156,6 +155,14 @@ export default function EditarPerfilPage() {
     }
   };
 
+  // Manejar subida de CV
+  const handleCVChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCurriculumVitae(file);
+    }
+  };
+
   // Guardar perfil
   const guardarPerfil = (e) => {
     e.preventDefault();
@@ -169,6 +176,7 @@ export default function EditarPerfilPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Editar Perfil</h1>
         <p className="text-gray-600">Actualiza tu información personal y profesional</p>
+        {/* <SeccionPersonal /> */}
       </div>
 
       <form onSubmit={guardarPerfil} className="space-y-8">
@@ -639,7 +647,7 @@ export default function EditarPerfilPage() {
             <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
               {fotoPerfil ? (
                 <img
-                  src={URL.createObjectURL(fotoPerfil)}
+                  src={fotoPerfil}
                   alt="Foto de perfil"
                   className="w-24 h-24 rounded-full object-cover"
                 />
@@ -664,6 +672,42 @@ export default function EditarPerfilPage() {
                 Subir Foto
               </label>
               <p className="text-sm text-gray-500 mt-1">JPG, PNG o GIF (máx. 5MB)</p>
+            </div>
+          </div>
+        
+          {/* Curriculum Vitae */}
+          <h2 className="text-xl font-semibold text-gray-900 mb-6 mt-6">Currículum en PDF</h2>
+
+          <div className="flex items-center space-x-6">
+            
+            <div className="w-full h-24 bg-gray-200 rounded-4xl flex items-center justify-center">
+              {curriculumVitae ? (
+                <img
+                  src={curriculumVitae}
+                  alt="Curriculum Vitae de candidato"
+                  className="w-24 h-24 object-cover items-center justify-center align-center"
+                />
+              ) : (
+                <File className="w-12 h-12 text-gray-400" />
+              )}
+            </div>
+
+            <div>
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={handleCVChange}
+                className="hidden"
+                id="curriculum-vitae"
+              />
+              <label
+                htmlFor="curriculum-vitae"
+                className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+              >
+                <Upload className="w-4 h-4" />
+                Subir CV
+              </label>
+              <p className="text-sm text-gray-500 mt-1">Solo PDF (máx. 5MB)</p>
             </div>
           </div>
         </div>

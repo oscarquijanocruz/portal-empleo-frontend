@@ -1,4 +1,4 @@
-//logica para explorar
+//logica para populares
 
 'use client'
 import { useState } from 'react';

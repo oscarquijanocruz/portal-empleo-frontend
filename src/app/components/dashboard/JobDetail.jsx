@@ -1,6 +1,6 @@
 // Panel derecho con detalle
 'use client'
-import { Home, Search, Briefcase, Clock, MessageSquare } from 'lucide-react';
+import { MessageSquareText } from 'lucide-react';
 import { useState } from "react";
 import { mockJobs } from "../../data/mockData";
 
@@ -16,7 +16,7 @@ export default function JobDetail({ job }) {
     
     return(
         <div className='p-4 sticky top-0'>
-          <div className='space-y-4 overflow-hidden overflow-y-auto'>
+          <div className='space-y-4'>
               {/* Header */}
               <div className="justify-between mb-6">
                   <div className="grid justify-center text-center items-center place-items-center">
@@ -98,8 +98,8 @@ export default function JobDetail({ job }) {
                   </button>
                   {/* Chat Button */}
                   <div className="">
-                      <button className="w-12 h-12 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
-                          <MessageSquare size={20} />
+                      <button className="w-12 h-12 bg-indigo-300 text-blue-900 rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                          <MessageSquareText size={20} />
                       </button>
                   </div>
               </div>

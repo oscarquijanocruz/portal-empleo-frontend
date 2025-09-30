@@ -35,9 +35,9 @@ export default function JobCard({
                 <div
                   key={job.id}
                   onClick={() => handleJobClick(job)}
-                  className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                  className={`bg-white shadow-md p-4 border rounded-lg cursor-pointer transition-all ${
                     selectedJob?.id === job.id 
-                      ? 'border-blue-500 bg-blue-50 shadow-md' 
+                      ? 'border-gray-400 bg-blue-50 shadow-md' 
                       : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                   }`}
                 >

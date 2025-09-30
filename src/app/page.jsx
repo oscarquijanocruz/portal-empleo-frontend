@@ -1,6 +1,6 @@
 
 export default function Home() {
   return(
-    <h1>Portal de empleo Zavaleta</h1>
+    <h1>Portal de Mentory</h1>
   )
 }

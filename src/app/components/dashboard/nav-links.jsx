@@ -1,8 +1,16 @@
-'use client'
-import { Home, Search, Briefcase, Clock, MessageCircleMore, User2 } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+"use client";
+import {
+  Home,
+  Search,
+  Briefcase,
+  MessageCircleMore,
+  User2,
+  BellRing,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
+/*
 const menuItems = [
         { icon: Home, label: 'Inicio', active: false },
         { icon: Search, label: 'Buscar empleos', active: true },
@@ -10,29 +18,33 @@ const menuItems = [
         { icon: Clock, label: 'Mi actividad', active: false },
         { icon: MessageCircleMore, label: 'Mensajes', active: false },
     ];
+*/
 
 const links = [
-  { name: 'Inicio', 
-    href: '/dashboard/candidato', 
-    icon: Home },
+  { name: "Inicio", href: "/dashboard/candidato", icon: Home },
   {
-    name: 'Buscar empleos',
-    href: '/dashboard/candidato/buscar-empleos',
-    icon: Search},
-    
-  { name: 'Mis empleos', 
-    href: '/dashboard/candidato/mis-empleos' , 
-    icon: Briefcase },
-  {
-    name: 'Mi actividad',
-    href: '/dashboard/candidato/mi-actividad',
-    icon: Clock},
+    name: "Buscar empleos",
+    href: "/dashboard/candidato/buscar-empleos",
+    icon: Search,
+  },
 
-  { name: 'Mensajes', 
-    href: '/dashboard/candidato/mensajes',
-    icon: MessageCircleMore },
+  {
+    name: "Mis empleos",
+    href: "/dashboard/candidato/mis-empleos",
+    icon: Briefcase,
+  },
+  {
+    name: "Notificaciones",
+    href: "/dashboard/candidato/notificaciones",
+    icon: BellRing,
+  },
+
+  {
+    name: "Mensajes",
+    href: "/dashboard/candidato/mensajes",
+    icon: MessageCircleMore,
+  },
 ];
-
 
 export default function NavLinks() {
   const pathname = usePathname(); // Obtiene la ruta actual
@@ -44,8 +56,9 @@ export default function NavLinks() {
           <Link
             key={link.name}
             href={link.href}
-            className={`flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3
-            ${pathname === link.href ? ' bg-sky-100 text-blue-600' : ''}
+            className={`flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 
+              text-sm font-medium hover:bg-gray-200 hover:text-blue-800 md:flex-none md:justify-start md:p-2 md:px-3
+            ${pathname === link.href ? " bg-gray-200 text-blue-900" : ""}
             `}
           >
             <LinkIcon className="w-6" />

@@ -58,9 +58,9 @@ export default function SearchFilters({
   const hasActiveFilters = localSearchTerm || Object.values(localFilters).some(f => f);
 
   return (
-    <div className="p-4 bg-gray-50 shadow-md rounded-md mb-4">
+    <div className="p-4 rounded-md mb-4">
       {/* Barra de búsqueda */}
-      <div className="flex items-center bg-white border rounded-md px-4 py-3 mb-4">
+      <div className="flex items-center bg-white border rounded-md border-gray-200 px-4 py-3 mb-4 shadow-md">
         <Search size={22} className="text-gray-400" />
         <input
           type="text"

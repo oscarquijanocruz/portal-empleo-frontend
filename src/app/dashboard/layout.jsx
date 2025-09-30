@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }) {
             <div className="w-full flex-none md:w-64">
                 <SideBar />
             </div>
-            <div className="flex-grow p-6 overflow-y-auto"> {children} </div>
+            <div className="flex-grow p-2 overflow-y-auto"> {children} </div>
         </div>
   )
 }

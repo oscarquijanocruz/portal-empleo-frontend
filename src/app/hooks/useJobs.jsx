@@ -1,7 +1,7 @@
 //Logica de card jobs
 
 'use client'
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { mockJobs } from '../data/mockData';
 
 export const useJobs = (initialJobs = mockJobs) => {
