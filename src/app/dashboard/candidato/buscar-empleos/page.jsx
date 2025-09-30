@@ -1,7 +1,7 @@
 "use client";
 import SearchFilters from "../buscar-empleos/search-filters";
-import JobCard from "../../../components/dashboard/JobCard";
-import JobDetail from "../../../components/dashboard/JobDetail";
+import JobCard from "../../../components/dashboard-candidato/JobCard";
+import JobDetail from "../../../components/dashboard-candidato/JobDetail";
 import { mockJobs } from "../../../data/mockData";
 import { useFavorites } from "../../../hooks/useFavorites";
 import { useExplorer }  from "../../../hooks/useExplorer";

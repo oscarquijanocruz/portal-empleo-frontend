@@ -1,7 +1,7 @@
 "use client";
 import { Edit2Icon, Ellipsis, Search } from "lucide-react"
-import MessageCard from '../../../components/dashboard/MessageCard'
-import MessageDetail from '../../../components/dashboard/MessageDetail'
+import MessageCard from '../../../components/dashboard-candidato/MessageCard'
+import MessageDetail from '../../../components/dashboard-candidato/MessageDetail'
 import Input from "../../../components/ui/Input"
 import { useState } from "react"
 import { mockMessages } from "../../../data/mockDataMessages"

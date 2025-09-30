@@ -1,6 +1,6 @@
 "use client";
-import JobCard from "../../../components/dashboard/JobCard";
-import JobDetail from "../../../components/dashboard/JobDetail";
+import JobCard from "../../../components/dashboard-candidato/JobCard";
+import JobDetail from "../../../components/dashboard-candidato/JobDetail";
 import { useState } from "react";
 import { useJobs } from "../../../hooks/useJobs";
 import { useFavorites } from "../../../hooks/useFavorites";

@@ -10,8 +10,8 @@ import {
   Archive,
   Trash2
 } from "lucide-react";
-import NotificationCard from "../../../components/dashboard/NotificationCard";
-import NotificationFilters from "../../../components/dashboard/NotificationFilters";
+import NotificationCard from "../../../components/dashboard-candidato/NotificationCard";
+import NotificationFilters from "../../../components/dashboard-candidato/NotificationFilters";
 import { mockNotifications } from "../../../data/mockNotifications";
 import Button from "../../../components/ui/Button";
 
