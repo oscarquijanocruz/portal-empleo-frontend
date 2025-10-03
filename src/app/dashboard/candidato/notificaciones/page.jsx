@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import NotificationCard from "../../../components/dashboard-candidato/NotificationCard";
 import NotificationFilters from "../../../components/dashboard-candidato/NotificationFilters";
-import { mockNotifications } from "../../../data/mockNotifications";
+import { mockNotifications } from "@/app/data/mockNotifications";
 import Button from "../../../components/ui/Button";
 
 export default function NotificacionesPage() {
@@ -196,8 +196,8 @@ export default function NotificacionesPage() {
       </div>
 
       {/* Notifications List */}
-      <div className="flex">
-        <div className="overflow-hidden">
+      <div className="grid grid-cols-12 overflow-y-auto">
+        <div className="col-span-12 lg:col-span-9 min-w-0">
           {filteredNotifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-gray-500">
               <Bell size={48} className="mb-4 text-gray-300" />
@@ -232,9 +232,9 @@ export default function NotificacionesPage() {
               </div>
 
               {/* Notification Cards */}
-              <div className="divide-y divide-gray-200">
+              <div className="divide-y divide-gray-200">  
                 {filteredNotifications.map((notification) => (
-                  <div key={notification.id} className="relative">
+                  <div key={notification.id} className="relative border-r-1 ">  
                     <input
                       type="checkbox"
                       checked={selectedNotifications.includes(notification.id)}
@@ -256,7 +256,7 @@ export default function NotificacionesPage() {
           )}
         </div>
 
-        <div className="w-12 flex-1 flex flex-col">
+        <div className="col-span-12 lg:col-span-3 lg:sticky lg:top-6">
           {/* Filtros */}
           {/* Bulk Actions */}
           {selectedNotifications.length > 0 && (

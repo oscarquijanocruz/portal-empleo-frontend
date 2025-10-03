@@ -33,7 +33,7 @@ export default function BuscarEmpleoPage() {
   return (
     <div className="h-full flex flex-col">
       {/* Resultados */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="h-full grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Lista de trabajos */}
         <div className="bg-gray-100 space-y-4 p-4">
           {/* Bar busqueda y filtros */}
@@ -127,7 +127,7 @@ export default function BuscarEmpleoPage() {
         </div>
         
         {/* Panel de detalles */}
-        <div className="p-1 space-y-4">
+        <div className="p-1 space-y-4 overflow-hidden">
           <JobDetail 
             job={selectedJob} 
             isFavorite={isFavorite(selectedJob?.id)}

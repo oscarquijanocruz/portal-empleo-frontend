@@ -1,14 +1,16 @@
-"use client";
-import { useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
-import Input from "../../../components/ui/Input";
-import Button from "../../../components/ui/Button";
-import StepPersonalInfo from "../mi-perfil/information-form/StepPersonalInfo";
+import { useState } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import StepPersonalInfo from '../dashboard/candidato/mi-perfil/information-form/StepPersonalInfo';
+// import StepExperience from './StepExperience';
+// import StepEducation from './StepEducation';
+// import StepSkills from './StepSkills';
 
-export default function MiPerfilPage() {
+export default function useCandidateFormStore() {
   const [currentStep, setCurrentStep] = useState(1);
+  
+  // UN SOLO useForm con TODOS los campos
   const methods = useForm({
-    mode: "onChange",
+    mode: 'onChange',
     defaultValues: {
       // Step 1: Datos Personales
       nombre: '',
@@ -16,29 +18,22 @@ export default function MiPerfilPage() {
       email: '',
       telefono: '',
       fechaNacimiento: '',
-      genero: '',
-      estadoCivil: '',
-      // Ubicación
-      ciudad: '',
-      estado: '',
-      codigoPostal: '',
-
       // Step 2: Experiencia
-      empresaActual: "",
-      puestoActual: "",
-      añosExperiencia: "",
-      salarioDeseado: "",
+      empresaActual: '',
+      puestoActual: '',
+      añosExperiencia: '',
+      salarioDeseado: '',
       // Step 3: Educación
-      nivelEstudios: "",
-      institucion: "",
-      carrera: "",
-      añoGraduacion: "",
+      nivelEstudios: '',
+      institucion: '',
+      carrera: '',
+      añoGraduacion: '',
       // Step 4: Habilidades
       habilidadesTecnicas: [],
       idiomas: [],
-      disponibilidad: "",
-      comentarios: "",
-    },
+      disponibilidad: '',
+      comentarios: '',
+    }
   });
 
   const { handleSubmit, trigger, getValues } = methods;
@@ -46,28 +41,28 @@ export default function MiPerfilPage() {
   // Validar solo los campos del paso actual
   const handleNext = async () => {
     let fieldsToValidate = [];
-
+    
     switch (currentStep) {
       case 1:
-        fieldsToValidate = [ "nombre", "apellido", "email","telefono","fechaNacimiento",];
+        fieldsToValidate = ['nombre', 'apellido', 'email', 'telefono', 'fechaNacimiento'];
         break;
       case 2:
-        fieldsToValidate = ["empresaActual", "puestoActual", "añosExperiencia"];
+        fieldsToValidate = ['empresaActual', 'puestoActual', 'añosExperiencia'];
         break;
       case 3:
-        fieldsToValidate = ["nivelEstudios", "institucion", "carrera"];
+        fieldsToValidate = ['nivelEstudios', 'institucion', 'carrera'];
         break;
       case 4:
-        fieldsToValidate = ["habilidadesTecnicas", "disponibilidad"];
+        fieldsToValidate = ['habilidadesTecnicas', 'disponibilidad'];
         break;
     }
 
     const isValid = await trigger(fieldsToValidate);
-
+    
     if (isValid) {
-      // Aquí se guarda en el backend
+      // Aquí puedes guardar en el backend
       await saveStepData(currentStep, getValues());
-
+      
       if (currentStep < 4) {
         setCurrentStep(currentStep + 1);
       }
@@ -81,7 +76,7 @@ export default function MiPerfilPage() {
   };
 
   const onSubmit = async (data) => {
-    console.log("Formulario completo:", data);
+    console.log('Formulario completo:', data);
     // Aquí envías todo al backend
     await saveFinalData(data);
   };
@@ -96,11 +91,11 @@ export default function MiPerfilPage() {
       //   body: JSON.stringify({ step, data })
       // });
       console.log(`Guardando paso ${step}:`, data);
-
+      
       // También puedes guardar en localStorage
-      localStorage.setItem("candidateFormDraft", JSON.stringify(data));
+      localStorage.setItem('candidateFormDraft', JSON.stringify(data));
     } catch (error) {
-      console.error("Error guardando:", error);
+      console.error('Error guardando:', error);
     }
   };
 
@@ -111,21 +106,15 @@ export default function MiPerfilPage() {
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(data)
       // });
-      console.log("Datos finales guardados:", data);
-      localStorage.removeItem("candidateFormDraft");
+      console.log('Datos finales guardados:', data);
+      localStorage.removeItem('candidateFormDraft');
     } catch (error) {
-      console.error("Error guardando datos finales:", error);
+      console.error('Error guardando datos finales:', error);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Editar Perfil</h1>
-        <p className="text-gray-600">
-          Actualiza tu información personal y profesional
-        </p>
-      </div>
+    <div className="max-w-3xl mx-auto p-6">
       {/* Barra de progreso */}
       <div className="mb-8">
         <div className="flex justify-between mb-2">
@@ -133,7 +122,7 @@ export default function MiPerfilPage() {
             <div
               key={step}
               className={`w-1/4 h-2 mx-1 rounded ${
-                step <= currentStep ? "bg-blue-500" : "bg-gray-200"
+                step <= currentStep ? 'bg-blue-500' : 'bg-gray-200'
               }`}
             />
           ))}

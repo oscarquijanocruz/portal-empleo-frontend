@@ -58,32 +58,6 @@ export default function NotificationCard({
     }
   };
 
-  // const getPriorityColor = (priority) => {
-  //   switch (priority) {
-  //     case "high":
-  //       return "border-l-red-500 bg-red-50";
-  //     case "medium":
-  //       return "border-l-yellow-500 bg-yellow-50";
-  //     case "low":
-  //       return "border-l-gray-400 bg-gray-50";
-  //     default:
-  //       return "border-l-gray-300 bg-white";
-  //   }
-  // };
-
-  // const getPriorityDot = (priority) => {
-  //   switch (priority) {
-  //     case "high":
-  //       return "bg-red-500";
-  //     case "medium":
-  //       return "bg-yellow-500";
-  //     case "low":
-  //       return "bg-gray-400";
-  //     default:
-  //       return "bg-gray-300";
-  //   }
-  // };
-
   const handleMarkAsRead = (e) => {
     e.stopPropagation();
     onMarkAsRead(notification.id);
@@ -106,9 +80,9 @@ export default function NotificationCard({
   return (
     <div
       className={`
-        relative p-4 cursor-pointer transition-all duration-200
+        relative p-4 cursor-pointer transition-all
         ${!notification.isRead ? 'shadow-sm' : ''}
-        hover:shadow-md hover:scale-[1.01]
+        hover:shadow-md
         ${isHovered ? 'shadow-md' : ''}
       `}
       onClick={handleCardClick}
