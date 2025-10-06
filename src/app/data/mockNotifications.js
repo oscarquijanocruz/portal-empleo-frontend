@@ -3,7 +3,7 @@ export const mockNotifications = [
     id: 1,
     type: "job_application",
     title: "Nueva aplicación de trabajo",
-    message: "María González ha aplicado para la posición de Diseñadora UX/UI",
+    message: "Aplicaste para la posición de Cocinero",
     timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 horas atrás
     isRead: false,
     priority: "high",
@@ -51,8 +51,8 @@ export const mockNotifications = [
   {
     id: 4,
     type: "job_application",
-    title: "Aplicación revisada",
-    message: "Carlos Mendoza ha actualizado su aplicación para Desarrollador Full Stack",
+    title: "Aplicación en revisión",
+    message: "Se ha actualizado su aplicación para mesero",
     timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 días atrás
     isRead: true,
     priority: "medium",
@@ -101,8 +101,8 @@ export const mockNotifications = [
   {
     id: 7,
     type: "job_application",
-    title: "Aplicación urgente",
-    message: "Luis Adan Sánchez ha aplicado para una posición de alta prioridad",
+    title: "Aplicación aceptada",
+    message: "Se ha aceptado tu aplicaion para Desarrollador Full Stack",
     timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000), // 6 días atrás
     isRead: false,
     priority: "high",
@@ -112,9 +112,10 @@ export const mockNotifications = [
       candidateId: "luis-adan-sanchez-789"
     },
     metadata: {
-      jobTitle: "Desarrollador Frontend Senior",
+      jobTitle: "Desarrollador Full Stack",
       company: "StartupTech",
-      candidateName: "Luis Adan Sánchez Hernández"
+      isFeatured: true,
+      //candidateName: "Luis Adan Sánchez Hernández"
     }
   },
   {
@@ -150,21 +151,20 @@ export const mockNotifications = [
   {
     id: 10,
     type: "job_application",
-    title: "Aplicación destacada",
-    message: "Federico Jasso ha aplicado con un perfil destacado para Ingeniero de Software",
+    title: "Aplicación rechazada",
+    message: "Se ha rechazado tu aplicación para Ingeniero de Software",
     timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 días atrás
     isRead: true,
     priority: "high",
     action: {
       type: "view_application",
       jobId: "software-engineer-004",
-      candidateId: "federico-jasso-101"
+      // candidateId: "federico-jasso-101"
     },
     metadata: {
       jobTitle: "Ingeniero de Software",
       company: "Tech Startup",
-      candidateName: "Federico Jasso",
-      isFeatured: true
+      // candidateName: "Federico Jasso",
     }
   }
 ];

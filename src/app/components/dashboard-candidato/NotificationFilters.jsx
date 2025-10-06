@@ -64,11 +64,11 @@ export default function NotificationFilters({
   const hasActiveFilters = filters.type !== "all";
 
   return (
-    <div className="bg-white border border-gray-200 w-full md:w-72 shrink-0">
-      <Accordion type="single" collapsible className="w-full bg-gray-50">
+    <div className="items-center align-center w-full md:w-72 shrink-0">
+      <Accordion type="single" collapsible className="w-full bg-gray-100">
         <AccordionItem value="item-1">
           <AccordionTrigger className="p-3 pl-3 gap-2 text-left justify-between">
-            <span className="font-medium inline-flex items-center gap-2">
+            <span className="font-semibold inline-flex items-center gap-2">
               <Filter size={18} />
               Filtros</span>
           </AccordionTrigger>

@@ -256,7 +256,7 @@ export default function NotificacionesPage() {
           )}
         </div>
 
-        <div className="col-span-12 lg:col-span-3 lg:sticky lg:top-6">
+        <div className="col-span-12 flex justify-center lg:col-span-3 lg:sticky lg:top-6">
           {/* Filtros */}
           {/* Bulk Actions */}
           {selectedNotifications.length > 0 && (

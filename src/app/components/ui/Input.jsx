@@ -54,7 +54,7 @@ export default function Input({
           sizeClass,
           isError
             ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-            : "border-gray-300 focus:border-blue-500 focus:ring-blue-500",
+            : "border-gray-300 focus:border-blue-900 focus:ring-blue-900",
           disabled &&
             "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-500",
           className

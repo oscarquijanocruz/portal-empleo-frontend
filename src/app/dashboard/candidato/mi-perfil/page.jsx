@@ -1,43 +1,98 @@
 "use client";
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import Input from "../../../components/ui/Input";
 import Button from "../../../components/ui/Button";
 import StepPersonalInfo from "../mi-perfil/information-form/StepPersonalInfo";
+import StepProfesional from "../mi-perfil/information-form/StepProfesional";
+import StepExperience from "../mi-perfil/information-form/StepExperience";
+import { CircleCheck, CircleChevronLeft, CircleChevronRight } from "lucide-react";
+// import { useCandidateForm } from '../../../hooks/useCandidateForm';
 
 export default function MiPerfilPage() {
   const [currentStep, setCurrentStep] = useState(1);
-  const methods = useForm({
+  // const [isLoading, setIsLoading] = useState(false);
+
+  // hook de useCandidateForm
+  // const { 
+  //   saveStepData, 
+  //   saveFinalData, 
+  //   loadCandidateData,
+  //   saveDraft,
+  //   loadDraft,
+  //   clearDraft 
+  // } = useCandidateForm();
+
+  const methods= useForm({
     mode: "onChange",
     defaultValues: {
       // Step 1: Datos Personales
-      nombre: '',
-      apellido: '',
-      email: '',
-      telefono: '',
-      fechaNacimiento: '',
-      genero: '',
-      estadoCivil: '',
+      nombre: "Oscar Omar",
+      apellido: "Quijano",
+      email: "oscar.quijano@gmail.com",
+      telefono: "+52 55 1234 5678",
+      fechaNacimiento: "1995-05-15",
+      genero: "",
+      estadoCivil: "",
+      rol: "candidate",
+      createdAt: new Date(),
+      updatedAt: new Date(),
       // Ubicación
-      ciudad: '',
-      estado: '',
-      codigoPostal: '',
+      ciudad: "",
+      estado: "",
+      codigoPostal: "",
 
       // Step 2: Experiencia
-      empresaActual: "",
-      puestoActual: "",
-      añosExperiencia: "",
-      salarioDeseado: "",
-      // Step 3: Educación
-      nivelEstudios: "",
-      institucion: "",
-      carrera: "",
-      añoGraduacion: "",
-      // Step 4: Habilidades
-      habilidadesTecnicas: [],
-      idiomas: [],
-      disponibilidad: "",
-      comentarios: "",
+      nivelEducativo: "licenciatura",
+      institucion: "Universidad Nacional Autónoma de México",
+      carrera: "Ingeniería en Sistemas Computacionales",
+      fechaGraduacion: "2018-06-15",
+      habilidades: ["React", "JavaScript", "HTML", "CSS", "Node.js"],
+      idiomas: [
+        { idioma: "Español", nivel: "Nativo" },
+        { idioma: "Inglés", nivel: "Intermedio" },
+      ],
+      // Preferencias de empleo
+      disponibilidad: "inmediata",
+      modalidadPreferida: "remoto",
+      tipoPuesto: [
+        "Tecnología / Sistemas / Programación",
+        "Administración / Oficina",
+        "Ventas / Comercial",
+        "Atención a clientes / Call center",
+        "Contabilidad / Finanzas",
+        "Recursos humanos",
+        "Marketing / Publicidad / Comunicación",
+        "Logística / Transporte / Almacén",
+        "Ingeniería",
+        "Manufactura / Producción / Operarios",
+        "Salud / Medicina / Farmacia",
+        "Educación / Docencia",
+        "Diseño / Arte / Multimedia",
+        "Legal / Jurídico",
+        "Construcción / Arquitectura",
+        "Hotelería / Turismo / Restaurantes",
+        "Otros / Generales",
+      ],
+      tipoJornada: [
+        "Tiempo completo",
+        "Medio tiempo",
+        "Prácticas profesionales / Becario",
+        "Temporal / Proyecto",
+      ],
+
+      // Step 3: Experiencia Laboral
+      nombreEmpresa: "Mentory",
+      cargo: "Gerente",
+      descripcionAct:
+        "Desarrollador con 3 años de experiencia en React y Next.js, apasionado por crear interfaces de usuario intuitivas y eficientes.",
+      periodo: [
+        {
+          anioEntrada: "2024",
+          mesEntrada: ["Enero", "Febrero", "Marzo", "Abril"],
+          anioSalida: "2025",
+          mesSalida: ["Enero", "Febrero", "Marzo", "Abril"],
+        },
+      ],
     },
   });
 
@@ -49,7 +104,18 @@ export default function MiPerfilPage() {
 
     switch (currentStep) {
       case 1:
-        fieldsToValidate = [ "nombre", "apellido", "email","telefono","fechaNacimiento",];
+        fieldsToValidate = [
+          "nombre",
+          "apellido",
+          "email",
+          "telefono",
+          "fechaNacimiento",
+          "genero",
+          "estadoCivil",
+          "ciudad",
+          "Estado",
+          "codigPostal"
+        ];
         break;
       case 2:
         fieldsToValidate = ["empresaActual", "puestoActual", "añosExperiencia"];
@@ -128,13 +194,20 @@ export default function MiPerfilPage() {
       </div>
       {/* Barra de progreso */}
       <div className="mb-8">
-        <div className="flex justify-between mb-2">
+        <div className="flex justify-between mb-2 items-center align-center">
+          <CircleCheck
+            size={28}
+            className="text-blue-900 transition-colors"
+            // fill={favorites.has(job.id) ? 'currentColor' : 'none'}
+          />
           {[1, 2, 3, 4].map((step) => (
             <div
               key={step}
-              className={`w-1/4 h-2 mx-1 rounded ${
-                step <= currentStep ? "bg-blue-500" : "bg-gray-200"
-              }`}
+              className={`w-1/4 h-1 mx-1 rounded ${
+                step <= currentStep
+                  ? "bg-blue-900"
+                  : "bg-gray-200"
+              } transition-colors duration-500`}
             />
           ))}
         </div>
@@ -147,37 +220,34 @@ export default function MiPerfilPage() {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Renderizar el paso actual */}
-          {currentStep === 1 && <StepPersonalInfo />}
-          {currentStep === 2 && <StepExperience />}
-          {currentStep === 3 && <StepEducation />}
-          {currentStep === 4 && <StepSkills />}
+          {currentStep === 1 && <StepPersonalInfo methods={methods} />}
+          {currentStep === 2 && <StepProfesional methods={methods} />}
+          {currentStep === 3 && <StepExperience />}
+          {currentStep === 4 && <StepDoc />}
 
           {/* Botones de navegación */}
           <div className="flex justify-between mt-8">
-            <button
+            <Button
               type="button"
+              variant={currentStep === 1 ? "disabled" : "secondary"}
               onClick={handleBack}
-              disabled={currentStep === 1}
-              className="px-6 py-2 border border-gray-300 rounded disabled:opacity-50 hover:bg-gray-50"
             >
+              <CircleChevronLeft className="w-4 h-4 mr-2"/>
               Atrás
-            </button>
+            </Button>
 
             {currentStep < 4 ? (
-              <button
-                type="button"
-                onClick={handleNext}
-                className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
+              <Button type="button" variant={"primary"} onClick={handleNext}>
                 Siguiente
-              </button>
+                <CircleChevronRight className="w-4 h-4 ml-2"/>
+              </Button>
             ) : (
-              <button
+              <Button
                 type="submit"
                 className="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600"
               >
                 Finalizar
-              </button>
+              </Button>
             )}
           </div>
         </form>

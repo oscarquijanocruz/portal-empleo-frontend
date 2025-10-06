@@ -6,6 +6,7 @@ import { mockJobs } from "../../../data/mockData";
 import { useFavorites } from "../../../hooks/useFavorites";
 import { useExplorer }  from "../../../hooks/useExplorer";
 import { useJobs } from "../../../hooks/useJobs";
+import Button from "@/app/components/ui/Button";
 
 export default function BuscarEmpleoPage() {
   // ✅ Hook de trabajos con toda la lógica centralizada
@@ -50,16 +51,17 @@ export default function BuscarEmpleoPage() {
           {/* Tabs y controles */}
           <div className="flex items-center justify-between mt-4 mb-4">
             <div className="flex space-x-6">
-              <button
+              <Button
                 onClick={() => handleTabChange("para-ti")}
+                variant={"text_tab"} 
                 className={`font-medium pb-2 transition-colors ${
                   activeTab === "para-ti"
-                    ? "text-blue-600 border-b-2 border-blue-600"
+                    ? "active:text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-500 hover:text-gray-700"
                 }`}
               >
                 Para ti ({filteredJobs.length})
-              </button>
+              </Button>
 
               {/* Tab de Explorar */}
               <button
@@ -69,6 +71,7 @@ export default function BuscarEmpleoPage() {
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-500 hover:text-gray-700"
                 }`}
+                // variant="text_tab"
               >
                 Explorar ({filteredJobs.length})
               </button>
@@ -114,7 +117,6 @@ export default function BuscarEmpleoPage() {
                   onJobSelect={handleJobSelect}
                   favorites={favorites}
                   onToggleFavorite={toggleFavorite}
-
                 />
               ) : (
                 <div className="text-center py-8 text-gray-500">

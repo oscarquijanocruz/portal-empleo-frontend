@@ -28,8 +28,7 @@ export default function MiPerfilPage() {
     institucion: 'Universidad Nacional Autónoma de México',
     carrera: 'Ingeniería en Sistemas Computacionales',
     fechaGraduacion: '2018-06-15',
-    // Preferencias de empleado
-    experiencia: '3 años',
+    // Preferencias de empleo
     disponibilidad: 'inmediata',
     modalidadPreferida: 'remoto',
     tipoPuesto: [
@@ -84,8 +83,8 @@ export default function MiPerfilPage() {
         "Abril",
         ], 
       },
-
     ],
+    experienciaLaboral: '3 años',
 
     //Bloque - Documentación 
 
