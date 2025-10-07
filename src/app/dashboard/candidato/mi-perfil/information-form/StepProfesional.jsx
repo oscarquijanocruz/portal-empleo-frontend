@@ -8,14 +8,14 @@ import {
   Globe,
   X,
 } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import MiPerfilPage from "../../../candidato/mi-perfil/page";
 
 export default function StepProfesional({ methods = MiPerfilPage() }) {
   const {
     register,
     formState: { errors },
-  } = useForm();
+  } = useFormContext();
   const [nuevaHabilidad, setNuevaHabilidad] = useState("");
   const [nuevoIdioma, setNuevoIdioma] = useState({ idioma: "", nivel: "" });
 
@@ -278,23 +278,9 @@ export default function StepProfesional({ methods = MiPerfilPage() }) {
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="categorias">Todas las categorías</option>
-                <option value="tecnologia">Tecnología / Sistemas</option>
-                <option value="administracion">Administración / Oficina</option>
-                <option value="ventas">Ventas / Comercial</option>
-                <option value="atencion">Atención a clientes</option>
-                {/* <option value="finanzas">Contabilidad / Finanzas</option>
-                    <option value="rh">Recursos humanos</option>
-                    <option value="marketing">Marketing / Publicidad</option>
-                    <option value="logistica">Logística / Transporte</option>
-                    <option value="ingenieria">Ingeniería</option>
-                    <option value="manufactura">Manufactura / Producción</option>
-                    <option value="salud">Salud / Medicina</option>
-                    <option value="educacion">Educación / Docencia</option>
-                    <option value="diseno">Diseño / Arte</option>
-                    <option value="legal">Legal / Jurídico</option>
-                    <option value="construccion">Construcción / Arquitectura</option>
-                    <option value="turismo">Hotelería / Turismo</option>
-                    <option value="otros">Otros</option> */}
+                <option value="operativo">Operativo</option>
+                <option value="ejecutivo">Ejecutivo</option>
+                <option value="supervisor">Supervisor</option>  
               </select>
             </div>
             <div>
@@ -305,12 +291,11 @@ export default function StepProfesional({ methods = MiPerfilPage() }) {
                 name="tipoJornada"
                 className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="presencial">Tiempo completo</option>
-                <option value="remoto">Medio tiempo</option>
-                <option value="hibrido">
-                  Prácticas profesionales / Becario
-                </option>
-                <option value="remoto">Temporal / Proyecto</option>
+                <option value="tiempoCompleto">Tiempo completo</option>
+                <option value="medioTiempo">Medio tiempo</option>
+                <option value="practicasProfesionales">Prácticas profesionales / Becario</option>
+                <option value="temporalProyecto">Temporal / Proyecto</option>
+                <option value="finesDeSemana">Fines de semana</option>
               </select>
             </div>
           </div>

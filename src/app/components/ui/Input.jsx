@@ -1,4 +1,5 @@
 // Barra de búsqueda
+import { TriangleAlert } from "lucide-react";
 import { useId } from "react";
 
 function cn(...classes) {
@@ -54,7 +55,7 @@ export default function Input({
           sizeClass,
           isError
             ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-            : "border-gray-300 focus:border-blue-900 focus:ring-blue-900",
+            : "border-gray-300 focus:border-blue-900 focus:ring-blue-900 transition-colors",
           disabled &&
             "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-500",
           className
@@ -62,15 +63,18 @@ export default function Input({
         {...props}
       />
       {errorText || helperContent ? (
-        <p
-          id={messageId}
-          className={cn(
-            "mt-1 text-sm",
-            errorText ? "text-red-600" : "text-gray-500"
-          )}
-        >
-          {errorText ?? helperContent}
-        </p>
+        <div className="flex items-center gap-2 mt-1">
+          {errorText && <TriangleAlert className="w-4 h-4 text-red-600" />}
+          <p
+            id={messageId}
+            className={cn(
+              "text-sm",
+              errorText ? "text-red-600" : "text-gray-500"
+            )}
+          >
+            {errorText ?? helperContent}
+          </p>
+        </div>
       ) : null}
     </div>
   );

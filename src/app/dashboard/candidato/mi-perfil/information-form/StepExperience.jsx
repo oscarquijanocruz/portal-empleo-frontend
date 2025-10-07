@@ -40,7 +40,7 @@ export default function StepProfesional({ methods = MiPerfilPage() }) {
           <Input
             type="text"
             name="nombreEmpresa"
-            placeholder="Tu título o puesto actual"
+            placeholder="Nombre de la Empresa"
           />
         </div>
 

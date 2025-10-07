@@ -9,7 +9,7 @@ function cn(...classes) {
 const variantStyles = {
   default: "border-gray-300 bg-white text-gray-900",
   active: "border-blue-900 bg-white text-gray-900",
-  focused: "border-blue-900 bg-white text-gray-900 ring-2 ring-blue-900 ring-offset-1",
+  focused: "border-blue-300 bg-white text-gray-900 ring-2 ring-blue-900 ring-offset-1",
   disabled: "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed",
   error: "border-red-500 bg-white text-gray-900",
   success: "border-green-500 bg-white text-gray-900",
@@ -23,13 +23,13 @@ const sizeStyles = {
 
 const optionVariantStyles = {
   checkbox: {
-    default: "flex items-center gap-3 p-2 rounded-md hover:bg-gray-50",
-    selected: "flex items-center gap-3 p-2 rounded-md bg-blue-50 border border-blue-200",
-    disabled: "flex items-center gap-3 p-2 rounded-md opacity-50 cursor-not-allowed"
+    default: "flex items-center gap-3 p-2 hover:bg-gray-100 hover:text-blue-900",
+    selected: "flex items-center gap-3 p-2 bg-blue-50 border border-blue-200",
+    disabled: "flex items-center gap-3 p-2 opacity-50 cursor-not-allowed"
   },
   button: {
-    default: "px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 hover:border-blue-900",
-    selected: "px-3 py-2 rounded-md border border-blue-200 bg-blue-50 text-gray-900",
+    default: "px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 hover:bg-gray-100 hover:text-blue-900",
+    selected: "px-3 py-2 border border-blue-200 bg-blue-50 text-gray-900",
     disabled: "px-3 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
   }
 };
@@ -194,7 +194,7 @@ export default function Select({
           <div className={cn(
             "w-4 h-4 rounded border-2 flex items-center justify-center",
             isSelected 
-              ? "bg-purple-500 border-purple-500" 
+              ? "bg-purple-800 border-purple-800" 
               : "border-gray-300 bg-white"
           )}>
             {isSelected && <Check className="w-3 h-3 text-white" />}
@@ -236,7 +236,7 @@ export default function Select({
         className={cn(
           "flex items-center gap-3 p-2 rounded-md hover:bg-gray-50 cursor-pointer",
           isSelected && "bg-blue-50",
-          isFocused && "ring-1 ring-blue-900"
+          isFocused && "ring-0"
         )}
         onClick={() => handleOptionSelect(option)}
         onMouseEnter={() => setFocusedIndex(index)}
@@ -244,13 +244,13 @@ export default function Select({
         <div className={cn(
           "w-4 h-4 rounded border-2 flex items-center justify-center",
           isSelected 
-            ? "bg-purple-500 border-purple-500" 
+            ? "bg-purple-800 border-purple-800" 
             : "border-gray-300 bg-white"
         )}>
           {isSelected && <Check className="w-3 h-3 text-white" />}
         </div>
         <span className="text-sm text-gray-900">
-          {isSelected ? "Selected" : option.label}
+          {isSelected ? `${option.label}` : option.label}
         </span>
       </div>
     );

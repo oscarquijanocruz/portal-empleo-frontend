@@ -2,11 +2,11 @@ import Button from "../../../../components/ui/Button";
 import Input from "../../../../components/ui/Input";
 import Select from "../../../../components/ui/Select";
 import { User, Mail, Phone, MapPin, Save } from "lucide-react";
-import { useForm, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import MiPerfilPage from "../../../candidato/mi-perfil/page";
 
 export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, formState: { errors } } = useFormContext();
 
   const onSubmit = (data) => {
     console.log("Datos enviados:", data);
@@ -40,17 +40,17 @@ export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
             </label>
             <Input
               type="text"
-              // value={methods.getValues().nombre}
-              {...register("nombre", {
-                required: true,
-                maxLength: 20,
-                pattern: /^[A-Za-z]+$/i,
-              })}
+              error={errors.nombre?.message}
               placeholder="Tu nombre"
+              {...register("nombre", {
+                required: "Nombre requerido",
+                maxLength: { value: 50, message: "Máximo 50 caracteres" },
+                pattern: {
+                  value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+$/,
+                  message: "Solo letras y espacios",
+                },
+              })}
             />
-            {errors.nombre && (
-              <p className="text-red-500 text-sm">{errors.nombre.message}</p>
-            )}
           </div>
 
           <div>
@@ -59,16 +59,17 @@ export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
             </label>
             <Input
               type="text"
-              // value={methods.getValues().apellido}
-              {...register("nivelEducativo", {
-                required: [true, "Apellido requerido"],
-                maxLength: 20,
+              error={errors.apellido?.message}
+              {...register("apellido", {
+                required: "Apellido requerido",
+                maxLength: { value: 50, message: "Máximo 50 caracteres" },
+                pattern: {
+                  value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+$/,
+                  message: "Solo letras y espacios",
+                },
               })}
               placeholder="Tu apellido"
             />
-             {errors.apellido && (
-              <p className="text-red-500 text-sm">{errors.apellido.message}</p>
-            )}
           </div>
 
           <div>
@@ -79,19 +80,17 @@ export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
                 type="email"
+                error={errors.email?.message}
                 {...register("email", {
-                  required: [true, "Correo requerido"],
-                   pattern: {
+                  required: "Correo requerido",
+                  pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'Email inválido'
-                  }
+                    message: "Email inválido",
+                  },
                 })}
                 placeholder="tu@email.com"
                 className="pl-10"
               />
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email.message}</p>
-              )}
             </div>
           </div>
 
@@ -103,9 +102,13 @@ export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
               <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
                 type="tel"
+                error={errors.telefono?.message}
                 {...register("telefono", {
-                  required: [true, "Telefono requerido"],
-                  pattern: /^[0-9]+$/i,
+                  required: "Telefono requerido",
+                  pattern: {
+                    value: /^[0-9]+$/i,
+                    message: "Telefono no inválido",
+                  },
                 })}
                 placeholder="+52 55 1234 5678"
                 className="pl-10"
@@ -119,7 +122,7 @@ export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
             </label>
             <Input
               type="date"
-              // value={methods.getValues().fechaNacimiento}
+              error={errors.fechaNacimiento?.message}
               {...register("fechaNacimiento", {
                 required: "Fecha de nacimiento requerida",
               })}
@@ -130,33 +133,51 @@ export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Género
             </label>
-            <Select
+            <Controller
               name="genero"
-              // className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="masculino">Masculino</option>
-              <option value="femenino">Femenino</option>
-              <option value="otro">Otro</option>
-              <option value="prefiero-no-decir">Prefiero no decir</option>
-            </Select>
+              // control={control}
+              rules={{ required: "Selecciona un género" }}
+              render={({ field }) => (
+                <Select
+                  placeholder="Selecciona un género"
+                  options={[
+                    { label: "Masculino", value: "masculino" },
+                    { label: "Femenino", value: "femenino" },
+                    { label: "Otro", value: "otro" },
+                    { label: "Prefiero no decir", value: "prefiero-no-decir" },
+                  ]}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.genero?.message}
+                />
+              )}
+            />
           </div>
 
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Estado Civil
             </label>
-            <select
+            <Controller
               name="estadoCivil"
-              // value={methods.getValues().estadoCivil}
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Selecciona</option>
-              <option value="soltero">Soltero(a)</option>
-              <option value="casado">Casado(a)</option>
-              <option value="divorciado">Divorciado(a)</option>
-              <option value="viudo">Viudo(a)</option>
-              <option value="union-libre">Unión Libre</option>
-            </select>
+              // control={control}
+              rules={{ required: "Estado Civil requerido" }}
+              render={({ field }) => (
+                <Select
+                  placeholder="Selecciona un Estado Civil"
+                  options={[
+                    { label: "Soltero(a)", value: "soltero" },
+                    { label: "Casado(a)", value: "casado" },
+                    { label: "Divorciado(a)", value: "divorciado" },
+                    { label: "Viudo(a)", value: "viudo" },
+                    { label: "Unión Libre", value: "union-libre" },
+                  ]}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.estadoCivil?.message}
+                />
+              )}
+            />
           </div>
         </div>
         <div>
@@ -172,7 +193,14 @@ export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
               </label>
               <Input
                 type="text"
-                {...register("ciudad", { required: "Ciudad requerida" })}
+                error={errors.ciudad?.message}
+                {...register("ciudad", {
+                  required: "Ciudad requerida",
+                  pattern: {
+                    value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+$/,
+                    message: "Solo letras y espacios",
+                  },
+                })}
                 placeholder="Ciudad"
               />
             </div>
@@ -183,7 +211,8 @@ export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
               </label>
               <Input
                 type="text"
-                {...register("estado", { required: true, maxLength: 20 })}
+                error={errors.estado?.message}
+                {...register("estado", { required: "Estado requerido" })}
                 placeholder="Estado"
               />
             </div>
@@ -194,8 +223,17 @@ export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
               </label>
               <Input
                 type="number"
+                error={errors.codigoPostal?.message}
                 {...register("codigoPostal", {
                   required: "Código postal requerido",
+                  pattern: {
+                    value: /^[0-9]+$/,
+                    message: "Código postal no válido",
+                  },
+                  maxLength: {
+                    value: 5,
+                    message: "Código postal no válido",
+                  },
                 })}
                 placeholder="00000"
               />

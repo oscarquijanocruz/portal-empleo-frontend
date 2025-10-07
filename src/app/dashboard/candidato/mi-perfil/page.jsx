@@ -29,7 +29,7 @@ export default function MiPerfilPage() {
       nombre: "Oscar Omar",
       apellido: "Quijano",
       email: "oscar.quijano@gmail.com",
-      telefono: "+52 55 1234 5678",
+      telefono: "55 1234 5678",
       fechaNacimiento: "1995-05-15",
       genero: "",
       estadoCivil: "",
@@ -39,7 +39,7 @@ export default function MiPerfilPage() {
       // Ubicación
       ciudad: "",
       estado: "",
-      codigoPostal: "",
+      codigoPostal: "24070",
 
       // Step 2: Experiencia
       nivelEducativo: "licenciatura",
@@ -55,29 +55,16 @@ export default function MiPerfilPage() {
       disponibilidad: "inmediata",
       modalidadPreferida: "remoto",
       tipoPuesto: [
-        "Tecnología / Sistemas / Programación",
-        "Administración / Oficina",
-        "Ventas / Comercial",
-        "Atención a clientes / Call center",
-        "Contabilidad / Finanzas",
-        "Recursos humanos",
-        "Marketing / Publicidad / Comunicación",
-        "Logística / Transporte / Almacén",
-        "Ingeniería",
-        "Manufactura / Producción / Operarios",
-        "Salud / Medicina / Farmacia",
-        "Educación / Docencia",
-        "Diseño / Arte / Multimedia",
-        "Legal / Jurídico",
-        "Construcción / Arquitectura",
-        "Hotelería / Turismo / Restaurantes",
-        "Otros / Generales",
+        "Operativo",
+        "Ejecutivo",
+        "Supervisor",
       ],
       tipoJornada: [
         "Tiempo completo",
         "Medio tiempo",
         "Prácticas profesionales / Becario",
         "Temporal / Proyecto",
+        "Fines de semana",
       ],
 
       // Step 3: Experiencia Laboral
@@ -113,12 +100,23 @@ export default function MiPerfilPage() {
           "genero",
           "estadoCivil",
           "ciudad",
-          "Estado",
-          "codigPostal"
+          "estado",
+          "codigPostal",
         ];
         break;
       case 2:
-        fieldsToValidate = ["empresaActual", "puestoActual", "añosExperiencia"];
+        fieldsToValidate = [
+          "nivelEducativo",
+          "institucion",
+          "carrera",
+          "fechaGraduacion",
+          "habilidades",
+          "idiomas",
+          "disponibilidad",
+          "modalidadPreferida",
+          "tipoPuesto",
+          "tipoJornada",
+        ];
         break;
       case 3:
         fieldsToValidate = ["nivelEstudios", "institucion", "carrera"];
@@ -220,9 +218,9 @@ export default function MiPerfilPage() {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Renderizar el paso actual */}
-          {currentStep === 1 && <StepPersonalInfo methods={methods} />}
+          {currentStep === 1 && <StepPersonalInfo methods={methods}  />}
           {currentStep === 2 && <StepProfesional methods={methods} />}
-          {currentStep === 3 && <StepExperience />}
+          {currentStep === 3 && <StepExperience methods={methods} />}
           {currentStep === 4 && <StepDoc />}
 
           {/* Botones de navegación */}
