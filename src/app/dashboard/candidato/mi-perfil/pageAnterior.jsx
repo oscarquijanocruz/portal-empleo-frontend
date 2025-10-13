@@ -686,11 +686,13 @@ export default function MiPerfilPage() {
             
             <div className="w-full h-24 bg-gray-200 rounded-4xl flex items-center justify-center">
               {curriculumVitae ? (
-                <img
-                  src={curriculumVitae}
-                  alt="Curriculum Vitae de candidato"
-                  className="w-24 h-24 object-cover items-center justify-center align-center"
-                />
+                <a href={curriculumVitae} download>
+                  <img
+                    src={curriculumVitae}
+                    alt="Curriculum Vitae de candidato"
+                    className="w-24 h-24 object-cover items-center justify-center align-center"
+                  />
+                </a>
               ) : (
                 <File className="w-12 h-12 text-gray-400" />
               )}
@@ -725,7 +727,7 @@ export default function MiPerfilPage() {
               <input
                 type="checkbox"
                 name="notificaciones"
-                checked={formData.notificaciones}
+                checked={methods.notificaciones}
                 onChange={handleInputChange}
                 className="mr-3"
               />

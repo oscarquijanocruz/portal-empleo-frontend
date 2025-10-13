@@ -1,11 +1,13 @@
 // Panel derecho con detalle
 "use client";
-import { MessageSquareText } from "lucide-react";
+import { ChevronDown, MessageSquareText } from "lucide-react";
 import { useState } from "react";
 import { mockJobs } from "../../data/mockData";
 import Button from "../ui/Button";
 
 export default function JobDetail({ job }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   // ✅ Ahora recibe job como prop
   if (!job) {
     return (
@@ -14,6 +16,20 @@ export default function JobDetail({ job }) {
       </div>
     );
   }
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+    console.log("Abierto:", isOpen);
+    // Aquí se implementaría la lógica para mostrar o ocultar el modal
+    alert("Toggle abierto");
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    console.log("Cerrado:", isOpen);
+    // Aquí se implementaría la lógica para mostrar o ocultar el modal
+    alert("Toggle cerrado");
+  };
 
   return (
     <div className="p-4 sticky top-0">
@@ -27,9 +43,9 @@ export default function JobDetail({ job }) {
               </div>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{job.titulo}</h1>
-              <p className="text-blue-600 font-medium">{job.empresa}</p>
-              <p className="text-gray-500">
+              <h1 className="text-2xl font-bold text-blue-900">{job.titulo}</h1>
+              <p className="text-blue-900 font-medium">{job.empresa}</p>
+              <p className="text-black">
                 {job.ubicacion}, {job.modalidad}, {job.jornada}
               </p>
             </div>
@@ -95,8 +111,8 @@ export default function JobDetail({ job }) {
             </ul>
           </div>
 
-          <button className="text-blue-600 text-sm font-medium mt-2 hover:underline">
-            Leer más ↓
+          <button onClick={handleToggle} onChange={handleClose} className="flex items-center text-blue-800 text-sm font-medium mt-2 hover:underline">
+            Leer más <ChevronDown size={20} />
           </button>
         </div>
 

@@ -7,9 +7,9 @@ function cn(...classes) {
 }
 
 const variantStyles = {
-  default: "border-gray-300 bg-white text-gray-900",
-  active: "border-blue-900 bg-white text-gray-900",
-  focused: "border-blue-300 bg-white text-gray-900 ring-2 ring-blue-900 ring-offset-1",
+  default: "border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-900",
+  active: "border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-900",
+  focused: "border-blue-300 bg-white text-gray-900 ring-2 ring-blue-900 ring-offset-1 focus:outline-none focus:ring-2 focus:ring-blue-900",
   disabled: "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed",
   error: "border-red-500 bg-white text-gray-900",
   success: "border-green-500 bg-white text-gray-900",
@@ -23,8 +23,8 @@ const sizeStyles = {
 
 const optionVariantStyles = {
   checkbox: {
-    default: "flex items-center gap-3 p-2 hover:bg-gray-100 hover:text-blue-900",
-    selected: "flex items-center gap-3 p-2 bg-blue-50 border border-blue-200",
+    default: "flex items-center gap-3 p-2 hover:bg-gray-200 hover:text-blue-900",
+    selected: "flex items-center gap-3 p-2 bg-blue-200 border border-blue-200",
     disabled: "flex items-center gap-3 p-2 opacity-50 cursor-not-allowed"
   },
   button: {
@@ -319,7 +319,7 @@ export default function Select({
             sizeClass,
             variantClass,
             "pr-10", // Espacio para el icono
-            className
+            className // Agregar clase adicional
           )}
           {...props}
         >

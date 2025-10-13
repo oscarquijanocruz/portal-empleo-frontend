@@ -1,5 +1,6 @@
 // Filtros mejorados - VERSION CORREGIDA
 "use client";
+import Select from "@/app/components/ui/Select";
 import { Search, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -17,6 +18,45 @@ export default function SearchFilters({
     tipoContrato: filters.tipoContrato || "",
     categoria: filters.categoria || "",
   });
+
+  const modalidadOptions = [
+    { label: "Remoto", value: "remoto" },
+    { label: "Híbrido", value: "hibrido" },
+    { label: "Presencial", value: "presencial" },
+  ];
+
+  const sueldoOptions = [
+    { label: "Sin salario", value: "sin-salario" },
+    { label: "$15,000+", value: "15000" },
+    { label: "$25,000+", value: "25000" },
+    { label: "$35,000+", value: "35000" },
+    { label: "$45,000+", value: "45000" },
+    { label: "Más de $50,000", value: "50000" },
+  ];
+
+  const tipoContratoOptions = [
+    { label: "Tiempo completo", value: "tiempoCompleto" },
+    { label: "Medio tiempo", value: "medioTiempo" },
+    { label: "Prácticas profesionales / Becario", value: "practicasProfesionales" },
+    { label: "Temporal / Proyecto", value: "temporalProyecto" },
+    { label: "Fines de semana", value: "finesDeSemana" },
+  ];
+
+  const categoriaOptions = [
+    { label: "Tecnología / Sistemas / Programación", value: "tecnologia" },
+    { label: "Ventas / Comercial", value: "ventas" },
+    { label: "Marketing / Publicidad / Comunicación", value: "marketing" },
+    { label: "Logística / Transporte / Almacén", value: "logistica" },
+    { label: "Ingeniería", value: "ingenieria" },
+    { label: "Manufactura / Producción / Operarios", value: "manufactura" },
+    { label: "Salud / Medicina / Farmacia", value: "salud" },
+    { label: "Educación / Docencia", value: "educacion" },
+    { label: "Diseño / Arte / Multimedia", value: "diseno" },
+    { label: "Legal / Jurídico", value: "legal" },
+    { label: "Construcción / Arquitectura", value: "construccion" },
+    { label: "Hotelería / Turismo / Restaurantes", value: "hoteleria" },
+    { label: "Otros / Generales", value: "otros" },
+  ];
 
   // Sincronizar con props cuando cambien
   useEffect(() => {
@@ -87,34 +127,44 @@ export default function SearchFilters({
       </div>
 
       {/* Filtros */}
-      <div className="flex flex-wrap items-center gap-2">
-        <select
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+        <Select
+          placeholder="Modalidad"
+          options={modalidadOptions}
           value={localFilters.modalidad}
-          onChange={(e) => handleFilterChange("modalidad", e.target.value)}
-          className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
-        >
-          <option value="">Modalidad</option>
-          <option value="Remoto">Remoto</option>
-          <option value="Híbrido">Híbrido</option>
-          <option value="Presencial">Presencial</option>
-        </select>
-
-        <select
+          onChange={(value) => handleFilterChange("modalidad", value)}
+          size="md"
+          className="bg-sky-950 text-black border-sky-950 border rounded-sm text-sm"
+        />
+        <Select
+          placeholder="Sueldo"
+          options={sueldoOptions}
           value={localFilters.sueldo}
-          onChange={(e) => handleFilterChange("sueldo", e.target.value)}
-          className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
-        >
-          <option value="">Sueldo</option>
-          <option value="15000">$15,000+</option>
-          <option value="25000">$25,000+</option>
-          <option value="35000">$35,000+</option>
-          <option value="45000">$45,000+</option>
-        </select>
+          onChange={(value) => handleFilterChange("sueldo", value)}
+          size="md"
+          className="bg-sky-950 text-black border-sky-950 border rounded-sm text-sm"
+        />
+        <Select
+          placeholder="Tipo de contrato"
+          options={tipoContratoOptions}
+          value={localFilters.tipoContrato}
+          onChange={(value) => handleFilterChange("tipoContrato", value)}
+          size="md"
+          className="bg-sky-950 text-black border-sky-950 border rounded-sm text-sm"
+        />
+        <Select
+          placeholder="Categoría"
+          options={categoriaOptions}
+          value={localFilters.categoria}
+          onChange={(value) => handleFilterChange("categoria", value)}
+          size="md"
+          className=" bg-blue-950 text-black border-sky-950 border rounded-sm text-sm"
+        />
 
         <select
           value={localFilters.tipoContrato}
           onChange={(e) => handleFilterChange("tipoContrato", e.target.value)}
-          className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
+          className="bg-sky-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
         >
           <option value="">Tipo de contrato</option>
           <option value="Tiempo completo">Tiempo completo</option>
@@ -123,27 +173,12 @@ export default function SearchFilters({
           <option value="Prácticas">Prácticas</option>
         </select>
 
-        <select
-          value={localFilters.categoria}
-          onChange={(e) => handleFilterChange("categoria", e.target.value)}
-          className="bg-blue-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
-        >
-          <option value="">Categoría</option>
-          <option value="tecnologia">Tecnología</option>
-          <option value="ventas">Ventas</option>
-          <option value="marketing">Marketing</option>
-          <option value="diseno">Diseño</option>
-          <option value="administracion">Administración</option>
-          <option value="recursos-humanos">Recursos Humanos</option>
-          <option value="contabilidad">Contabilidad</option>
-        </select>
-
         {/* Botón limpiar filtros */}
         {hasActiveFilters && (
           <div className="ml-auto">
             <button
               onClick={handleClearFilters}
-              className="text-blue-600 text-sm hover:underline flex items-center gap-1"
+              className="text-blue-800 text-sm hover:underline flex items-center gap-1"
             >
               <X size={14} />
               Borrar filtros

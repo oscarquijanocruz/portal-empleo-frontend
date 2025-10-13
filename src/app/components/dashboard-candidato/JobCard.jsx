@@ -35,7 +35,7 @@ export default function JobCard({
                 <div
                   key={job.id}
                   onClick={() => handleJobClick(job)}
-                  className={`bg-white shadow-md p-4 border rounded-lg cursor-pointer transition-all ${
+                  className={`bg-white shadow-md p-4 border rounded-sm cursor-pointer transition-all ${
                     selectedJob?.id === job.id 
                       ? 'border-gray-400 bg-blue-50 shadow-md' 
                       : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
@@ -64,7 +64,7 @@ export default function JobCard({
                             </span>
                           )}
                         </div>
-                        <p className="text-blue-600 text-md">{job.empresa}</p>
+                        <p className="text-blue-800 text-md">{job.empresa}</p>
                         <div className='flex space-x-8'>
                         <p className="text-gray-500 text-sm">{job.ubicacion}, {job.modalidad}, {job.jornada}</p>
                           <p className="text-md text-gray-900"> 
@@ -84,7 +84,7 @@ export default function JobCard({
                         }`}
                         title={favorites.has(job.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'}
                       >
-                        <Bookmark 
+                        <Bookmark
                           size={22} 
                           fill={favorites.has(job.id) ? 'currentColor' : 'none'} 
                         />

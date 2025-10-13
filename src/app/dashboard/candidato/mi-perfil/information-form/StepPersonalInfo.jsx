@@ -5,7 +5,7 @@ import { User, Mail, Phone, MapPin, Save } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
 import MiPerfilPage from "../../../candidato/mi-perfil/page";
 
-export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
+export default function StepPersonalInfo() {
   const { register, formState: { errors } } = useFormContext();
 
   const onSubmit = (data) => {
@@ -25,7 +25,7 @@ export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
       <h1 className="text-3xl font-bold text-gray-900 mb-2">
         Información Personal
       </h1>
-      <div className="bg-white rounded-lg shadow-sm border p-6">
+      <div className="border-y-1 py-6">
         <div className="flex items-center mb-6">
           <User className="w-6 h-6 text-blue-900 mr-3" />
           <h2 className="text-xl font-semibold text-gray-900">
@@ -181,7 +181,7 @@ export default function StepPersonalInfo({ methods = MiPerfilPage() }) {
           </div>
         </div>
         <div>
-          <div className="flex items-center mb-6">
+          <div className="flex items-center mb-6 border-t-1 pt-3">
             <MapPin className="w-6 h-6 text-blue-900 mr-3" />
             <h2 className="text-xl font-semibold text-gray-900">Ubicación</h2>
           </div>

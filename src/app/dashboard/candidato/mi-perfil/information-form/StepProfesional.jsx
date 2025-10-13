@@ -1,112 +1,160 @@
 import { useState } from "react";
 import Button from "../../../../components/ui/Button";
 import Input from "../../../../components/ui/Input";
-import {
-  GraduationCap,
-  Briefcase,
-  UserCog,
-  Globe,
-  X,
-} from "lucide-react";
-import { useFormContext } from "react-hook-form";
-import MiPerfilPage from "../../../candidato/mi-perfil/page";
+import { GraduationCap, Briefcase, UserCog, Globe, X } from "lucide-react";
+import { Controller, useFormContext } from "react-hook-form";
+import Select from "@/app/components/ui/Select";
 
-export default function StepProfesional({ methods = MiPerfilPage() }) {
+export default function StepProfesional({ methods }) {
   const {
     register,
     formState: { errors },
+    setValue,
+    clearErrors,
+    getValues,
+    watch,
   } = useFormContext();
-  const [nuevaHabilidad, setNuevaHabilidad] = useState("");
+  const [nuevaHabilidadDura, setNuevaHabilidadDura] = useState("");
+  const [nuevaHabilidadBlanda, setNuevaHabilidadBlanda] = useState("");
   const [nuevoIdioma, setNuevoIdioma] = useState({ idioma: "", nivel: "" });
+  const [noAplicaCarrera, setNoAplicaCarrera] = useState(false);
+  const [noAplicaFechaEgreso, setNoAplicaFechaEgreso] = useState(false);
+
+  // Watch para hacer reactivo el componente cuando cambien los arrays
+  const habilidadesDuras = watch("habilidadesDuras") || [];
+  const habilidadesBlandas = watch("habilidadesBlandas") || [];
+  const idiomas = watch("idiomas") || [];
 
   // Guardar perfil
   const guardarPerfil = (e) => {
     e.preventDefault();
-    console.log("Guardando perfil:", methods.getValues());
+    console.log("Guardando perfil:", getValues());
     // Aquí se implementaría la lógica para guardar en el backend
     alert("Perfil actualizado exitosamente");
   };
 
-  // Agregar nueva habilidad
-  const agregarHabilidad = () => {
-    if (
-      nuevaHabilidad.trim() &&
-      !methods.getValues().habilidades.includes(nuevaHabilidad.trim())
-    ) {
-      setMethods((prev) => ({
-        ...prev,
-        habilidades: [...prev.habilidades, nuevaHabilidad.trim()],
-      }));
-      setNuevaHabilidad("");
+  // Agregar nueva habilidad dura
+  const agregarHabilidadDura = () => {
+    if (nuevaHabilidadDura.trim()) {
+      const currentHabilidadesDuras = getValues("habilidadesDuras") || [];
+      if (!currentHabilidadesDuras.includes(nuevaHabilidadDura.trim())) {
+        setValue("habilidadesDuras", [...currentHabilidadesDuras, nuevaHabilidadDura.trim()]);
+        setNuevaHabilidadDura("");
+      }
     }
   };
 
-  // Eliminar habilidad
-  const eliminarHabilidad = (habilidad) => {
-    setMethods((prev) => ({
-      ...prev,
-      habilidades: prev.habilidades.filter((h) => h !== habilidad),
-    }));
+  // Agregar nueva habilidad blanda
+  const agregarHabilidadBlanda = () => {
+    if (nuevaHabilidadBlanda.trim()) {
+      const currentHabilidadesBlandas = getValues("habilidadesBlandas") || [];
+      if (!currentHabilidadesBlandas.includes(nuevaHabilidadBlanda.trim())) {
+        setValue("habilidadesBlandas", [...currentHabilidadesBlandas, nuevaHabilidadBlanda.trim()]);
+        setNuevaHabilidadBlanda("");
+      }
+    }
+  };
+
+  // Eliminar habilidad dura
+  const eliminarHabilidadDura = (habilidad) => {
+    const currentHabilidadesDuras = getValues("habilidadesDuras") || [];
+    setValue("habilidadesDuras", currentHabilidadesDuras.filter((h) => h !== habilidad));
+  };
+
+  // Eliminar habilidad blanda
+  const eliminarHabilidadBlanda = (habilidad) => {
+    const currentHabilidadesBlandas = getValues("habilidadesBlandas") || [];
+    setValue("habilidadesBlandas", currentHabilidadesBlandas.filter((h) => h !== habilidad));
   };
 
   // Agregar nuevo idioma
   const agregarIdioma = () => {
     if (nuevoIdioma.idioma.trim() && nuevoIdioma.nivel.trim()) {
-      setFormData((prev) => ({
-        ...prev,
-        idiomas: [...prev.idiomas, { ...nuevoIdioma }],
-      }));
+      const currentIdiomas = getValues("idiomas") || [];
+      setValue("idiomas", [...currentIdiomas, { ...nuevoIdioma }]);
       setNuevoIdioma({ idioma: "", nivel: "" });
     }
   };
 
   // Eliminar idioma
   const eliminarIdioma = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      idiomas: prev.idiomas.filter((_, i) => i !== index),
-    }));
+    const currentIdiomas = getValues("idiomas") || [];
+    setValue("idiomas", currentIdiomas.filter((_, i) => i !== index));
   };
+
+  const handleNoAplicaCarrera = (e) => {
+  const checked = e.target.checked;
+  setNoAplicaCarrera(checked);
+  if (checked) {
+    setValue("carrera", ""); // Limpia el valor
+    clearErrors("carrera"); // Limpia los errores
+  }
+};
+
+const handleNoAplicaFechaEgreso = (e) => {
+  const checked = e.target.checked;
+  setNoAplicaFechaEgreso(checked);
+  if (checked) {
+    setValue("fechaEgreso", ""); // Limpia el valor
+    clearErrors("fechaEgreso"); // Limpia los errores
+  }
+};
 
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-6">
         Datos profesionales
       </h1>
+      <div className="border-y-1 pt-6">
         <div className="flex items-center mb-6">
           <GraduationCap className="w-6 h-6 text-blue-900 mr-3" />
           <h2 className="text-xl font-semibold text-gray-900">Educación</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Nivel Educativo
             </label>
-            <select
+            <Controller
               name="nivelEducativo"
-              {...register("nivelEducativo", { required: [true, "Nivel Educativo requerido"] })}
-              // value={methods.getValues().nivelEducativo}
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="secundaria">Secundaria</option>
-              <option value="preparatoria">Preparatoria</option>
-              <option value="tecnico">Técnico</option>
-              <option value="licenciatura">Licenciatura</option>
-              <option value="maestria">Maestría</option>
-              <option value="doctorado">Doctorado</option>
-            </select>
+              // control={control}
+              rules={{ required: "Selecciona un nivel de educación" }}
+              render={({ field }) => (
+                <Select
+                  placeholder="Selecciona un nvel de educación"
+                  options={[
+                    { label: "Secundaria", value: "secundaria" },
+                    { label: "Preparatoria", value: "preparatoria" },
+                    { label: "Técnico", value: "tecnico" },
+                    { label: "Licenciatura", value: "licenciatura" },
+                    { label: "Maestría", value: "maestria" },
+                    { label: "Doctorado", value: "doctorado" },
+                  ]}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.nivelEducativo?.message}
+                />
+              )}
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">x
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Institución
             </label>
             <Input
               type="text"
-              name="institucion"
-              {...register("institucion", { required: [true, "Institución requerida"] })}
               placeholder="Nombre de la institución"
+              {...register("institucion", {
+                required: "Institución requerida",
+                maxLength: {
+                  value: 50,
+                  message: "Máximo 50 caracteres",
+                  minLength: { value: 3, message: "Mínimo 3 caracteres" },
+                },
+              })}
+              error={errors.institucion?.message}
             />
           </div>
 
@@ -116,57 +164,104 @@ export default function StepProfesional({ methods = MiPerfilPage() }) {
             </label>
             <Input
               type="text"
-              {...register("institucion", { required: [true, "Institución requerida"] })}
-              placeholder="Nombre de la carrera"
+              {...register("carrera", {
+                required: !noAplicaCarrera
+                  ? "Carrera/Especialidad requerida"
+                  : "",
+                maxLength: {
+                  value: 50,
+                  message: "Máximo 50 caracteres",
+                  minLength: { value: 3, message: "Mínimo 3 caracteres" },
+                },
+              })}
+              placeholder="Nombre de la carrera/especialidad"
+              error={!noAplicaCarrera && errors.carrera?.message}
+              disabled={noAplicaCarrera}
             />
+            <div className="flex items-center gap-2 mt-1 p-1 align-center">
+              <input
+                type="checkbox"
+                checked={noAplicaCarrera}
+                onChange={handleNoAplicaCarrera}
+                name="noAplicaCarrera"
+                className="border-gray-300 rounded-md"
+              />
+              <p className="text-sm text-gray-500">No aplica</p>
+            </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Fecha de Graduación
+              Fecha de Egreso
             </label>
             <Input
               type="date"
-              name="fechaGraduacion"
-              // value={methods.getValues().fechaGraduacion}
+              error={!noAplicaFechaEgreso && errors.fechaEgreso?.message}
+              disabled={noAplicaFechaEgreso}
+              //variant={noAplicaFechaEgreso ? "disabled" : "default"}
+              {...register("fechaEgreso", {
+                required: !noAplicaFechaEgreso
+                  ? "Fecha  de egreso requerido"
+                  : false,
+                pattern: {
+                  value: /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/,
+                  message: "Fecha de egreso no válida",
+                },
+              })}
             />
+            <div className="flex items-center gap-2 mt-1 p-1 align-center">
+              <input
+                type="checkbox"
+                name="noAplicaCarrera"
+                checked={noAplicaFechaEgreso}
+                onChange={handleNoAplicaFechaEgreso}
+                className="border-gray-300 rounded-md"
+              />
+              <p className="text-sm text-gray-500">No aplica</p>
+            </div>
           </div>
         </div>
 
         {/* Habilidades */}
         <div className="mb-6">
-          <div className="flex items-center mb-6">
+          <div className="flex items-center mb-6 border-t-1 pt-6">
             <UserCog className="w-6 h-6 text-blue-900 mr-3" />
             <h2 className="text-xl font-semibold text-gray-900">Habilidades</h2>
           </div>
 
           <div className="mb-4">
+            <div className="flex items-center mb-2">
+              <h2 className="block text-md font-medium text-gray-700">
+                Habilidades duras
+              </h2>
+            </div>
             <div className="flex gap-2">
               <Input
                 type="text"
-                value={nuevaHabilidad}
-                onChange={(e) => setNuevaHabilidad(e.target.value)}
-                placeholder="Agregar nueva habilidad"
+                value={nuevaHabilidadDura}
+                onChange={(e) => setNuevaHabilidadDura(e.target.value)}
+                placeholder="Agregar nueva habilidad técnica o profesional"
                 onKeyPress={(e) =>
-                  e.key === "Enter" && (e.preventDefault(), agregarHabilidad())
+                  e.key === "Enter" &&
+                  (e.preventDefault(), agregarHabilidadDura())
                 }
               />
-              <Button onClick={agregarHabilidad} type="button">
+              <Button onClick={agregarHabilidadDura} type="button">
                 Agregar
               </Button>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {methods.getValues().habilidades.map((habilidad, index) => (
+            {habilidadesDuras.map((habilidadDura, index) => (
               <span
                 key={index}
                 className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
               >
-                {habilidad}
+                {habilidadDura}
                 <button
                   type="button"
-                  onClick={() => eliminarHabilidad(habilidad)}
+                  onClick={() => eliminarHabilidadDura(habilidadDura)}
                   className="text-blue-600 hover:text-blue-800"
                 >
                   <X className="w-3 h-3" />
@@ -175,8 +270,52 @@ export default function StepProfesional({ methods = MiPerfilPage() }) {
             ))}
           </div>
         </div>
+        <div className="mb-8">
+          <div className="flex items-center mb-2">
+            <h2 className="block text-md font-medium text-gray-700">
+              Habilidades blandas
+            </h2>
+          </div>
+
+          <div className="mb-4">
+            <div className="flex gap-2">
+              <Input
+                type="text"
+                value={nuevaHabilidadBlanda}
+                onChange={(e) => setNuevaHabilidadBlanda(e.target.value)}
+                placeholder="Agregar nueva habilidad blanda"
+                onKeyPress={(e) =>
+                  e.key === "Enter" &&
+                  (e.preventDefault(), agregarHabilidadBlanda())
+                }
+              />
+              <Button onClick={agregarHabilidadBlanda} type="button">
+                Agregar
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {habilidadesBlandas.map((habilidadBlanda, index) => (
+              <span
+                key={index}
+                className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
+              >
+                {habilidadBlanda}
+                <button
+                  type="button"
+                  onClick={() => eliminarHabilidadBlanda(habilidadBlanda)}
+                  className="text-blue-600 hover:text-blue-800"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+
         {/* Idiomas */}
-        <div className="flex items-center mb-6">
+        <div className="flex items-center mb-6 border-t-1 pt-6">
           <Globe className="w-6 h-6 text-blue-900 mr-3" />
           <h2 className="text-xl font-semibold text-gray-900">Idiomas</h2>
         </div>
@@ -190,7 +329,9 @@ export default function StepProfesional({ methods = MiPerfilPage() }) {
                 setNuevoIdioma((prev) => ({ ...prev, idioma: e.target.value }))
               }
               placeholder="Idioma"
+              error={errors.idioma?.message}
             />
+            
             <select
               value={nuevoIdioma.nivel}
               onChange={(e) =>
@@ -204,6 +345,7 @@ export default function StepProfesional({ methods = MiPerfilPage() }) {
               <option value="Avanzado">Avanzado</option>
               <option value="Nativo">Nativo</option>
             </select>
+
             <Button onClick={agregarIdioma} type="button">
               Agregar
             </Button>
@@ -211,7 +353,7 @@ export default function StepProfesional({ methods = MiPerfilPage() }) {
         </div>
 
         <div className="space-y-2 mb-6">
-          {methods.getValues().idiomas.map((idioma, index) => (
+          {idiomas.map((idioma, index) => (
             <div
               key={index}
               className="flex items-center justify-between bg-gray-50 p-3 rounded-lg"
@@ -229,8 +371,8 @@ export default function StepProfesional({ methods = MiPerfilPage() }) {
           ))}
         </div>
 
-        {/* Preferencias de empleo */} 
-        <div className="flex items-center mb-6">
+        {/* Preferencias de empleo */}
+        <div className="flex items-center mb-6 border-t-1 pt-6">
           <Briefcase className="w-6 h-6 text-blue-900 mr-3" />
           <h2 className="text-xl font-semibold text-gray-900">
             Preferencias de empleo
@@ -238,67 +380,106 @@ export default function StepProfesional({ methods = MiPerfilPage() }) {
         </div>
 
         <div className="space-y-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Disponibilidad
-              </label>
-              <select
-                name="disponibilidad"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="inmediata">Inmediata</option>
-                <option value="1 semana">1 semana</option>
-                <option value="2 semanas">2 semanas</option>
-                <option value="1 mes">1 mes</option>
-                <option value="2 meses">2 meses</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Modalidad Preferida
-              </label>
-              <select
-                name="modalidadPreferida"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="presencial">Presencial</option>
-                <option value="remoto">Remoto</option>
-                <option value="hibrido">Híbrido</option>
-              </select>
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Disponibilidad
+            </label>
+            <Controller
+              name="disponibilidad"
+              rules={{ required: "Selecciona una disponibilidad" }}
+              render={({ field }) => (
+                <Select
+                  placeholder="Disponibilidad"
+                  options={[
+                    { label: "Inmediata", value: "inmediata" },
+                    { label: "1 semana", value: "1 semana" },
+                    { label: "2 semanas", value: "2 semanas" },
+                    { label: "1 mes", value: "1 mes" },
+                    { label: "2 meses", value: "2 meses" },
+                  ]}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.disponibilidad?.message}
+                />
+              )}
+            />
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Modalidad Preferida
+            </label>
+            <Controller
+              name="modalidadPreferida"
+              render={({ field }) => (
+                <Select
+                  placeholder="Modalidad Preferida"
+                  options={[
+                    { label: "Presencial", value: "presencial" },
+                    { label: "Remoto", value: "remoto" },
+                    { label: "Híbrido", value: "hibrido" },
+                  ]}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          </div>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tipo de puesto
-              </label>
-              <select
-                name="tipoPuesto"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="categorias">Todas las categorías</option>
-                <option value="operativo">Operativo</option>
-                <option value="ejecutivo">Ejecutivo</option>
-                <option value="supervisor">Supervisor</option>  
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Jornada
-              </label>
-              <select
-                name="tipoJornada"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="tiempoCompleto">Tiempo completo</option>
-                <option value="medioTiempo">Medio tiempo</option>
-                <option value="practicasProfesionales">Prácticas profesionales / Becario</option>
-                <option value="temporalProyecto">Temporal / Proyecto</option>
-                <option value="finesDeSemana">Fines de semana</option>
-              </select>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Tipo de puesto
+            </label>
+            <Controller
+              name="tipoPuesto"
+              rules={{ required: "Selecciona un tipo de puesto" }}
+              render={({ field }) => (
+                <Select
+                  placeholder="Tipo de puesto"
+                  rules={{ required: "Selecciona un tipo de puesto" }}
+                  options={[
+                    { label: "Operativo", value: "operativo" },
+                    { label: "Ejecutivo", value: "ejecutivo" },
+                    { label: "Supervisor", value: "supervisor" },
+                  ]}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.tipoPuesto?.message}
+                />
+              )}
+            />
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Jornada
+            </label>
+            <Controller
+              name="tipoJornada"
+              rules={{ required: "Selecciona una jornada" }}
+              render={({ field }) => (
+                <Select
+                  placeholder="Tipo de jornada"
+                  rules={{ required: "Selecciona una jornada" }}
+                  options={[
+                    { label: "Tiempo completo", value: "tiempoCompleto" },
+                    { label: "Medio tiempo", value: "medioTiempo" },
+                    {
+                      label: "Prácticas profesionales / Becario",
+                      value: "practicasProfesionales",
+                    },
+                    { label: "Temporal / Proyecto", value: "temporalProyecto" },
+                    { label: "Fines de semana", value: "finesDeSemana" },
+                  ]}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.tipoJornada?.message}
+                />
+              )}
+            />
+          </div>
+        </div>
       </div>
+    </div>
   );
 }

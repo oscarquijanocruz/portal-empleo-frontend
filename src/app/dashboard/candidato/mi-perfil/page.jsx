@@ -5,60 +5,50 @@ import Button from "../../../components/ui/Button";
 import StepPersonalInfo from "../mi-perfil/information-form/StepPersonalInfo";
 import StepProfesional from "../mi-perfil/information-form/StepProfesional";
 import StepExperience from "../mi-perfil/information-form/StepExperience";
+import StepDoc from "../mi-perfil/information-form/StepDoc";
 import { CircleCheck, CircleChevronLeft, CircleChevronRight } from "lucide-react";
-// import { useCandidateForm } from '../../../hooks/useCandidateForm';
 
 export default function MiPerfilPage() {
   const [currentStep, setCurrentStep] = useState(1);
-  // const [isLoading, setIsLoading] = useState(false);
 
-  // hook de useCandidateForm
-  // const { 
-  //   saveStepData, 
-  //   saveFinalData, 
-  //   loadCandidateData,
-  //   saveDraft,
-  //   loadDraft,
-  //   clearDraft 
-  // } = useCandidateForm();
-
-  const methods= useForm({
+  const methods = useForm({
     mode: "onChange",
     defaultValues: {
       // Step 1: Datos Personales
       nombre: "Oscar Omar",
       apellido: "Quijano",
       email: "oscar.quijano@gmail.com",
-      telefono: "55 1234 5678",
-      fechaNacimiento: "1995-05-15",
-      genero: "",
-      estadoCivil: "",
+      telefono: "5512345678",
+      fechaNacimiento: new Date("1995-05-15"),
+      genero: "masculino",
+      estadoCivil: "casado",
       rol: "candidate",
       createdAt: new Date(),
       updatedAt: new Date(),
-      // Ubicación
-      ciudad: "",
-      estado: "",
+      ciudad: "Puebla",
+      estado: "Puebla",
       codigoPostal: "24070",
 
       // Step 2: Experiencia
       nivelEducativo: "licenciatura",
       institucion: "Universidad Nacional Autónoma de México",
       carrera: "Ingeniería en Sistemas Computacionales",
-      fechaGraduacion: "2018-06-15",
-      habilidades: ["React", "JavaScript", "HTML", "CSS", "Node.js"],
+      fechaEgreso: new Date("2025-08-01"),
+      habilidadesDuras: ["React", "JavaScript", "HTML", "CSS", "Node.js"],
+      habilidadesBlandas: [
+        "Comunicación",
+        "Gestión de proyectos",
+        "Liderazgo",
+        "Organización",
+        "Trabajo en equipo",
+      ],
       idiomas: [
         { idioma: "Español", nivel: "Nativo" },
         { idioma: "Inglés", nivel: "Intermedio" },
       ],
-      // Preferencias de empleo
       disponibilidad: "inmediata",
       modalidadPreferida: "remoto",
-      tipoPuesto: [
-        "Operativo",
-        "Ejecutivo",
-        "Supervisor",
-      ],
+      tipoPuesto: "operativo",
       tipoJornada: [
         "Tiempo completo",
         "Medio tiempo",
@@ -72,20 +62,24 @@ export default function MiPerfilPage() {
       cargo: "Gerente",
       descripcionAct:
         "Desarrollador con 3 años de experiencia en React y Next.js, apasionado por crear interfaces de usuario intuitivas y eficientes.",
-      periodo: [
-        {
-          anioEntrada: "2024",
-          mesEntrada: ["Enero", "Febrero", "Marzo", "Abril"],
-          anioSalida: "2025",
-          mesSalida: ["Enero", "Febrero", "Marzo", "Abril"],
-        },
-      ],
+      anioEntrada: 2024,
+      mesEntrada: 1,
+      anioSalida: 2020,
+      mesSalida: "Octubre",
+      añosExperiencia: 1.0,
+
+      // Step 4: Documentos
+      fotoPerfil: null,
+      curriculumVitae: null,
+      portafolio: null,
+      notificaciones: false,
+      perfilPublico: true,
+      recibirOfertas: false,
     },
   });
 
   const { handleSubmit, trigger, getValues } = methods;
 
-  // Validar solo los campos del paso actual
   const handleNext = async () => {
     let fieldsToValidate = [];
 
@@ -109,8 +103,9 @@ export default function MiPerfilPage() {
           "nivelEducativo",
           "institucion",
           "carrera",
-          "fechaGraduacion",
-          "habilidades",
+          "fechaEgreso",
+          "habilidadesDuras",
+          "habilidadesBlandas",
           "idiomas",
           "disponibilidad",
           "modalidadPreferida",
@@ -119,17 +114,32 @@ export default function MiPerfilPage() {
         ];
         break;
       case 3:
-        fieldsToValidate = ["nivelEstudios", "institucion", "carrera"];
+        fieldsToValidate = [
+          "nombreEmpresa",
+          "cargo",
+          "descripcionAct",
+          "anioEntrada",
+          "mesEntrada",
+          "anioSalida",
+          "mesSalida",
+          "añosExperiencia",
+        ];
         break;
       case 4:
-        fieldsToValidate = ["habilidadesTecnicas", "disponibilidad"];
+        fieldsToValidate = [
+          "fotoPerfil",
+          "curriculumVitae",
+          "portfolio",
+          "notificaciones",
+          "perfilPublico",
+          "recibirOfertas",
+        ];
         break;
     }
 
     const isValid = await trigger(fieldsToValidate);
 
     if (isValid) {
-      // Aquí se guarda en el backend
       await saveStepData(currentStep, getValues());
 
       if (currentStep < 4) {
@@ -146,23 +156,13 @@ export default function MiPerfilPage() {
 
   const onSubmit = async (data) => {
     console.log("Formulario completo:", data);
-    // Aquí envías todo al backend
     await saveFinalData(data);
   };
 
-  // Función para guardar cada paso
   const saveStepData = async (step, data) => {
     try {
-      // Ejemplo con fetch a tu API
-      // const response = await fetch('/api/candidate/save-step', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ step, data })
-      // });
       console.log(`Guardando paso ${step}:`, data);
-
-      // También puedes guardar en localStorage
-      localStorage.setItem("candidateFormDraft", JSON.stringify(data));
+      window.candidateFormDraft = data;
     } catch (error) {
       console.error("Error guardando:", error);
     }
@@ -170,86 +170,91 @@ export default function MiPerfilPage() {
 
   const saveFinalData = async (data) => {
     try {
-      // const response = await fetch('/api/candidate/save', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data)
-      // });
       console.log("Datos finales guardados:", data);
-      localStorage.removeItem("candidateFormDraft");
+      delete window.candidateFormDraft;
     } catch (error) {
       console.error("Error guardando datos finales:", error);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Editar Perfil</h1>
-        <p className="text-gray-600">
-          Actualiza tu información personal y profesional
-        </p>
-      </div>
-      {/* Barra de progreso */}
-      <div className="mb-8">
-        <div className="flex justify-between mb-2 items-center align-center">
-          <CircleCheck
-            size={28}
-            className="text-blue-900 transition-colors"
-            // fill={favorites.has(job.id) ? 'currentColor' : 'none'}
-          />
-          {[1, 2, 3, 4].map((step) => (
-            <div
-              key={step}
-              className={`w-1/4 h-1 mx-1 rounded ${
-                step <= currentStep
-                  ? "bg-blue-900"
-                  : "bg-gray-200"
-              } transition-colors duration-500`}
-            />
-          ))}
+    <div className="min-h-screen flex justify-center items-start px-4 sm:px-6 lg:px-8 py-8 ">
+      {/* Contenedor responsive con ancho máximo y mínimo */}
+      <div className="w-full min-w-[320px] max-w-[729px] mx-auto">
+        <div className="mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            Editar Perfil
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600">
+            Actualiza tu información personal y profesional
+          </p>
         </div>
-        <p className="text-center text-sm text-gray-600">
-          Paso {currentStep} de 4
-        </p>
-      </div>
 
-      {/* FormProvider pasa el context a todos los hijos */}
-      <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Renderizar el paso actual */}
-          {currentStep === 1 && <StepPersonalInfo methods={methods}  />}
-          {currentStep === 2 && <StepProfesional methods={methods} />}
-          {currentStep === 3 && <StepExperience methods={methods} />}
-          {currentStep === 4 && <StepDoc />}
-
-          {/* Botones de navegación */}
-          <div className="flex justify-between mt-8">
-            <Button
-              type="button"
-              variant={currentStep === 1 ? "disabled" : "secondary"}
-              onClick={handleBack}
-            >
-              <CircleChevronLeft className="w-4 h-4 mr-2"/>
-              Atrás
-            </Button>
-
-            {currentStep < 4 ? (
-              <Button type="button" variant={"primary"} onClick={handleNext}>
-                Siguiente
-                <CircleChevronRight className="w-4 h-4 ml-2"/>
-              </Button>
-            ) : (
-              <Button
-                type="submit"
-                className="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-              >
-                Finalizar
-              </Button>
-            )}
+        {/* Barra de progreso */}
+        <div className="mb-8">
+          <div className="flex justify-between mb-2 items-center">
+            <CircleCheck
+              size={28}
+              className="text-blue-900 transition-colors flex-shrink-0"
+            />
+            {[1, 2, 3, 4].map((step) => (
+              <div
+                key={step}
+                className={`w-1/4 h-1 mx-1 rounded ${
+                  step <= currentStep ? "bg-blue-900" : "bg-gray-200"
+                } transition-colors duration-500`}
+              />
+            ))}
           </div>
-        </form>
-      </FormProvider>
+          <p className="text-center text-sm text-gray-600">
+            Paso {currentStep} de 4
+          </p>
+        </div>
+
+        {/* FormProvider pasa el context a todos los hijos */}
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Renderizar el paso actual */}
+            {currentStep === 1 && <StepPersonalInfo />}
+            {currentStep === 2 && <StepProfesional methods={methods} />}
+            {currentStep === 3 && <StepExperience methods={methods} />}
+            {currentStep === 4 && <StepDoc methods={methods} />}
+
+            {/* Botones de navegación - Responsive */}
+            <div className="flex flex-col sm:flex-row justify-start gap-4 sm:gap-6 mt-8">
+              <Button
+                type="button"
+                variant={currentStep === 1 ? "disabled" : "secondary"}
+                onClick={handleBack}
+                className="w-full sm:w-32 text-center"
+                disabled={currentStep === 1}
+              >
+                <CircleChevronLeft className="w-4 h-4 mr-2" />
+                Atrás
+              </Button>
+
+              {currentStep < 4 ? (
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={handleNext}
+                  className="w-full sm:w-48 text-center"
+                >
+                  Siguiente
+                  <CircleChevronRight className="w-4 h-4 ml-2" />
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  className="w-full sm:w-auto px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                >
+                  Finalizar
+                </Button>
+              )}
+            </div>
+          </form>
+        </FormProvider>
+      </div>
     </div>
   );
 }

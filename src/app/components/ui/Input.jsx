@@ -50,14 +50,14 @@ export default function Input({
         aria-invalid={isError || undefined}
         aria-describedby={messageId}
         className={cn(
-          "block w-full rounded-md border transition focus:outline-none focus:ring-2 focus:ring-offset-1",
-          "bg-white text-gray-900 placeholder:text-gray-400",
+          "block w-full rounded-md border-2 transition focus:outline-none focus:ring-2 focus:ring-offset-1",
+          "bg-white text-gray-900 placeholder:text-gray-400 hover:border-2 hover:border-sky-900",
           sizeClass,
           isError
             ? "border-red-500 focus:border-red-500 focus:ring-red-500"
             : "border-gray-300 focus:border-blue-900 focus:ring-blue-900 transition-colors",
           disabled &&
-            "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-500",
+            "cursor-not-allowed border-gray-300 bg-gray-400 text-gray-300",
           className
         )}
         {...props}

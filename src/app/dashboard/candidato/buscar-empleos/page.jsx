@@ -7,6 +7,8 @@ import { useFavorites } from "../../../hooks/useFavorites";
 import { useExplorer }  from "../../../hooks/useExplorer";
 import { useJobs } from "../../../hooks/useJobs";
 import Button from "@/app/components/ui/Button";
+import Tabs, { Tab, TabList, TabContent } from "../../../components/ui/Tab";
+import Select from "@/app/components/ui/Select";
 
 export default function BuscarEmpleoPage() {
   // ✅ Hook de trabajos con toda la lógica centralizada
@@ -27,6 +29,13 @@ export default function BuscarEmpleoPage() {
 
   //  Hook de favoritos (mantiene su lógica separada)
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
+
+  // Opciones de filtro
+  const sortOptions = [
+    { label: "Más recientes", value: "recientes" },
+    { label: "Mejor pagados", value: "mejor-pagados" },
+    { label: "Más relevantes", value: "mas-relevantes" },
+  ];
 
   //  Hook de explorar trabajos (mantiene su lógica separada)
   // const { explorer } =  useExplorer(); // Hacer algoritmo
@@ -50,68 +59,60 @@ export default function BuscarEmpleoPage() {
           </div>
           {/* Tabs y controles */}
           <div className="flex items-center justify-between mt-4 mb-4">
-            <div className="flex space-x-6">
-              <Button
-                onClick={() => handleTabChange("para-ti")}
-                variant={"text_tab"} 
-                className={`font-medium pb-2 transition-colors ${
-                  activeTab === "para-ti"
-                    ? "active:text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                Para ti ({filteredJobs.length})
-              </Button>
+            <Tabs
+              defaultValue="para-ti"
+              onValueChange={handleTabChange}
+              variant="underline"
+              className="flex-1"
+            >
+              <TabList>
+                <Tab value="para-ti">Para ti ({filteredJobs.length})</Tab>
+                <Tab value="explorar">Explorar ({filteredJobs.length})</Tab>
+              </TabList>
+            </Tabs>
 
-              {/* Tab de Explorar */}
-              <button
-                onClick={() => handleTabChange("explorar")}
-                className={`font-medium pb-2 transition-colors ${
-                  activeTab === "explorar"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
-                // variant="text_tab"
-              >
-                Explorar ({filteredJobs.length})
-              </button>
-            </div>
-            
             {/* Selector de ordenamiento */}
             <div className="ml-auto">
-              <select 
+              <Select
+                placeholder="Ordenar por: "
+                options={sortOptions}
                 value={sortOrder}
-                onChange={(e) => handleSortChange(e.target.value)}
-                className="bg-white px-3 py-2 border border-gray-300 rounded-lg text-sm"
-              >
-                <option value="recientes">Más recientes</option>
-                <option value="mejor-pagados">Mejor pagados</option>
-                <option value="mas-relevantes">Más relevantes</option>
-              </select>
+                onChange={handleSortChange}
+                className="bg-white text-sky-950 px-3 py-2 border rounded-lg text-sm"
+              />
             </div>
           </div>
 
-          {/* Lista de trabajos */}
-          {activeTab === "para-ti" ? (
-            filteredJobs.length > 0 ? (
-              <JobCard 
-                jobs={filteredJobs}
-                selectedJob={selectedJob}
-                onJobSelect={handleJobSelect}
-                favorites={favorites}
-                onToggleFavorite={toggleFavorite}
-              />
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                <p>No se encontraron trabajos</p>
-                {searchTerm && <p className="text-sm mt-2">con el término "{searchTerm}"</p>}
-              </div>
-            )
-          ) : (
-            // Tab de favoritos
-            <div className="space-y-4">
+          {/* Lista de trabajos con Tabs */}
+          <Tabs
+            value={activeTab}
+            onValueChange={handleTabChange}
+            variant="underline"
+          >
+            <TabContent value="para-ti">
               {filteredJobs.length > 0 ? (
-                <JobCard 
+                <JobCard
+                  jobs={filteredJobs}
+                  selectedJob={selectedJob}
+                  onJobSelect={handleJobSelect}
+                  favorites={favorites}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <p>No se encontraron trabajos</p>
+                  {searchTerm && (
+                    <p className="text-sm mt-2">
+                      con el término "{searchTerm}"
+                    </p>
+                  )}
+                </div>
+              )}
+            </TabContent>
+
+            <TabContent value="explorar">
+              {filteredJobs.length > 0 ? (
+                <JobCard
                   jobs={filteredJobs}
                   selectedJob={selectedJob}
                   onJobSelect={handleJobSelect}
@@ -121,17 +122,28 @@ export default function BuscarEmpleoPage() {
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <p>No hay trabajos por el momento</p>
-                  <p className="text-sm mt-2">Aqui encontraras trabajos nuevos...</p>
+                  <p className="text-sm mt-2">
+                    Aquí encontrarás trabajos nuevos...
+                  </p>
                 </div>
               )}
-            </div>
-          )}
+            </TabContent>
+
+            <TabContent value="favoritos">
+              <div className="text-center py-8 text-gray-500">
+                <p>Función de favoritos próximamente</p>
+                <p className="text-sm mt-2">
+                  Pronto podrás guardar tus trabajos favoritos
+                </p>
+              </div>
+            </TabContent>
+          </Tabs>
         </div>
-        
+
         {/* Panel de detalles */}
         <div className="p-1 space-y-4 overflow-hidden">
-          <JobDetail 
-            job={selectedJob} 
+          <JobDetail
+            job={selectedJob}
             isFavorite={isFavorite(selectedJob?.id)}
             onToggleFavorite={() => toggleFavorite(selectedJob?.id)}
           />
