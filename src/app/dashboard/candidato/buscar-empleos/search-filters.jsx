@@ -1,8 +1,10 @@
 // Filtros mejorados - VERSION CORREGIDA
 "use client";
 import Select from "@/app/components/ui/Select";
+import Input from "@/app/components/ui/Input";
 import { Search, X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 export default function SearchFilters({
   onSearch,
@@ -11,6 +13,11 @@ export default function SearchFilters({
   searchTerm = "",
   filters = {},
 }) {
+  // Url params
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const {replace} = useRouter();
+  // filtros locales
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
   const [localFilters, setLocalFilters] = useState({
     modalidad: filters.modalidad || "",
@@ -40,7 +47,7 @@ export default function SearchFilters({
     { label: "Prácticas profesionales / Becario", value: "practicasProfesionales" },
     { label: "Temporal / Proyecto", value: "temporalProyecto" },
     { label: "Fines de semana", value: "finesDeSemana" },
-  ];
+  ];  
 
   const categoriaOptions = [
     { label: "Tecnología / Sistemas / Programación", value: "tecnologia" },
@@ -57,6 +64,21 @@ export default function SearchFilters({
     { label: "Hotelería / Turismo / Restaurantes", value: "hoteleria" },
     { label: "Otros / Generales", value: "otros" },
   ];
+
+  // Search params
+  const handleSearch = (term) => {
+    const value = event.target.value;
+    setLocalSearchTerm(value);
+    onSearch?.(value);
+    const params = new URLSearchParams(searchParams);
+    if (term) {
+      params.set("query", term);
+    } else {
+      params.delete("query");
+    }
+    console.log(params.toString());
+    replace(`${pathname}?${params.toString()}`);
+  };
 
   // Sincronizar con props cuando cambien
   useEffect(() => {
@@ -82,6 +104,12 @@ export default function SearchFilters({
     const newFilters = { ...localFilters, [filterType]: value };
     setLocalFilters(newFilters);
     onFilterChange?.(newFilters);
+    if (value) {
+      newFilters[filterType] = value;
+    } else {
+      delete newFilters[filterType];
+    }
+    //replace(`${pathname}?${new URLSearchParams(newFilters).toString()}`);
   };
 
   const handleClearFilters = () => {
@@ -109,9 +137,10 @@ export default function SearchFilters({
         <input
           type="text"
           placeholder="Busca tu trabajo ideal..."
+          defaultValue={localSearchTerm || searchParams.get("query")?.toString()}
           className="flex-1 outline-none bg-transparent px-2"
-          value={localSearchTerm}
-          onChange={handleSearchChange}
+          //value={localSearchTerm}
+          onChange={(event) => handleSearch(event.target.value)}
         />
         {localSearchTerm && (
           <button

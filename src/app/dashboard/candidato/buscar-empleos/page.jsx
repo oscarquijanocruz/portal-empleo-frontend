@@ -26,7 +26,7 @@ export default function BuscarEmpleoPage() {
     handleSortChange,
     handleTabChange
   } = useJobs(mockJobs);
-
+  
   //  Hook de favoritos (mantiene su lógica separada)
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
@@ -141,7 +141,7 @@ export default function BuscarEmpleoPage() {
         </div>
 
         {/* Panel de detalles */}
-        <div className="p-1 space-y-4 overflow-hidden">
+        <div className="p-1 space-y-4 overflow-y-auto">
           <JobDetail
             job={selectedJob}
             isFavorite={isFavorite(selectedJob?.id)}

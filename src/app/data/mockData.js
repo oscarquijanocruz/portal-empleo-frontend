@@ -216,5 +216,36 @@ export const mockJobs = [
         "Conocimiento en herramientas de automatización"
       ]
     }
+  },
+  {
+    id: 8,
+    titulo: "Nutriologa",
+    empresa: "Clinica Nutricional",
+    ubicacion: "Queretaro",
+    modalidad: "Presencial",
+    jornada: "Tiempo completo",
+    categoria: "Salud / Medicina / Farmacia",
+    salario: "300,000",
+    logo: "/api/placeholder/50/50",
+    descripcion: "Especialista en marketing digital para campañas innovadoras...",
+    responsabilidades: [
+      "Gestionar campañas en redes sociales",
+      "Análisis de métricas y KPIs",
+      "Creación de contenido digital",
+      "Optimización SEO/SEM"
+    ],
+    requisitos: {
+      indispensables: [
+        "Licenciatura en Marketing o Comunicación",
+        "Experiencia en Google Ads, Facebook Ads",
+        "Conocimiento en Analytics",
+        "Creatividad y pensamiento estratégico"
+      ],
+      deseables: [
+        "Certificaciones en Google",
+        "Experiencia en e-commerce",
+        "Conocimiento en herramientas de automatización"
+      ]
+    }
   }
 ];

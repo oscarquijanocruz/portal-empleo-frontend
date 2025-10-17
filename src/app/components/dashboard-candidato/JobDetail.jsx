@@ -4,6 +4,7 @@ import { ChevronDown, MessageSquareText } from "lucide-react";
 import { useState } from "react";
 import { mockJobs } from "../../data/mockData";
 import Button from "../ui/Button";
+import Image from "next/image";
 
 export default function JobDetail({ job }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,12 +38,15 @@ export default function JobDetail({ job }) {
         {/* Header */}
         <div className="justify-between mb-6">
           <div className="grid justify-center text-center items-center place-items-center">
-            <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-green-400 rounded-lg flex items-center justify-center m-4">
-              <div className="w-8 h-8 bg-white rounded transform rotate-45">
-                Logo
-              </div>
+            <div className="w-24 h-24 bg-sky-100 rounded-xs flex items-center justify-center m-4">
+              <Image
+                src="/logo_cardjob.png"
+                alt="logo"
+                width={94}
+                height={88}
+              />
             </div>
-            <div>
+            <div className="space-y-1">
               <h1 className="text-2xl font-bold text-blue-900">{job.titulo}</h1>
               <p className="text-blue-900 font-medium">{job.empresa}</p>
               <p className="text-black">
@@ -111,7 +115,11 @@ export default function JobDetail({ job }) {
             </ul>
           </div>
 
-          <button onClick={handleToggle} onChange={handleClose} className="flex items-center text-blue-800 text-sm font-medium mt-2 hover:underline">
+          <button
+            onClick={handleToggle}
+            onChange={handleClose}
+            className="flex items-center text-blue-800 text-sm font-medium mt-2 hover:underline"
+          >
             Leer más <ChevronDown size={20} />
           </button>
         </div>

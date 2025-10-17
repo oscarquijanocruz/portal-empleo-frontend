@@ -4,6 +4,8 @@ import Input from "../../../../components/ui/Input";
 import { GraduationCap, Briefcase, UserCog, Globe, X } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
 import Select from "@/app/components/ui/Select";
+import { idiomasDisponibles, nivelesIdioma } from "@/app/constants/language.js";
+import { useNotification } from "@/app/contexts/NotificationContext";
 
 export default function StepProfesional({ methods }) {
   const {
@@ -14,9 +16,9 @@ export default function StepProfesional({ methods }) {
     getValues,
     watch,
   } = useFormContext();
+  const { notify } = useNotification();
   const [nuevaHabilidadDura, setNuevaHabilidadDura] = useState("");
   const [nuevaHabilidadBlanda, setNuevaHabilidadBlanda] = useState("");
-  const [nuevoIdioma, setNuevoIdioma] = useState({ idioma: "", nivel: "" });
   const [noAplicaCarrera, setNoAplicaCarrera] = useState(false);
   const [noAplicaFechaEgreso, setNoAplicaFechaEgreso] = useState(false);
 
@@ -38,7 +40,10 @@ export default function StepProfesional({ methods }) {
     if (nuevaHabilidadDura.trim()) {
       const currentHabilidadesDuras = getValues("habilidadesDuras") || [];
       if (!currentHabilidadesDuras.includes(nuevaHabilidadDura.trim())) {
-        setValue("habilidadesDuras", [...currentHabilidadesDuras, nuevaHabilidadDura.trim()]);
+        setValue("habilidadesDuras", [
+          ...currentHabilidadesDuras,
+          nuevaHabilidadDura.trim(),
+        ]);
         setNuevaHabilidadDura("");
       }
     }
@@ -49,7 +54,10 @@ export default function StepProfesional({ methods }) {
     if (nuevaHabilidadBlanda.trim()) {
       const currentHabilidadesBlandas = getValues("habilidadesBlandas") || [];
       if (!currentHabilidadesBlandas.includes(nuevaHabilidadBlanda.trim())) {
-        setValue("habilidadesBlandas", [...currentHabilidadesBlandas, nuevaHabilidadBlanda.trim()]);
+        setValue("habilidadesBlandas", [
+          ...currentHabilidadesBlandas,
+          nuevaHabilidadBlanda.trim(),
+        ]);
         setNuevaHabilidadBlanda("");
       }
     }
@@ -58,47 +66,70 @@ export default function StepProfesional({ methods }) {
   // Eliminar habilidad dura
   const eliminarHabilidadDura = (habilidad) => {
     const currentHabilidadesDuras = getValues("habilidadesDuras") || [];
-    setValue("habilidadesDuras", currentHabilidadesDuras.filter((h) => h !== habilidad));
+    setValue(
+      "habilidadesDuras",
+      currentHabilidadesDuras.filter((h) => h !== habilidad)
+    );
   };
 
   // Eliminar habilidad blanda
   const eliminarHabilidadBlanda = (habilidad) => {
     const currentHabilidadesBlandas = getValues("habilidadesBlandas") || [];
-    setValue("habilidadesBlandas", currentHabilidadesBlandas.filter((h) => h !== habilidad));
+    setValue(
+      "habilidadesBlandas",
+      currentHabilidadesBlandas.filter((h) => h !== habilidad)
+    );
   };
 
   // Agregar nuevo idioma
   const agregarIdioma = () => {
-    if (nuevoIdioma.idioma.trim() && nuevoIdioma.nivel.trim()) {
-      const currentIdiomas = getValues("idiomas") || [];
-      setValue("idiomas", [...currentIdiomas, { ...nuevoIdioma }]);
-      setNuevoIdioma({ idioma: "", nivel: "" });
+    const idioma = getValues("idioma");
+    const nivel = getValues("nivel");
+
+    if (!idioma || !nivel) return;
+
+    const currentIdiomas = getValues("idiomas") || [];
+
+    // Verificar que no esté duplicado
+    const yaExiste = currentIdiomas.some((i) => i.idioma === idioma);
+
+    if (yaExiste) {
+      notify.error("Idioma duplicado", "Este idioma ya está agregado, por favor selecciona otro");
+      return;
     }
+
+    setValue("idiomas", [...currentIdiomas, { idioma, nivel }]);
+    setValue("idioma", "");
+    setValue("nivel", "");
+    notify.success("Idioma agregado", "¡Se ha agregado el idioma!");
   };
 
   // Eliminar idioma
   const eliminarIdioma = (index) => {
     const currentIdiomas = getValues("idiomas") || [];
-    setValue("idiomas", currentIdiomas.filter((_, i) => i !== index));
+    setValue(
+      "idiomas",
+      currentIdiomas.filter((_, i) => i !== index)
+    );
   };
 
   const handleNoAplicaCarrera = (e) => {
-  const checked = e.target.checked;
-  setNoAplicaCarrera(checked);
-  if (checked) {
-    setValue("carrera", ""); // Limpia el valor
-    clearErrors("carrera"); // Limpia los errores
-  }
-};
+    const checked = e.target.checked;
+    setNoAplicaCarrera(checked);
+    if (checked) {
+      setValue("carrera", ""); // Limpia el valor
+      clearErrors("carrera"); // Limpia los errores
+    }
+  };
 
-const handleNoAplicaFechaEgreso = (e) => {
-  const checked = e.target.checked;
-  setNoAplicaFechaEgreso(checked);
-  if (checked) {
-    setValue("fechaEgreso", ""); // Limpia el valor
-    clearErrors("fechaEgreso"); // Limpia los errores
-  }
-};
+  const handleNoAplicaFechaEgreso = (e) => {
+    const checked = e.target.checked;
+    setNoAplicaFechaEgreso(checked);
+    if (checked) {
+      setValue("fechaEgreso", ""); // Limpia el valor
+      clearErrors("fechaEgreso"); // Limpia los errores
+    }
+  };
 
   return (
     <div>
@@ -114,7 +145,7 @@ const handleNoAplicaFechaEgreso = (e) => {
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Nivel Educativo
+              Ultimo nivel de estudios o
             </label>
             <Controller
               name="nivelEducativo"
@@ -198,7 +229,6 @@ const handleNoAplicaFechaEgreso = (e) => {
               type="date"
               error={!noAplicaFechaEgreso && errors.fechaEgreso?.message}
               disabled={noAplicaFechaEgreso}
-              //variant={noAplicaFechaEgreso ? "disabled" : "default"}
               {...register("fechaEgreso", {
                 required: !noAplicaFechaEgreso
                   ? "Fecha  de egreso requerido"
@@ -322,30 +352,28 @@ const handleNoAplicaFechaEgreso = (e) => {
 
         <div className="mb-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-            <Input
-              type="text"
-              value={nuevoIdioma.idioma}
-              onChange={(e) =>
-                setNuevoIdioma((prev) => ({ ...prev, idioma: e.target.value }))
-              }
-              placeholder="Idioma"
-              error={errors.idioma?.message}
+            <Controller
+              name="idioma"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  placeholder="Idioma"
+                  options={idiomasDisponibles}
+                  error={errors.idioma?.message}
+                />
+              )}
             />
-            
-            <select
-              value={nuevoIdioma.nivel}
-              onChange={(e) =>
-                setNuevoIdioma((prev) => ({ ...prev, nivel: e.target.value }))
-              }
-              className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Nivel</option>
-              <option value="Básico">Básico</option>
-              <option value="Intermedio">Intermedio</option>
-              <option value="Avanzado">Avanzado</option>
-              <option value="Nativo">Nativo</option>
-            </select>
-
+            <Controller
+              name="nivel"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  placeholder="Selecciona un nivel"
+                  options={nivelesIdioma}
+                  error={errors.nivel?.message}
+                />
+              )}
+            />
             <Button onClick={agregarIdioma} type="button">
               Agregar
             </Button>

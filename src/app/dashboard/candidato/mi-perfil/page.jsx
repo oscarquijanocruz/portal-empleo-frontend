@@ -1,6 +1,8 @@
+// page.jsx - ACTUALIZADO
 "use client";
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { useNotification } from "@/app/contexts/NotificationContext";
 import Button from "../../../components/ui/Button";
 import StepPersonalInfo from "../mi-perfil/information-form/StepPersonalInfo";
 import StepProfesional from "../mi-perfil/information-form/StepProfesional";
@@ -10,6 +12,7 @@ import { CircleCheck, CircleChevronLeft, CircleChevronRight } from "lucide-react
 
 export default function MiPerfilPage() {
   const [currentStep, setCurrentStep] = useState(1);
+  const { notify } = useNotification();
 
   const methods = useForm({
     mode: "onChange",
@@ -29,7 +32,7 @@ export default function MiPerfilPage() {
       estado: "Puebla",
       codigoPostal: "24070",
 
-      // Step 2: Experiencia
+      // Step 2: Educación y Profesional
       nivelEducativo: "licenciatura",
       institucion: "Universidad Nacional Autónoma de México",
       carrera: "Ingeniería en Sistemas Computacionales",
@@ -49,24 +52,37 @@ export default function MiPerfilPage() {
       disponibilidad: "inmediata",
       modalidadPreferida: "remoto",
       tipoPuesto: "operativo",
-      tipoJornada: [
-        "Tiempo completo",
-        "Medio tiempo",
-        "Prácticas profesionales / Becario",
-        "Temporal / Proyecto",
-        "Fines de semana",
-      ],
+      tipoJornada: "tiempoCompleto",
 
-      // Step 3: Experiencia Laboral
-      nombreEmpresa: "Mentory",
-      cargo: "Gerente",
-      descripcionAct:
-        "Desarrollador con 3 años de experiencia en React y Next.js, apasionado por crear interfaces de usuario intuitivas y eficientes.",
-      anioEntrada: 2024,
-      mesEntrada: 1,
-      anioSalida: 2020,
-      mesSalida: "Octubre",
-      añosExperiencia: 1.0,
+      // Step 3: Experiencia Laboral - NUEVA ESTRUCTURA
+      noExperienciaLaboral: false, // Checkbox para indicar sin experiencia
+      experiencias: [
+        // Array de experiencias
+        // {
+        //   id: 1,
+        //   nombreEmpresa: "Mentory",
+        //   cargo: "Desarrollador Frontend",
+        //   descripcionAct:
+        //     "Desarrollo de aplicaciones web con React y Next.js, implementación de componentes reutilizables.",
+        //   anioEntrada: "2022",
+        //   mesEntrada: "Marzo",
+        //   anioSalida: "2024",
+        //   mesSalida: "Diciembre",
+        //   esActual: false,
+        // },
+        // {
+        //   id: 2,
+        //   nombreEmpresa: "Tech Solutions",
+        //   cargo: "Desarrollador Junior",
+        //   descripcionAct:
+        //     "Soporte y mantenimiento de aplicaciones web, corrección de bugs.",
+        //   anioEntrada: "2020",
+        //   mesEntrada: "Enero",
+        //   anioSalida: "2022",
+        //   mesSalida: "Febrero",
+        //   esActual: false,
+        // },
+      ],
 
       // Step 4: Documentos
       fotoPerfil: null,
@@ -78,10 +94,40 @@ export default function MiPerfilPage() {
     },
   });
 
-  const { handleSubmit, trigger, getValues } = methods;
+  const icon = () => {
+    return (
+      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+        <CircleCheck size={26} className="text-blue-600" />
+      </div>
+    );
+  };
+
+  const { handleSubmit, trigger, getValues, watch } = methods;
+
+  // Validación personalizada para experiencias
+  const validarExperiencias = () => {
+    const noExperiencia = watch("noExperienciaLaboral");
+    const experiencias = watch("experiencias");
+
+    // Si no tiene experiencia, está OK
+    if (noExperiencia) {
+      return true;
+    }
+
+    // Si no marcó "sin experiencia", debe tener al menos 1
+    if (!experiencias || experiencias.length === 0) {
+      notify.error(
+        "Completar información",
+        "Por favor agrega al menos una experiencia laboral o marca 'No tengo experiencia laboral'"
+      );
+      return false;
+    }
+    return true;
+  };
 
   const handleNext = async () => {
     let fieldsToValidate = [];
+    let esValido = true;
 
     switch (currentStep) {
       case 1:
@@ -95,56 +141,51 @@ export default function MiPerfilPage() {
           "estadoCivil",
           "ciudad",
           "estado",
-          "codigPostal",
+          "codigoPostal",
         ];
         break;
+
       case 2:
         fieldsToValidate = [
           "nivelEducativo",
           "institucion",
           "carrera",
           "fechaEgreso",
-          "habilidadesDuras",
-          "habilidadesBlandas",
-          "idiomas",
           "disponibilidad",
           "modalidadPreferida",
           "tipoPuesto",
           "tipoJornada",
         ];
         break;
+
       case 3:
-        fieldsToValidate = [
-          "nombreEmpresa",
-          "cargo",
-          "descripcionAct",
-          "anioEntrada",
-          "mesEntrada",
-          "anioSalida",
-          "mesSalida",
-          "añosExperiencia",
-        ];
+        // Validación custom para experiencias
+        esValido = validarExperiencias();
+        if (!esValido) return;
         break;
+
       case 4:
         fieldsToValidate = [
-          "fotoPerfil",
-          "curriculumVitae",
-          "portfolio",
-          "notificaciones",
-          "perfilPublico",
-          "recibirOfertas",
+          "curriculumVitae", // Obligatorio
         ];
         break;
     }
 
-    const isValid = await trigger(fieldsToValidate);
-
-    if (isValid) {
+    // Validar campos con react-hook-form
+    if (fieldsToValidate.length > 0) {
+      esValido = await trigger(fieldsToValidate);
+    }
+    if (esValido) {
       await saveStepData(currentStep, getValues());
 
       if (currentStep < 4) {
         setCurrentStep(currentStep + 1);
       }
+    } else {
+      notify.error(
+        "Completa la información",
+        "Por favor completa todos los campos requeridos"
+      );
     }
   };
 
@@ -155,31 +196,49 @@ export default function MiPerfilPage() {
   };
 
   const onSubmit = async (data) => {
-    console.log("Formulario completo:", data);
+    console.log("✅ Formulario completo:", data);
+    
+    // Ver las experiencias específicamente
+    console.log("📋 Experiencias laborales:", data.experiencias);
+    console.log("🎯 Total de experiencias:", data.experiencias?.length || 0);
+    
     await saveFinalData(data);
   };
 
   const saveStepData = async (step, data) => {
     try {
-      console.log(`Guardando paso ${step}:`, data);
+      console.log(`💾 Guardando paso ${step}:`, data);
+      // Aquí harías tu llamada al backend
+      // await fetch('/api/candidate/save-step', { ... })
+      
+      // Guardar en memoria temporal (simulando backend)
       window.candidateFormDraft = data;
     } catch (error) {
-      console.error("Error guardando:", error);
+      console.error("❌ Error guardando:", error);
     }
   };
 
   const saveFinalData = async (data) => {
     try {
-      console.log("Datos finales guardados:", data);
+      console.log("✅ Guardando datos finales:", data);
+      // Aquí harías tu llamada final al backend
+      // await fetch('/api/candidate/save-final', { ... })
+
+      // Limpiar draft
       delete window.candidateFormDraft;
+
+      notify.success(
+        "Perfil guardado exitosamente",
+        "Se ha guardado el perfil de candidato exitosamente"
+      );
     } catch (error) {
-      console.error("Error guardando datos finales:", error);
+      notify.error("Error", "No se pudieron guardar los datos");
+      console.error("❌ Error guardando datos finales:", error);
     }
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-start px-4 sm:px-6 lg:px-8 py-8 ">
-      {/* Contenedor responsive con ancho máximo y mínimo */}
+    <div className="min-h-screen flex justify-center items-start px-4 sm:px-6 lg:px-8 py-8">
       <div className="w-full min-w-[320px] max-w-[729px] mx-auto">
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
@@ -195,13 +254,13 @@ export default function MiPerfilPage() {
           <div className="flex justify-between mb-2 items-center">
             <CircleCheck
               size={28}
-              className="text-blue-900 transition-colors flex-shrink-0"
+              className="text-sky-950 transition-colors flex-shrink-0"
             />
             {[1, 2, 3, 4].map((step) => (
               <div
                 key={step}
                 className={`w-1/4 h-1 mx-1 rounded ${
-                  step <= currentStep ? "bg-blue-900" : "bg-gray-200"
+                  step <= currentStep ? "bg-sky-950" : "bg-gray-200"
                 } transition-colors duration-500`}
               />
             ))}
@@ -211,16 +270,43 @@ export default function MiPerfilPage() {
           </p>
         </div>
 
+        {/* Nuevo diseño
+        <section className="space-y-6">
+          <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+            <ul className="grid grid-cols-1 space-y-3 text-sm relative">
+              <li className="h-16 w-1 mx-1 rounded bg-sky-950 flex items-center text-green-600">
+                <CircleCheck className="w-4 h-4 mr-2 justify-self-center" />
+                Información básica
+              </li>
+              <li className="flex items-center text-green-600">
+                <div className="h-16 w-1 mx-1 rounded bg-sky-950 " />
+                <CircleCheck className="w-4 h-4 mr-2" />
+                Informacion profesional
+              </li>
+              <li className="flex items-center text-gray-400">
+                <div className="h-16 w-1 mx-1 rounded bg-sky-950 " />
+                <div className="w-4 h-4 rounded-full border-2 border-gray-300 mr-2"></div>
+                Experiencia laboral
+              </li>
+              <li className="flex items-center text-gray-400">
+                <div className="h-16 w-1 mx-1 rounded bg-sky-950 " />
+                <div className="w-4 h-4 rounded-full border-2 border-gray-300 mr-2"></div>
+                Subir CV
+              </li>
+            </ul>
+          </div>
+        </section> */}
+
         {/* FormProvider pasa el context a todos los hijos */}
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Renderizar el paso actual */}
             {currentStep === 1 && <StepPersonalInfo />}
             {currentStep === 2 && <StepProfesional methods={methods} />}
-            {currentStep === 3 && <StepExperience methods={methods} />}
+            {currentStep === 3 && <StepExperience />}
             {currentStep === 4 && <StepDoc methods={methods} />}
 
-            {/* Botones de navegación - Responsive */}
+            {/* Botones de navegación */}
             <div className="flex flex-col sm:flex-row justify-start gap-4 sm:gap-6 mt-8">
               <Button
                 type="button"

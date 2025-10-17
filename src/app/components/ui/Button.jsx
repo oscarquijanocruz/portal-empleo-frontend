@@ -12,6 +12,8 @@ const variantStyles = {
     "bg-transparent text-blue-900 hover:bg-blue-50 focus-visible:ring-blue-500",
   disabled:
     "bg-gray-200 text-gray-400 cursor-not-allowed hover:bg-gray-200 focus-visible:ring-gray-200",
+  outline:
+    "bg-transparent text-sky-950 hover:bg-transparent hover:text-sky-800 active:text-sky-900 focus-visible:ring-sky-700 cursor-pointer",
   };
 
 const sizeStyles = {

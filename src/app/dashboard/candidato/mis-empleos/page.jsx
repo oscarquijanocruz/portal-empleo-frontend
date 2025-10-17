@@ -89,7 +89,7 @@ export default function MisEmpleosPage() {
   const counts = getCounts();
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col p-4">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Mis Empleos</h1>

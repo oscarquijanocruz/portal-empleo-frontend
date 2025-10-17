@@ -20,7 +20,6 @@ export default function NotificacionesPage() {
   const [notifications, setNotifications] = useState(mockNotifications);
   const [filters, setFilters] = useState({
     type: "all",
-    // priority: "all_priorities"
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedNotifications, setSelectedNotifications] = useState([]);
@@ -50,11 +49,6 @@ export default function NotificacionesPage() {
         filtered = filtered.filter((n) => n.type === filters.type);
       }
     }
-
-    // // Filter by priority
-    // if (filters.priority !== "all_priorities") {
-    //   filtered = filtered.filter(n => n.priority === filters.priority);
-    // }
 
     // Filter by search term
     if (searchTerm) {

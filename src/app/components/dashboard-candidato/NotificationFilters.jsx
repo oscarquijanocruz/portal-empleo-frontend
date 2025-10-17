@@ -35,7 +35,7 @@ export default function NotificationFilters({
     },
     {
       key: "job_application",
-      label: "Aplicaciones",
+      label: "Postulaciones",
       icon: <FileText size={16} />,
       count: notificationCounts.job_application
     },

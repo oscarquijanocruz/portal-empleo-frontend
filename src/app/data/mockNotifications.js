@@ -2,7 +2,7 @@ export const mockNotifications = [
   {
     id: 1,
     type: "job_application",
-    title: "Nueva aplicación de trabajo",
+    title: "Nueva postulación de trabajo",
     message: "Aplicaste para la posición de Cocinero",
     timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 horas atrás
     isRead: false,
@@ -51,8 +51,8 @@ export const mockNotifications = [
   {
     id: 4,
     type: "job_application",
-    title: "Aplicación en revisión",
-    message: "Se ha actualizado su aplicación para mesero",
+    title: "Postulación en revisión",
+    message: "Se ha actualizado su postulación para mesero",
     timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 días atrás
     isRead: true,
     priority: "medium",
@@ -101,8 +101,8 @@ export const mockNotifications = [
   {
     id: 7,
     type: "job_application",
-    title: "Aplicación aceptada",
-    message: "Se ha aceptado tu aplicaion para Desarrollador Full Stack",
+    title: "Postulación aceptada",
+    message: "Se ha aceptado tu postulación para Desarrollador Full Stack",
     timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000), // 6 días atrás
     isRead: false,
     priority: "high",
@@ -151,8 +151,8 @@ export const mockNotifications = [
   {
     id: 10,
     type: "job_application",
-    title: "Aplicación rechazada",
-    message: "Se ha rechazado tu aplicación para Ingeniero de Software",
+    title: "Postulación rechazada",
+    message: "Se ha rechazado tu postulación para Ingeniero de Software",
     timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 días atrás
     isRead: true,
     priority: "high",
@@ -171,7 +171,7 @@ export const mockNotifications = [
 
 export const notificationTypes = {
   job_application: {
-    label: "Aplicaciones de trabajo",
+    label: "Postulaciones de trabajo",
     icon: "📋",
     color: "blue"
   },

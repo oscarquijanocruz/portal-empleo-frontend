@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { AlertTriangle, CheckCircle2, Info, OctagonAlert } from "lucide-react";
 
 function Modal({
     isOpen = false,
@@ -8,6 +9,10 @@ function Modal({
     size = "md", // 'sm' | 'md' | 'lg' | 'xl'
     showCloseButton = true,
     closeOnBackdrop = true,
+    variant = "default", // 'default' | 'warning-red' | 'success' | 'warning-yellow' | 'info'
+    onConfirm = null, // Si se proporciona, muestra botones OK/Cancel
+    confirmText = "Okay",
+    cancelText = "Cancelar",
 }) {
     const modalRef = useRef(null);
     const previouslyFocused = useRef(null);
@@ -83,6 +88,57 @@ function Modal({
         xl: { maxWidth: "1100px" },
     };
 
+    // Configuración de variantes con iconos y colores
+    const variantConfig = {
+        default: {
+            icon: null,
+            primaryColor: "#2563eb", // blue-600
+            primaryBg: "#2563eb",
+            primaryText: "#ffffff",
+            secondaryBg: "#dbeafe", // blue-100
+            secondaryText: "#2563eb",
+            showCloseButton: true,
+        },
+        "warning-red": {
+            icon: <OctagonAlert size={22} color="#dc2626" strokeWidth={2.25} />,
+            primaryColor: "#dc2626", // red-600
+            primaryBg: "#dc2626",
+            primaryText: "#ffffff",
+            secondaryBg: "#fecaca", // red-200
+            secondaryText: "#dc2626",
+            showCloseButton: false,
+        },
+        success: {
+            icon: <CheckCircle2 size={22} color="#16a34a" strokeWidth={2.25} />,
+            primaryColor: "#16a34a", // green-600
+            primaryBg: "#16a34a",
+            primaryText: "#ffffff",
+            secondaryBg: "#bbf7d0", // green-200
+            secondaryText: "#16a34a",
+            showCloseButton: false,
+        },
+        "warning-yellow": {
+            icon: <AlertTriangle size={22} color="#d97706" strokeWidth={2.25} />,
+            primaryColor: "#d97706", // amber-600
+            primaryBg: "#d97706",
+            primaryText: "#ffffff",
+            secondaryBg: "#fde68a", // amber-200
+            secondaryText: "#d97706",
+            showCloseButton: false,
+        },
+        info: {
+            icon: <Info size={22} color="#0891b2" strokeWidth={2.25} />,
+            primaryColor: "#0891b2", // cyan-600
+            primaryBg: "#0891b2",
+            primaryText: "#ffffff",
+            secondaryBg: "#a7f3d0", // cyan-200
+            secondaryText: "#0891b2",
+            showCloseButton: false,
+        },
+    };
+
+    const currentVariant = variantConfig[variant] || variantConfig.default;
+
     const handleBackdropClick = (e) => {
         if (!closeOnBackdrop) return;
         if (e.target === e.currentTarget) onClose();
@@ -121,12 +177,15 @@ function Modal({
                 }}
             >
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                    {title ? (
-                        <h2 id="modal-title" style={{ margin: 0, fontSize: "1.125rem" }}>
-                            {title}
-                        </h2>
-                    ) : null}
-                    {showCloseButton ? (
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        {currentVariant.icon}
+                        {title ? (
+                            <h2 id="modal-title" style={{ margin: 0, fontSize: "1.125rem", fontWeight: "bold", color: "#1f2937" }}>
+                                {title}
+                            </h2>
+                        ) : null}
+                    </div>
+                    {(showCloseButton && currentVariant.showCloseButton) ? (
                         <button
                             type="button"
                             onClick={onClose}
@@ -137,6 +196,8 @@ function Modal({
                                 fontSize: "1.25rem",
                                 lineHeight: 1,
                                 cursor: "pointer",
+                                color: "#6b7280",
+                                padding: "4px",
                             }}
                         >
                             ×
@@ -144,7 +205,69 @@ function Modal({
                     ) : null}
                 </div>
 
-                <div style={{ marginTop: 12 }}>{children}</div>
+                <div style={{ marginTop: 12, color: "#374151", lineHeight: "1.6" }}>{children}</div>
+                
+                {/* Botones de acción si se proporciona onConfirm */}
+                {onConfirm && (
+                    <div style={{ 
+                        display: "flex", 
+                        justifyContent: "flex-end", 
+                        gap: "12px", 
+                        marginTop: "24px",
+                        paddingTop: "16px",
+                        borderTop: "1px solid #e5e7eb"
+                    }}>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            style={{
+                                padding: "8px 16px",
+                                borderRadius: "6px",
+                                border: "none",
+                                backgroundColor: currentVariant.secondaryBg,
+                                color: currentVariant.secondaryText,
+                                cursor: "pointer",
+                                fontSize: "14px",
+                                fontWeight: "500",
+                                transition: "background-color 0.2s",
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.opacity = "0.9";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.opacity = "1";
+                            }}
+                        >
+                            {cancelText}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                onConfirm();
+                                onClose();
+                            }}
+                            style={{
+                                padding: "8px 16px",
+                                borderRadius: "6px",
+                                border: "none",
+                                backgroundColor: currentVariant.primaryBg,
+                                color: currentVariant.primaryText,
+                                cursor: "pointer",
+                                fontSize: "14px",
+                                fontWeight: "500",
+                                transition: "background-color 0.2s",
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.opacity = "0.9";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.opacity = "1";
+                            }}
+                        >
+                            {confirmText}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
