@@ -1,7 +1,7 @@
 //Logica de card jobs
 
 'use client'
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { mockJobs } from '../data/mockData';
 
 export const useJobs = (initialJobs = mockJobs) => {
@@ -9,7 +9,7 @@ export const useJobs = (initialJobs = mockJobs) => {
   const [selectedJob, setSelectedJob] = useState(initialJobs[0] || null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("para-ti");
-  const [sortOrder, setSortOrder] = useState("recientes");
+  const [sortOrder, setSortOrder] = useState("");
   
   // Estados de filtros
   const [filters, setFilters] = useState({

@@ -1,668 +1,333 @@
-'use client';
+// page.jsx - ACTUALIZADO
+"use client";
+import { useState } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { useNotification } from "@/app/contexts/NotificationContext";
+import Button from "../../../components/ui/Button";
+import StepPersonalInfo from "../mi-perfil/information-form/StepPersonalInfo";
+import StepProfesional from "../mi-perfil/information-form/StepProfesional";
+import StepExperience from "../mi-perfil/information-form/StepExperience";
+import StepDoc from "../mi-perfil/information-form/StepDoc";
+import {
+  CircleCheck,
+  CircleChevronLeft,
+  CircleChevronRight,
+} from "lucide-react";
 
-import { useState } from 'react';
-import { User, Mail, Phone, MapPin, Briefcase, GraduationCap, Save, Upload, X, Globe, UserCog } from 'lucide-react';
-import Input from '../../../components/ui/Input';
-import Button from '../../../components/ui/Button';
+export default function MiPerfilPage() {
+  const [currentStep, setCurrentStep] = useState(1);
+  const { notify } = useNotification();
 
-export default function EditarPerfilPage() {
-  // Estado para los datos del formulario
-  const [formData, setFormData] = useState({
-    // Bloque 1 - Información personal
-    nombre: 'Miguel',
-    apellido: 'Blanco',
-    email: 'migue.blanco@email.com',
-    telefono: '+52 55 1234 5678',
-    fechaNacimiento: '1995-05-15',
-    genero: 'masculino',
-    estadoCivil: 'soltero',
-    // Ubicación
-    ciudad: 'Ciudad de México',
-    estado: 'CDMX',
-    codigoPostal: '06000',
-    
-    // Bloque 2 - Datos profesionales
-    // Educación
-    nivelEducativo: 'licenciatura',
-    institucion: 'Universidad Nacional Autónoma de México',
-    carrera: 'Ingeniería en Sistemas Computacionales',
-    fechaGraduacion: '2018-06-15',
-    //Resumen profesional
-    titulo: 'Desarrollador Frontend',
-    resumen: 'Desarrollador con 3 años de experiencia en React y Next.js, apasionado por crear interfaces de usuario intuitivas y eficientes.',
-    experiencia: '3 años',
-    disponibilidad: 'inmediata',
-    modalidadPreferida: 'remoto',
-    tipoPuesto: [
-      "Tecnología / Sistemas / Programación",
-      "Administración / Oficina",
-      "Ventas / Comercial",
-      "Atención a clientes / Call center",
-      "Contabilidad / Finanzas",
-      "Recursos humanos",
-      "Marketing / Publicidad / Comunicación",
-      "Logística / Transporte / Almacén",
-      "Ingeniería",
-      "Manufactura / Producción / Operarios",
-      "Salud / Medicina / Farmacia",
-      "Educación / Docencia",
-      "Diseño / Arte / Multimedia",
-      "Legal / Jurídico",
-      "Construcción / Arquitectura",
-      "Hotelería / Turismo / Restaurantes",
-      "Otros / Generales"
-    ],
-    tipoJornada: [
-      "Tiempo completo",
-      "Medio tiempo",
-      "Prácticas profesionales / Becario",
-      "Temporal / Proyecto",
-    ],
-    // Habilidades
-    habilidades: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js'],
-    idiomas: [
-      { idioma: 'Español', nivel: 'Nativo' },
-      { idioma: 'Inglés', nivel: 'Intermedio' }
-    ],
-    
-    //Bloque 3 - exp. laboral
-    nombreEmpresa: "Mentory",
-    cargo: "Gerente",
-    periodo: [
-      { anioEntrada: '2024', anioSalida: '2025' },
-      { anioEntrada: '2019', anioSalida: '2023' }
-    ],
-    descripcionAct: "Gerente",
+  const methods = useForm({
+    mode: "onChange",
+    defaultValues: {
+      // Step 1: Datos Personales
+      nombre: "Oscar Omar",
+      apellido: "Quijano",
+      email: "oscar.quijano@gmail.com",
+      telefono: "5512345678",
+      fechaNacimiento: new Date("1995-05-15"),
+      genero: "masculino",
+      estadoCivil: "casado",
+      rol: "candidate",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      ciudad: "Puebla",
+      estado: "Puebla",
+      codigoPostal: "24070",
 
-    //Bloque - Documentación 
+      // Step 2: Educación y Profesional
+      nivelEducativo: "licenciatura",
+      institucion: "Universidad Nacional Autónoma de México",
+      carrera: "Ingeniería en Sistemas Computacionales",
+      fechaEgreso: new Date("2025-08-01"),
+      habilidadesDuras: ["React", "JavaScript", "HTML", "CSS", "Node.js"],
+      habilidadesBlandas: [
+        "Comunicación",
+        "Gestión de proyectos",
+        "Liderazgo",
+        "Organización",
+        "Trabajo en equipo",
+      ],
+      idiomas: [
+        { idioma: "Español", nivel: "Nativo" },
+        { idioma: "Inglés", nivel: "Intermedio" },
+      ],
+      disponibilidad: "inmediata",
+      modalidadPreferida: "remoto",
+      tipoPuesto: "operativo",
+      tipoJornada: "tiempoCompleto",
 
-    // Preferencias
-    notificaciones: true,
-    perfilPublico: true,
-    recibirOfertas: true
+      // Step 3: Experiencia Laboral - NUEVA ESTRUCTURA
+      noExperienciaLaboral: false, // Checkbox para indicar sin experiencia
+      experiencias: [
+        // Array de experiencias
+        // {
+        //   id: 1,
+        //   nombreEmpresa: "Mentory",
+        //   cargo: "Desarrollador Frontend",
+        //   descripcionAct:
+        //     "Desarrollo de aplicaciones web con React y Next.js, implementación de componentes reutilizables.",
+        //   anioEntrada: "2022",
+        //   mesEntrada: "Marzo",
+        //   anioSalida: "2024",
+        //   mesSalida: "Diciembre",
+        //   esActual: false,
+        // },
+        // {
+        //   id: 2,
+        //   nombreEmpresa: "Tech Solutions",
+        //   cargo: "Desarrollador Junior",
+        //   descripcionAct:
+        //     "Soporte y mantenimiento de aplicaciones web, corrección de bugs.",
+        //   anioEntrada: "2020",
+        //   mesEntrada: "Enero",
+        //   anioSalida: "2022",
+        //   mesSalida: "Febrero",
+        //   esActual: false,
+        // },
+      ],
+
+      // Step 4: Documentos
+      fotoPerfil: null,
+      curriculumVitae: null,
+      portafolio: null,
+      notificaciones: false,
+      perfilPublico: true,
+      recibirOfertas: false,
+    },
   });
 
-  const [nuevaHabilidad, setNuevaHabilidad] = useState('');
-  const [nuevoIdioma, setNuevoIdioma] = useState({ idioma: '', nivel: '' });
-  const [fotoPerfil, setFotoPerfil] = useState(null);
+  const { handleSubmit, trigger, getValues, watch } = methods;
 
-  // Manejar cambios en los inputs
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+  const stepNames = {
+    1: "Información básica",
+    2: "Datos profesionales",
+    3: "Experiencia laboral",
+    4: "Documentos",
   };
 
-  // Agregar nueva habilidad
-  const agregarHabilidad = () => {
-    if (nuevaHabilidad.trim() && !formData.habilidades.includes(nuevaHabilidad.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        habilidades: [...prev.habilidades, nuevaHabilidad.trim()]
-      }));
-      setNuevaHabilidad('');
+  // Validación personalizada para experiencias
+  const validarExperiencias = () => {
+    const noExperiencia = watch("noExperienciaLaboral");
+    const experiencias = watch("experiencias");
+
+    // Si no tiene experiencia, está OK
+    if (noExperiencia) {
+      return true;
+    }
+
+    // Si no marcó "sin experiencia", debe tener al menos 1
+    if (!experiencias || experiencias.length === 0) {
+      notify.error(
+        "Completar información",
+        "Por favor agrega al menos una experiencia laboral o marca 'No tengo experiencia laboral'"
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const handleNext = async () => {
+    let fieldsToValidate = [];
+    let esValido = true;
+
+    switch (currentStep) {
+      case 1:
+        fieldsToValidate = [
+          "nombre",
+          "apellido",
+          "email",
+          "telefono",
+          "fechaNacimiento",
+          "genero",
+          "estadoCivil",
+          "ciudad",
+          "estado",
+          "codigoPostal",
+        ];
+        break;
+
+      case 2:
+        fieldsToValidate = [
+          "nivelEducativo",
+          "institucion",
+          "carrera",
+          "fechaEgreso",
+          "disponibilidad",
+          "modalidadPreferida",
+          "tipoPuesto",
+          "tipoJornada",
+        ];
+        break;
+
+      case 3:
+        // Validación custom para experiencias
+        esValido = validarExperiencias();
+        if (!esValido) return;
+        break;
+
+      case 4:
+        fieldsToValidate = [
+          "curriculumVitae", // Obligatorio
+        ];
+        break;
+    }
+
+    // Validar campos con react-hook-form
+    if (fieldsToValidate.length > 0) {
+      esValido = await trigger(fieldsToValidate);
+    }
+    if (esValido) {
+      await saveStepData(currentStep, getValues());
+
+      if (currentStep < 4) {
+        setCurrentStep(currentStep + 1);
+      }
+    } else {
+      notify.error(
+        "Completa la información",
+        "Por favor completa todos los campos requeridos"
+      );
     }
   };
 
-  // Eliminar habilidad
-  const eliminarHabilidad = (habilidad) => {
-    setFormData(prev => ({
-      ...prev,
-      habilidades: prev.habilidades.filter(h => h !== habilidad)
-    }));
-  };
-
-  // Agregar nuevo idioma
-  const agregarIdioma = () => {
-    if (nuevoIdioma.idioma.trim() && nuevoIdioma.nivel.trim()) {
-      setFormData(prev => ({
-        ...prev,
-        idiomas: [...prev.idiomas, { ...nuevoIdioma }]
-      }));
-      setNuevoIdioma({ idioma: '', nivel: '' });
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
     }
   };
 
-  // Eliminar idioma
-  const eliminarIdioma = (index) => {
-    setFormData(prev => ({
-      ...prev,
-      idiomas: prev.idiomas.filter((_, i) => i !== index)
-    }));
+  const onSubmit = async (data) => {
+    console.log("✅ Formulario completo:", data);
+
+    // Ver las experiencias específicamente
+    console.log("📋 Experiencias laborales:", data.experiencias);
+    console.log("🎯 Total de experiencias:", data.experiencias?.length || 0);
+
+    await saveFinalData(data);
   };
 
-  // Manejar subida de foto
-  const handleFotoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFotoPerfil(file);
+  const saveStepData = async (step, data) => {
+    try {
+      console.log(`💾 Guardando paso ${step}:`, data);
+      // Aquí harías tu llamada al backend
+      // await fetch('/api/candidate/save-step', { ... })
+
+      // Guardar en memoria temporal (simulando backend)
+      window.candidateFormDraft = data;
+    } catch (error) {
+      console.error("❌ Error guardando:", error);
     }
   };
 
-  // Guardar perfil
-  const guardarPerfil = (e) => {
-    e.preventDefault();
-    console.log('Guardando perfil:', formData);
-    // Aquí se implementaría la lógica para guardar en el backend
-    alert('Perfil actualizado exitosamente');
+  const saveFinalData = async (data) => {
+    try {
+      console.log("✅ Guardando datos finales:", data);
+      // Aquí harías tu llamada final al backend
+      // await fetch('/api/candidate/save-final', { ... })
+
+      // Limpiar draft
+      delete window.candidateFormDraft;
+
+      notify.success(
+        "Perfil guardado exitosamente",
+        "Se ha guardado el perfil de candidato exitosamente"
+      );
+    } catch (error) {
+      notify.error("Error", "No se pudieron guardar los datos");
+      console.error("❌ Error guardando datos finales:", error);
+    }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Editar Perfil</h1>
-        <p className="text-gray-600">Actualiza tu información personal y profesional</p>
+    <div className="min-h-screen flex justify-center items-start px-4 sm:px-6 lg:py-8">
+      {/* Barra de progreso */}
+      <div className="sticky top-7">
+        {[1, 2, 3, 4].map((step) => (
+          <ul
+            key={step}
+            className="grid grid-cols-1 space-y-0.5 text-xs font-semibold relative"
+          >
+            <div
+              className={`flex items-center gap-3 ${
+                step <= currentStep ? "text-green-600" : "text-gray-400"
+              }`}
+            >
+              <CircleCheck
+                className={`w-3 h-3 ${
+                  step <= currentStep
+                    ? "w-4.5 h-4.5 fill-green-600 text-white"
+                    : "fill-gray-400 text-gray-400"
+                } transition-all duration-400`}
+              />
+              <p>{stepNames[step]}</p>
+            </div>
+            <li className={`flex py-0.5 ${step === 4 ? "hidden" : ""}`}>
+              <div
+                className={`h-12 w-1 mx-1 rounded ${
+                  step + 1 <= currentStep ? "bg-green-600" : "bg-gray-200"
+                } transition-all duration-400`}
+              />
+            </li>
+          </ul>
+        ))}
       </div>
 
-      <form onSubmit={guardarPerfil} className="space-y-8">
-        
-        {/* Información Personal */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <div className="flex items-center mb-6">
-            <User className="w-6 h-6 text-blue-600 mr-3" />
-            <h2 className="text-xl font-semibold text-gray-900">Información Personal</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
-              <Input
-                type="text"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleInputChange}
-                placeholder="Tu nombre"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Apellido</label>
-              <Input
-                type="text"
-                name="apellido"
-                value={formData.apellido}
-                onChange={handleInputChange}
-                placeholder="Tu apellido"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Correo electrónico</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="tu@email.com"
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
-                  type="tel"
-                  name="telefono"
-                  value={formData.telefono}
-                  onChange={handleInputChange}
-                  placeholder="+52 55 1234 5678"
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Fecha de Nacimiento</label>
-              <Input
-                type="date"
-                name="fechaNacimiento"
-                value={formData.fechaNacimiento}
-                onChange={handleInputChange}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Género</label>
-              <select
-                name="genero"
-                value={formData.genero}
-                onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="masculino">Masculino</option>
-                <option value="femenino">Femenino</option>
-                <option value="otro">Otro</option>
-                <option value="prefiero-no-decir">Prefiero no decir</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Estado Civil</label>
-              <select
-                name="estadoCivil"
-                value={formData.estadoCivil}
-                onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="soltero">Soltero(a)</option>
-                <option value="casado">Casado(a)</option>
-                <option value="divorciado">Divorciado(a)</option>
-                <option value="viudo">Viudo(a)</option>
-                <option value="union-libre">Unión Libre</option>
-              </select>
-            </div>
-          </div>
+      <div className="w-full min-w-[320px] max-w-[729px] mx-auto">
+        <div className="mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            Editar Perfil
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600">
+            Actualiza tu información personal y profesional
+          </p>
         </div>
 
-        {/* Ubicación */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <div className="flex items-center mb-6">
-            <MapPin className="w-6 h-6 text-blue-600 mr-3" />
-            <h2 className="text-xl font-semibold text-gray-900">Ubicación</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Ciudad</label>
-              <Input
-                type="text"
-                name="ciudad"
-                value={formData.ciudad}
-                onChange={handleInputChange}
-                placeholder="Ciudad"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
-              <Input
-                type="text"
-                name="estado"
-                value={formData.estado}
-                onChange={handleInputChange}
-                placeholder="Estado"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Código Postal</label>
-              <Input
-                type="text"
-                name="codigoPostal"
-                value={formData.codigoPostal}
-                onChange={handleInputChange}
-                placeholder="00000"
-              />
-            </div>
-          </div>
-        </div>
+        {/* FormProvider pasa el context a todos los hijos */}
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Renderizar el paso actual */}
+            {currentStep === 1 && <StepPersonalInfo />}
+            {currentStep === 2 && <StepProfesional methods={methods} />}
+            {currentStep === 3 && <StepExperience />}
+            {currentStep === 4 && <StepDoc methods={methods} />}
 
-        {/* Educación */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <div className="flex items-center mb-6">
-            <GraduationCap className="w-6 h-6 text-blue-600 mr-3" />
-            <h2 className="text-xl font-semibold text-gray-900">Educación</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Nivel Educativo</label>
-              <select
-                name="nivelEducativo"
-                value={formData.nivelEducativo}
-                onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            {/* Botones de navegación */}
+            <div className="flex flex-col sm:flex-row justify-start gap-4 sm:gap-6 mt-8">
+              <Button
+                type="button"
+                variant={currentStep === 1 ? "disabled" : "secondary"}
+                onClick={handleBack}
+                className="w-full sm:w-32 text-center"
+                disabled={currentStep === 1}
               >
-                <option value="secundaria">Secundaria</option>
-                <option value="preparatoria">Preparatoria</option>
-                <option value="tecnico">Técnico</option>
-                <option value="licenciatura">Licenciatura</option>
-                <option value="maestria">Maestría</option>
-                <option value="doctorado">Doctorado</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Institución</label>
-              <Input
-                type="text"
-                name="institucion"
-                value={formData.institucion}
-                onChange={handleInputChange}
-                placeholder="Nombre de la institución"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Carrera/Especialidad</label>
-              <Input
-                type="text"
-                name="carrera"
-                value={formData.carrera}
-                onChange={handleInputChange}
-                placeholder="Nombre de la carrera"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Fecha de Graduación</label>
-              <Input
-                type="date"
-                name="fechaGraduacion"
-                value={formData.fechaGraduacion}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-
-          {/* Datos Profesionales */}
-          <div className="flex items-center mb-6">
-            <Briefcase className="w-6 h-6 text-blue-600 mr-3" />
-            <h2 className="text-xl font-semibold text-gray-900">Información Profesional</h2>
-          </div>
-          
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Título Profesional</label>
-              <Input
-                type="text"
-                name="titulo"
-                value={formData.titulo}
-                onChange={handleInputChange}
-                placeholder="Tu título o puesto actual"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Resumen Profesional</label>
-              <textarea
-                name="resumen"
-                value={formData.resumen}
-                onChange={handleInputChange}
-                rows={4}
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Describe tu experiencia y objetivos profesionales..."
-              />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Años de Experiencia</label>
-                <select
-                  name="experiencia"
-                  value={formData.experiencia}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="sin-experiencia">Sin experiencia</option>
-                  <option value="1 año">1 año</option>
-                  <option value="2 años">2 años</option>
-                  <option value="3 años">3 años</option>
-                  <option value="4 años">4 años</option>
-                  <option value="5+ años">5+ años</option>
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Disponibilidad</label>
-                <select
-                  name="disponibilidad"
-                  value={formData.disponibilidad}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="inmediata">Inmediata</option>
-                  <option value="1 semana">1 semana</option>
-                  <option value="2 semanas">2 semanas</option>
-                  <option value="1 mes">1 mes</option>
-                  <option value="2 meses">2 meses</option>
-                </select>
-              </div>
-            </div>
-            
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Modalidad Preferida</label>
-                <select
-                  name="modalidadPreferida"
-                  value={formData.modalidadPreferida}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="presencial">Presencial</option>
-                  <option value="remoto">Remoto</option>
-                  <option value="hibrido">Híbrido</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de puesto</label>
-                <select
-                  name="tipoPuesto"
-                  value={formData.tipoPuesto}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    <option value="categorias">Todas las categorías</option>
-                    <option value="tecnologia">Tecnología / Sistemas</option>
-                    <option value="administracion">Administración / Oficina</option>
-                    <option value="ventas">Ventas / Comercial</option>
-                    <option value="atencion">Atención a clientes</option>
-                    {/* <option value="finanzas">Contabilidad / Finanzas</option>
-                    <option value="rh">Recursos humanos</option>
-                    <option value="marketing">Marketing / Publicidad</option>
-                    <option value="logistica">Logística / Transporte</option>
-                    <option value="ingenieria">Ingeniería</option>
-                    <option value="manufactura">Manufactura / Producción</option>
-                    <option value="salud">Salud / Medicina</option>
-                    <option value="educacion">Educación / Docencia</option>
-                    <option value="diseno">Diseño / Arte</option>
-                    <option value="legal">Legal / Jurídico</option>
-                    <option value="construccion">Construcción / Arquitectura</option>
-                    <option value="turismo">Hotelería / Turismo</option>
-                    <option value="otros">Otros</option> */}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Jornada</label>
-                <select
-                  name="tipoJornada"
-                  value={formData.tipoJornada}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="presencial">Tiempo completo</option>
-                  <option value="remoto">Medio tiempo</option>
-                  <option value="hibrido">Prácticas profesionales / Becario</option>
-                  <option value="remoto">Temporal / Proyecto</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Habilidades */}
-          <div className='mb-6'>
-            <div className="flex items-center mb-6">
-              <UserCog className="w-6 h-6 text-blue-600 mr-3" />
-              <h2 className="text-xl font-semibold text-gray-900">Habilidades</h2>
-            </div>
-
-            <div className="mb-4">
-              <div className="flex gap-2">
-                <Input
-                  type="text"
-                  value={nuevaHabilidad}
-                  onChange={(e) => setNuevaHabilidad(e.target.value)}
-                  placeholder="Agregar nueva habilidad"
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), agregarHabilidad())}
-                />
-                <Button onClick={agregarHabilidad} type="button">
-                  Agregar
-                </Button>
-              </div>
-            </div>
-            
-            <div className="flex flex-wrap gap-2">
-              {formData.habilidades.map((habilidad, index) => (
-                <span
-                  key={index}
-                  className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
-                >
-                  {habilidad}
-                  <button
-                    type="button"
-                    onClick={() => eliminarHabilidad(habilidad)}
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
-          {/* Idiomas */}
-          <div className="flex items-center mb-6">
-            <Globe className="w-6 h-6 text-blue-600 mr-3" />
-            <h2 className="text-xl font-semibold text-gray-900">Idiomas</h2>
-          </div>
-          
-          <div className="mb-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-              <Input
-                type="text"
-                value={nuevoIdioma.idioma}
-                onChange={(e) => setNuevoIdioma(prev => ({ ...prev, idioma: e.target.value }))}
-                placeholder="Idioma"
-              />
-              <select
-                value={nuevoIdioma.nivel}
-                onChange={(e) => setNuevoIdioma(prev => ({ ...prev, nivel: e.target.value }))}
-                className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Nivel</option>
-                <option value="Básico">Básico</option>
-                <option value="Intermedio">Intermedio</option>
-                <option value="Avanzado">Avanzado</option>
-                <option value="Nativo">Nativo</option>
-              </select>
-              <Button onClick={agregarIdioma} type="button">
-                Agregar
+                <CircleChevronLeft className="w-4 h-4 mr-2" />
+                Atrás
               </Button>
-            </div>
-          </div>
-          
-          <div className="space-y-2">
-            {formData.idiomas.map((idioma, index) => (
-              <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                <span className="font-medium">{idioma.idioma}</span>
-                <span className="text-sm text-gray-600">{idioma.nivel}</span>
-                <button
-                  type="button"
-                  onClick={() => eliminarIdioma(index)}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Foto de Perfil */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Foto de Perfil</h2>
-          
-          <div className="flex items-center space-x-6">
-            <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
-              {fotoPerfil ? (
-                <img
-                  src={URL.createObjectURL(fotoPerfil)}
-                  alt="Foto de perfil"
-                  className="w-24 h-24 rounded-full object-cover"
-                />
+              {currentStep < 4 ? (
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={handleNext}
+                  className="w-full sm:w-48 text-center"
+                >
+                  Siguiente
+                  <CircleChevronRight className="w-4 h-4 ml-2" />
+                </Button>
               ) : (
-                <User className="w-12 h-12 text-gray-400" />
+                <Button
+                  type="submit"
+                  className="w-full sm:w-auto px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                >
+                  Finalizar
+                </Button>
               )}
             </div>
-            
-            <div>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFotoChange}
-                className="hidden"
-                id="foto-perfil"
-              />
-              <label
-                htmlFor="foto-perfil"
-                className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
-              >
-                <Upload className="w-4 h-4" />
-                Subir Foto
-              </label>
-              <p className="text-sm text-gray-500 mt-1">JPG, PNG o GIF (máx. 5MB)</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Preferencias */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Preferencias</h2>
-          
-          <div className="space-y-4">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                name="notificaciones"
-                checked={formData.notificaciones}
-                onChange={handleInputChange}
-                className="mr-3"
-              />
-              <span className="text-gray-700">Recibir notificaciones por email</span>
-            </label>
-            
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                name="perfilPublico"
-                checked={formData.perfilPublico}
-                onChange={handleInputChange}
-                className="mr-3"
-              />
-              <span className="text-gray-700">Perfil público (visible para empleadores)</span>
-            </label>
-            
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                name="recibirOfertas"
-                checked={formData.recibirOfertas}
-                onChange={handleInputChange}
-                className="mr-3"
-              />
-              <span className="text-gray-700">Recibir ofertas de trabajo</span>
-            </label>
-          </div>
-        </div>
-
-        {/* Botones de Acción */}
-        <div className="flex justify-end space-x-4">
-          <Button type="button" className="bg-gray-500 hover:bg-gray-700">
-            Cancelar
-          </Button>
-          <Button type="submit" className="bg-blue-500 hover:bg-blue-700">
-            <Save className="w-4 h-4 mr-2" />
-            Guardar Cambios
-          </Button>
-        </div>
-      </form>
+          </form>
+        </FormProvider>
+      </div>
     </div>
   );
 }

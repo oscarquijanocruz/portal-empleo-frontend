@@ -1,94 +1,95 @@
 "use client";
-import JobCard from "../../../components/dashboard/JobCard";
-import JobDetail from "../../../components/dashboard/JobDetail";
+import JobCard from "../../../components/dashboard-candidato/JobCard";
+import JobDetail from "../../../components/dashboard-candidato/JobDetail";
 import { useState } from "react";
 import { useJobs } from "../../../hooks/useJobs";
 import { useFavorites } from "../../../hooks/useFavorites";
 import { mockJobs } from "../../../data/mockData";
-  
-// const userJobs = [
-//   // Estos podrían venir de una API o base de datos
-//   {
-//     id: 1,
-//     titulo: "Desarrollador Frontend Senior",
-//     empresa: "TechCorp",
-//     ubicacion: "Ciudad de México",
-//     modalidad: "Remoto",
-//     jornada: "Tiempo completo",
-//     salario: "45,000",
-//     estado: "postulado", // postulado, en_revision, rechazado, aceptado
-//     fechaPostulacion: "2024-01-15"
-//   },
-//   {
-//     id: 2,
-//     titulo: "UX/UI Designer",
-//     empresa: "DesignStudio",
-//     ubicacion: "Guadalajara",
-//     modalidad: "Híbrido",
-//     jornada: "Tiempo completo",
-//     salario: "35,000",
-//     estado: "en_revision",
-//     fechaPostulacion: "2024-01-12"
-//   },
-//   {
-//     id: 3,
-//     titulo: "Chef",
-//     empresa: "Pizzeria",
-//     ubicacion: "Puebla",
-//     modalidad: "Presencial",
-//     jornada: "Tiempo completo",
-//     salario: "35,000",
-//     estado: "aceptado",
-//     fechaPostulacion: "2024-01-12"
-//   },
-//   {
-//     id: 4,
-//     titulo: "UX/UI Designer",
-//     empresa: "DesignStudio",
-//     ubicacion: "Guadalajara",
-//     modalidad: "Híbrido",
-//     jornada: "Tiempo completo",
-//     salario: "35,000",
-//     estado: "rechazado",
-//     fechaPostulacion: "2024-01-12"
-//   },
-// ];
 
-export default function MisEmpleosPage({ job }) {
+export default function MisEmpleosPage() {
   const [activeTab, setActiveTab] = useState("favoritos");
   
-  // ✅ Usar el hook de jobs con datos específicos del usuario
-  const {
-    selectedJob,
-    handleJobSelect,
-    handleTabChange
-  } = useJobs(mockJobs);
+  // DATOS SIMPLES - Solo para maquetado
+  // En producción esto vendrá del backend
+  const [misPostulaciones] = useState([
+    {
+      jobId: 1, // Se relaciona con mockJobs
+      estado: "postulado", 
+      fechaPostulacion: "2024-01-15"
+    },
+    {
+      jobId: 2,
+      estado: "en_revision",
+      fechaPostulacion: "2024-01-12"
+    },
+    {
+      jobId: 3,
+      estado: "aceptado",
+      fechaPostulacion: "2024-01-10"
+    },
+    {
+      jobId: 4,
+      estado: "postulado",
+      fechaPostulacion: "2024-01-10"
+    },
+    {
+      jobId: 5,
+      estado: "rechazado",
+      fechaPostulacion: "2024-01-08"
+    }
+  ]);
 
-  // ✅ Hook de favoritos
-  const { favorites, toggleFavorite, isFavorite } = useFavorites();
+  const { selectedJob, handleJobSelect } = useJobs(mockJobs);
+  const { favorites, toggleFavorite, isFavorite, getFavoriteJobs } = useFavorites();
 
-  // Filtrar jobs según el tab activo
+  // FUNCIÓN SIMPLE - Combinar datos de mock con estados
+  const getJobsWithStatus = (estado) => {
+    const postulacionesConEstado = misPostulaciones.filter(p => p.estado === estado);
+    
+    return postulacionesConEstado.map(postulacion => {
+      const job = mockJobs.find(j => j.id === postulacion.jobId);
+      return job ? {
+        ...job,
+        // Agregamos los dos campos que necesitas
+        estado: postulacion.estado,
+        fechaPostulacion: postulacion.fechaPostulacion
+      } : null;
+    }).filter(Boolean); // Quitar nulls
+  };
+
+  // Obtener trabajos según el tab
   const getJobsByTab = (tab) => {
     switch(tab) {
       case "favoritos":
-        return mockJobs.filter(job => favorites.has(job.id));
+        return getFavoriteJobs(mockJobs);
       case "postulados":
-        return mockJobs.filter(job => job.estado === "postulado");
+        return getJobsWithStatus("postulado");
       case "en_revision":
-        return mockJobs.filter(job => job.estado === "en_revision");
-      case "rechazados":
-        return mockJobs.filter(job => job.estado === "rechazado");
+        return getJobsWithStatus("en_revision");
       case "aceptados":
-        return mockJobs.filter(job => job.estado === "aceptado");
+        return getJobsWithStatus("aceptado");
+      case "rechazados":
+        return getJobsWithStatus("rechazado");
       default:
-        return mockJobs;
+        return [];
     }
   };
 
   const currentJobs = getJobsByTab(activeTab);
 
+  // Contadores simples
+  const getCounts = () => ({
+    favoritos: getFavoriteJobs(mockJobs).length,
+    postulados: getJobsWithStatus("postulado").length,
+    en_revision: getJobsWithStatus("en_revision").length,
+    aceptados: getJobsWithStatus("aceptado").length,
+    rechazados: getJobsWithStatus("rechazado").length
+  });
+
+  const counts = getCounts();
+
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col p-4">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Mis Empleos</h1>
@@ -99,11 +100,11 @@ export default function MisEmpleosPage({ job }) {
       <div className="mb-6 border-b border-gray-200">
         <div className="flex space-x-8">
           {[
-            { key: "favoritos", label: "Favoritos", count: getJobsByTab("favoritos").length },
-            { key: "postulados", label: "Postulados", count: getJobsByTab("postulados").length },
-            { key: "en_revision", label: "En Revisión", count: getJobsByTab("en_revision").length },
-            { key: "aceptados", label: "Aceptados", count: getJobsByTab("aceptados").length },
-            { key: "rechazados", label: "Rechazados", count: getJobsByTab("rechazados").length }
+            { key: "favoritos", label: "Favoritos", count: counts.favoritos },
+            { key: "postulados", label: "Postulados", count: counts.postulados },
+            { key: "en_revision", label: "En Revisión", count: counts.en_revision },
+            { key: "aceptados", label: "Aceptados", count: counts.aceptados },
+            { key: "rechazados", label: "Rechazados", count: counts.rechazados }
           ].map((tab) => (
             <button
               key={tab.key}
@@ -136,55 +137,52 @@ export default function MisEmpleosPage({ job }) {
             <div className="text-center py-8 text-gray-500">
               <p>No tienes empleos en esta categoría</p>
               <p className="text-sm mt-2">
-                {activeTab === "postulados" 
-                  ? "Busca empleos y postulate para verlos aquí"
+                {activeTab === "favoritos" 
+                  ? "Ve a 'Buscar Empleos' y guarda trabajos haciendo clic en el ícono 📌"
+                  : activeTab === "postulados" 
+                  ? "Busca empleos y postúlate para verlos aquí"
                   : `No hay empleos ${activeTab.replace("_", " ")}`
                 }
               </p>
             </div>
           )}
-
-          {/* Tab favoritos */}
-          {favorites.length > 0 ? (
-            <JobCard 
-              jobs={mockJobs.filter(job => favorites.has(job.id))}
-              onJobSelect={handleJobSelect}
-              favorites={favorites}
-              onToggleFavorite={toggleFavorite}
-            />
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-            </div>
-          )}
         </div>
-        
         
         {/* Panel de detalles */}
         <div className="p-4 space-y-4">
           {selectedJob ? (
             <div>
-              {/* Estado de la postulación */}
-              <div className="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Estado de postulación:</span>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    selectedJob.estado === "postulado" 
-                      ? "bg-yellow-100 text-yellow-800"
-                      : selectedJob.estado === "en_revision"
-                      ? "bg-blue-100 text-blue-800" 
-                      : selectedJob.estado === "aceptado"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}>
-                    {selectedJob.estado} {/* {selectedJob.estado.replace("_", " ").toUpperCase()} */}
-                  </span>
+              {/* ✅ Info de postulación - Solo si tiene estado */}
+              {selectedJob.estado && (
+                <div className="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Estado de postulación:</span>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      selectedJob.estado === "postulado" 
+                        ? "bg-yellow-100 text-yellow-800"
+                        : selectedJob.estado === "en_revision"
+                        ? "bg-blue-100 text-blue-800" 
+                        : selectedJob.estado === "aceptado"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}>
+                      {selectedJob.estado.replace("_", " ").toUpperCase()}
+                    </span>
+                  </div>
+                  {selectedJob.fechaPostulacion && (
+                    <p className="text-sm text-gray-500 mt-1">
+                      Postulado el {new Date(selectedJob.fechaPostulacion).toLocaleDateString()}
+                    </p>
+                  )}
                 </div>
-                {selectedJob.fechaPostulacion && (
-                  <p className="text-sm text-gray-500 mt-1">
-                    Postulado el {new Date(selectedJob.fechaPostulacion).toLocaleDateString()}
-                  </p>
-                )}
-              </div>
+              )}
+              
+              {/* Indicador de favorito */}
+              {activeTab === "favoritos" && (
+                <div className="mb-4 p-2 rounded-lg bg-yellow-50 border border-yellow-200">
+                  <p className="text-sm text-yellow-800">⭐ Trabajo guardado en favoritos</p>
+                </div>
+              )}
               
               {/* Detalles del trabajo */}
               <JobDetail 
