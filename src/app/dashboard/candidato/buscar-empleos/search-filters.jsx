@@ -163,7 +163,8 @@ export default function SearchFilters({
           value={localFilters.modalidad}
           onChange={(value) => handleFilterChange("modalidad", value)}
           size="md"
-          className="bg-sky-950 text-black border-sky-950 border rounded-sm text-sm"
+          className="bg-sky-950 text-white border-sky-950 border rounded-sm text-sm"
+          style={{backgroundColor: "#2A3B57"}}
         />
         <Select
           placeholder="Sueldo"
@@ -171,7 +172,8 @@ export default function SearchFilters({
           value={localFilters.sueldo}
           onChange={(value) => handleFilterChange("sueldo", value)}
           size="md"
-          className="bg-sky-950 text-black border-sky-950 border rounded-sm text-sm"
+          className="bg-sky-950 text-white border-sky-950 border rounded-sm text-sm"
+          style={{backgroundColor: "#2A3B57"}}
         />
         <Select
           placeholder="Tipo de contrato"
@@ -179,7 +181,8 @@ export default function SearchFilters({
           value={localFilters.tipoContrato}
           onChange={(value) => handleFilterChange("tipoContrato", value)}
           size="md"
-          className="bg-sky-950 text-black border-sky-950 border rounded-sm text-sm"
+          className="bg-sky-950 text-white border-sky-950 border rounded-sm text-sm"
+          style={{backgroundColor: "#2A3B57"}}
         />
         <Select
           placeholder="Categoría"
@@ -187,10 +190,11 @@ export default function SearchFilters({
           value={localFilters.categoria}
           onChange={(value) => handleFilterChange("categoria", value)}
           size="md"
-          className=" bg-blue-950 text-black border-sky-950 border rounded-sm text-sm"
+          className="bg-blue-950 text-white border-sky-950 border rounded-sm text-sm"
+          style={{backgroundColor: "#2A3B57"}}
         />
 
-        <select
+        {/* <select
           value={localFilters.tipoContrato}
           onChange={(e) => handleFilterChange("tipoContrato", e.target.value)}
           className="bg-sky-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
@@ -200,11 +204,11 @@ export default function SearchFilters({
           <option value="Medio tiempo">Medio tiempo</option>
           <option value="Por proyecto">Por proyecto</option>
           <option value="Prácticas">Prácticas</option>
-        </select>
+        </select> */}
 
         {/* Botón limpiar filtros */}
         {hasActiveFilters && (
-          <div className="ml-auto">
+          <div className="">
             <button
               onClick={handleClearFilters}
               className="text-blue-800 text-sm hover:underline flex items-center gap-1"

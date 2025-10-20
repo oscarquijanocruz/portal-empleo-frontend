@@ -51,13 +51,28 @@ export default function StepDoc() {
   const handlePortafolioChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5000000) {
-        alert("El archivo es muy grande. Máximo 5MB");
+      if (file.size > 500000000) {
+        alert("El archivo es muy grande. Máximo 50MB");
         return;
       }
       setPortafolioPreview(file.name);
     }
   };
+
+  //Crear función para guardar documentos
+  const handleSaveDocuments = () => {
+    console.log("Guardando documentos:", documentos);
+    // Aquí se implementaría la lógica para guardar los documentos
+    // Por ejemplo, enviar los documentos a un servidor y almacenarlos en una base de datos
+
+    // Limpiar documentos
+    setDocumentos([]);
+    setFotoPerfilPreview(null);
+    setCvPreview(null);
+    setPortafolioPreview(null);
+    alert("Documentos guardados exitosamente");
+  };
+
 
   return (
     <div>
@@ -191,7 +206,7 @@ export default function StepDoc() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                URL (LinkedIn, Github, Website o Personal)
+                URL (LinkedIn, Github, Carpeta de Drive, Website Personal)
               </label>
               <Input
                 type="url"

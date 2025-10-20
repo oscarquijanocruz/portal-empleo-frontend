@@ -145,7 +145,7 @@ export default function StepProfesional({ methods }) {
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Ultimo nivel de estudios o
+              Último nivel de estudios o actualmente estudiando
             </label>
             <Controller
               name="nivelEducativo"
@@ -262,7 +262,7 @@ export default function StepProfesional({ methods }) {
           <div className="mb-4">
             <div className="flex items-center mb-2">
               <h2 className="block text-md font-medium text-gray-700">
-                Habilidades duras
+                Habilidades duras (Hard Skills)
               </h2>
             </div>
             <div className="flex gap-2">
@@ -303,7 +303,7 @@ export default function StepProfesional({ methods }) {
         <div className="mb-8">
           <div className="flex items-center mb-2">
             <h2 className="block text-md font-medium text-gray-700">
-              Habilidades blandas
+              Habilidades blandas (Soft Skills)
             </h2>
           </div>
 

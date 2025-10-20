@@ -27,7 +27,7 @@ export default function StepPersonalInfo() {
       </h1>
       <div className="border-y-1 py-6">
         <div className="flex items-center mb-6">
-          <User className="w-6 h-6 text-blue-900 mr-3" />
+          <User className="w-6 h-6 text-blue-900 mr-3" fill={"currentColor"} />
           <h2 className="text-xl font-semibold text-gray-900">
             Datos Personales
           </h2>

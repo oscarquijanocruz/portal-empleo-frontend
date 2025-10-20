@@ -8,7 +8,11 @@ import StepPersonalInfo from "../mi-perfil/information-form/StepPersonalInfo";
 import StepProfesional from "../mi-perfil/information-form/StepProfesional";
 import StepExperience from "../mi-perfil/information-form/StepExperience";
 import StepDoc from "../mi-perfil/information-form/StepDoc";
-import { CircleCheck, CircleChevronLeft, CircleChevronRight } from "lucide-react";
+import {
+  CircleCheck,
+  CircleChevronLeft,
+  CircleChevronRight,
+} from "lucide-react";
 
 export default function MiPerfilPage() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -94,15 +98,14 @@ export default function MiPerfilPage() {
     },
   });
 
-  const icon = () => {
-    return (
-      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-        <CircleCheck size={26} className="text-blue-600" />
-      </div>
-    );
-  };
-
   const { handleSubmit, trigger, getValues, watch } = methods;
+
+  const stepNames = {
+    1: "Información básica",
+    2: "Datos profesionales",
+    3: "Experiencia laboral",
+    4: "Documentos",
+  };
 
   // Validación personalizada para experiencias
   const validarExperiencias = () => {
@@ -197,11 +200,11 @@ export default function MiPerfilPage() {
 
   const onSubmit = async (data) => {
     console.log("✅ Formulario completo:", data);
-    
+
     // Ver las experiencias específicamente
     console.log("📋 Experiencias laborales:", data.experiencias);
     console.log("🎯 Total de experiencias:", data.experiencias?.length || 0);
-    
+
     await saveFinalData(data);
   };
 
@@ -210,7 +213,7 @@ export default function MiPerfilPage() {
       console.log(`💾 Guardando paso ${step}:`, data);
       // Aquí harías tu llamada al backend
       // await fetch('/api/candidate/save-step', { ... })
-      
+
       // Guardar en memoria temporal (simulando backend)
       window.candidateFormDraft = data;
     } catch (error) {
@@ -238,7 +241,39 @@ export default function MiPerfilPage() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-start px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen flex justify-center items-start px-4 sm:px-6 lg:py-8">
+      {/* Barra de progreso */}
+      <div className="sticky top-7">
+        {[1, 2, 3, 4].map((step) => (
+          <ul
+            key={step}
+            className="grid grid-cols-1 space-y-0.5 text-xs font-semibold relative"
+          >
+            <div
+              className={`flex items-center gap-3 ${
+                step <= currentStep ? "text-green-600" : "text-gray-400"
+              }`}
+            >
+              <CircleCheck
+                className={`w-3 h-3 ${
+                  step <= currentStep
+                    ? "w-4.5 h-4.5 fill-green-600 text-white"
+                    : "fill-gray-400 text-gray-400"
+                } transition-all duration-400`}
+              />
+              <p>{stepNames[step]}</p>
+            </div>
+            <li className={`flex py-0.5 ${step === 4 ? "hidden" : ""}`}>
+              <div
+                className={`h-12 w-1 mx-1 rounded ${
+                  step + 1 <= currentStep ? "bg-green-600" : "bg-gray-200"
+                } transition-all duration-400`}
+              />
+            </li>
+          </ul>
+        ))}
+      </div>
+
       <div className="w-full min-w-[320px] max-w-[729px] mx-auto">
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
@@ -248,54 +283,6 @@ export default function MiPerfilPage() {
             Actualiza tu información personal y profesional
           </p>
         </div>
-
-        {/* Barra de progreso */}
-        <div className="mb-8">
-          <div className="flex justify-between mb-2 items-center">
-            <CircleCheck
-              size={28}
-              className="text-sky-950 transition-colors flex-shrink-0"
-            />
-            {[1, 2, 3, 4].map((step) => (
-              <div
-                key={step}
-                className={`w-1/4 h-1 mx-1 rounded ${
-                  step <= currentStep ? "bg-sky-950" : "bg-gray-200"
-                } transition-colors duration-500`}
-              />
-            ))}
-          </div>
-          <p className="text-center text-sm text-gray-600">
-            Paso {currentStep} de 4
-          </p>
-        </div>
-
-        {/* Nuevo diseño
-        <section className="space-y-6">
-          <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-            <ul className="grid grid-cols-1 space-y-3 text-sm relative">
-              <li className="h-16 w-1 mx-1 rounded bg-sky-950 flex items-center text-green-600">
-                <CircleCheck className="w-4 h-4 mr-2 justify-self-center" />
-                Información básica
-              </li>
-              <li className="flex items-center text-green-600">
-                <div className="h-16 w-1 mx-1 rounded bg-sky-950 " />
-                <CircleCheck className="w-4 h-4 mr-2" />
-                Informacion profesional
-              </li>
-              <li className="flex items-center text-gray-400">
-                <div className="h-16 w-1 mx-1 rounded bg-sky-950 " />
-                <div className="w-4 h-4 rounded-full border-2 border-gray-300 mr-2"></div>
-                Experiencia laboral
-              </li>
-              <li className="flex items-center text-gray-400">
-                <div className="h-16 w-1 mx-1 rounded bg-sky-950 " />
-                <div className="w-4 h-4 rounded-full border-2 border-gray-300 mr-2"></div>
-                Subir CV
-              </li>
-            </ul>
-          </div>
-        </section> */}
 
         {/* FormProvider pasa el context a todos los hijos */}
         <FormProvider {...methods}>

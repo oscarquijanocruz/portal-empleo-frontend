@@ -4,18 +4,18 @@ import Button from "../../../../components/ui/Button";
 import Input from "../../../../components/ui/Input";
 import Select from "@/app/components/ui/Select";
 import Modal from "@/app/components/ui/Modal";
-import { 
-  BriefcaseBusiness, 
-  Plus, 
-  Edit2, 
-  Trash2, 
-  Save, 
-  X, 
+import {
+  BriefcaseBusiness,
+  Plus,
+  Edit2,
+  Trash2,
+  Save,
+  X,
   Calendar,
-  CheckCircle 
+  CheckCircle,
 } from "lucide-react";
-import { Controller, set, useFormContext } from "react-hook-form";
-import useNotifications from "@/app/hooks/useNotifications";
+import { Controller, set, useFormContext } from "react-hook-form";  
+import { useNotification } from "@/app/contexts/NotificationContext";
 
 export default function StepExperience() {
   const {
@@ -23,10 +23,13 @@ export default function StepExperience() {
     formState: { errors },
     setValue,
     watch,
-    clearErrors
+    clearErrors,
   } = useFormContext();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { showWarning, showSuccess, showError } = useNotifications();
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [experienceIdPendingDelete, setExperienceIdPendingDelete] =
+    useState(null);
+  const { notify } = useNotification();
 
   // Watch para hacer reactivo el array de experiencias
   const experiencias = watch("experiencias") || [];
@@ -43,25 +46,34 @@ export default function StepExperience() {
     anioSalida: new Date().getFullYear().toString(),
     mesSalida: "Enero",
     descripcionAct: "",
-    esActual: false
+    esActual: false,
   });
 
   const meses = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
   ];
 
   // Generar años (últimos 50 años)
-  const anios = Array.from(
-    { length: 50 }, 
-    (_, i) => (new Date().getFullYear() - i).toString()
+  const anios = Array.from({ length: 50 }, (_, i) =>
+    (new Date().getFullYear() - i).toString()
   );
 
   // Manejar checkbox "No tengo experiencia"
   const handleNoExperiencia = (e) => {
     const checked = e.target.checked;
     setValue("noExperienciaLaboral", checked);
-    
+
     if (checked) {
       // Limpiar experiencias si marca que no tiene
       setValue("experiencias", []);
@@ -73,9 +85,9 @@ export default function StepExperience() {
   // Manejar cambios en el formulario
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -83,7 +95,7 @@ export default function StepExperience() {
   const guardarExperiencia = () => {
     // Validación básica
     if (!formData.nombreEmpresa.trim() || !formData.cargo.trim()) {
-      setIsModalOpen(true);
+      setIsWarningModalOpen(true);
       return;
     }
 
@@ -123,7 +135,7 @@ export default function StepExperience() {
       anioSalida: new Date().getFullYear().toString(),
       mesSalida: "Enero",
       descripcionAct: "",
-      esActual: false
+      esActual: false,
     });
     setMostrarFormulario(false);
     setExperienciaEditando(null);
@@ -133,35 +145,43 @@ export default function StepExperience() {
   const editarExperiencia = (experiencia) => {
     setFormData({ ...experiencia });
     setExperienciaEditando(experiencia);
-    setMostrarFormulario(true); 
+    setMostrarFormulario(true);
   };
 
   // Eliminar experiencia
   const eliminarExperiencia = (id) => {
-    if (window.confirm("¿Estás seguro de eliminar esta experiencia?")) {
-      const experienciasActuales = watch("experiencias") || [];
-      const nuevasExperiencias = experienciasActuales.filter(exp => exp.id !== id);
-      setValue("experiencias", nuevasExperiencias);
-      showSuccess("Eliminada", "La experiencia ha sido eliminada");
-    }
+    setExperienceIdPendingDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmarEliminacion = () => {
+    if (experienceIdPendingDelete == null) return;
+    const experienciasActuales = watch("experiencias") || [];
+    const nuevasExperiencias = experienciasActuales.filter(
+      (exp) => exp.id !== experienceIdPendingDelete
+    );
+    setValue("experiencias", nuevasExperiencias);
+    setIsDeleteModalOpen(false);
+    setExperienceIdPendingDelete(null);
+    notify.success("Eliminada", "La experiencia ha sido eliminada");
   };
 
   // Calcular experiencia total
   // const calcularExperienciaTotal = () => {
   //   let totalMeses = 0;
-    
+
   //   experiencias.forEach(exp => {
   //     const mesInicio = meses.indexOf(exp.mesEntrada) + 1;
-  //     const mesFin = exp.esActual 
-  //       ? new Date().getMonth() + 1 
+  //     const mesFin = exp.esActual
+  //       ? new Date().getMonth() + 1
   //       : meses.indexOf(exp.mesSalida) + 1;
 
   //     const fechaInicio = new Date(`${exp.anioEntrada}-${mesInicio}-01`);
-  //     const fechaFin = exp.esActual 
-  //       ? new Date() 
+  //     const fechaFin = exp.esActual
+  //       ? new Date()
   //       : new Date(`${exp.anioSalida}-${mesFin}-01`);
 
-  //     const mesesDiferencia = (fechaFin.getFullYear() - fechaInicio.getFullYear()) * 12 
+  //     const mesesDiferencia = (fechaFin.getFullYear() - fechaInicio.getFullYear()) * 12
   //       + (fechaFin.getMonth() - fechaInicio.getMonth());
 
   //     totalMeses += Math.max(0, mesesDiferencia);
@@ -169,7 +189,7 @@ export default function StepExperience() {
 
   //   const anios = Math.floor(totalMeses / 12);
   //   const meses = totalMeses % 12;
-    
+
   //   return { anios, meses };
   // };
 
@@ -183,27 +203,27 @@ export default function StepExperience() {
 
       <div className="border-y-1 py-6">
         <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          isOpen={isWarningModalOpen}
+          onClose={() => setIsWarningModalOpen(false)}
           title="Complete la información"
           variant="warning-yellow"
           confirmText="Okay"
-          onConfirm={() => setIsModalOpen(false)}
+          onConfirm={() => setIsWarningModalOpen(false)}
         >
           <p>Por favor completa al menos la empresa y el cargo.</p>
         </Modal>
         <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
           title="Eliminar experiencia"
           variant="warning-red"
           confirmText="Confirmar"
           cancelText="Cancelar"
-          onConfirm={() => setIsModalOpen(false)}
+          onConfirm={confirmarEliminacion}
         >
           <p>¿Estás seguro de eliminar esta experiencia?</p>
         </Modal>
-        
+
         {/* Checkbox: No tengo experiencia */}
         <div className="flex items-center mb-6 p-4 bg-gray-50 rounded-lg border">
           <input
