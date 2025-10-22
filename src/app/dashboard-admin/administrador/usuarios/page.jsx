@@ -1,36 +1,53 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil, Trash, UserCheck, UserX } from "lucide-react";
+import { Pencil, Trash, UserCheck, UserX, Calendar, PlusCircle } from "lucide-react"; // Agregar íconos para los filtros y acciones
 
 // Datos simulados de usuarios
 const usuarios = [
-  { id: 1, nombre: "Juan Pérez", edad: 30, ubicacion: "Ciudad de México", estado: "activo" },
-  { id: 2, nombre: "Ana García", edad: 25, ubicacion: "Guadalajara", estado: "inactivo" },
-  { id: 3, nombre: "Carlos López", edad: 35, ubicacion: "Monterrey", estado: "activo" },
-  { id: 4, nombre: "Lucía Martínez", edad: 28, ubicacion: "Cancún", estado: "activo" },
-  { id: 5, nombre: "José Gómez", edad: 40, ubicacion: "Tijuana", estado: "inactivo" },
+  { id: 1, nombre: "Juan Pérez", tipo: "Admin", estado: "Activo", fecha: "2025-01-15", ubicacion: "Ciudad de México" },
+  { id: 2, nombre: "Ana García", tipo: "Empleado", estado: "Inactivo", fecha: "2025-03-12", ubicacion: "Guadalajara" },
+  { id: 3, nombre: "Carlos López", tipo: "Admin", estado: "Activo", fecha: "2025-06-23", ubicacion: "Monterrey" },
+  { id: 4, nombre: "Lucía Martínez", tipo: "Empleado", estado: "Activo", fecha: "2025-07-18", ubicacion: "Cancún" },
+  { id: 5, nombre: "José Gómez", tipo: "Empleado", estado: "Inactivo", fecha: "2025-09-10", ubicacion: "Tijuana" },
 ];
 
 export default function UserManagement() {
   // Estados de búsqueda y filtros
-  const [search, setSearch] = useState("");
-  const [edadFilter, setEdadFilter] = useState("");
-  const [estadoFilter, setEstadoFilter] = useState("");
-  const [ubicacionFilter, setUbicacionFilter] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [search, setSearch] = useState(""); // Filtro por nombre
+  const [estadoFilter, setEstadoFilter] = useState(""); // Filtro por estado
+  const [tipoFilter, setTipoFilter] = useState(""); // Filtro por tipo
+  const [fechaFilter, setFechaFilter] = useState(""); // Filtro por fecha
+  const [ubicacionFilter, setUbicacionFilter] = useState(""); // Filtro por ubicación
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal para agregar o editar usuario
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false); // Modal para confirmar eliminación
+  const [selectedUser, setSelectedUser] = useState(null); // Usuario seleccionado para editar o eliminar
+
+  const [newUser, setNewUser] = useState({
+    nombre: "",
+    tipo: "",
+    estado: "",
+    fecha: "",
+    ubicacion: "",
+  });
 
   // Filtrar usuarios en base a los filtros
-  const filteredUsers = usuarios.filter(user => {
+  const filteredUsers = usuarios.filter((user) => {
     return (
       user.nombre.toLowerCase().includes(search.toLowerCase()) &&
-      (edadFilter ? user.edad >= parseInt(edadFilter.split("-")[0]) && user.edad <= parseInt(edadFilter.split("-")[1]) : true) &&
       (estadoFilter ? user.estado === estadoFilter : true) &&
+      (tipoFilter ? user.tipo === tipoFilter : true) &&
+      (fechaFilter ? user.fecha === fechaFilter : true) &&
       (ubicacionFilter ? user.ubicacion === ubicacionFilter : true)
     );
   });
+
+  // Abrir modal de agregar usuario
+  const openAddUserModal = () => {
+    setIsModalOpen(true);
+    setNewUser({ nombre: "", tipo: "", estado: "", fecha: "", ubicacion: "" });
+  };
 
   // Abrir modal de edición
   const openModal = (user) => {
@@ -58,18 +75,37 @@ export default function UserManagement() {
   const handleDelete = () => {
     // Lógica para eliminar el usuario
     console.log("Usuario eliminado:", selectedUser);
-    closeDeleteConfirm();
+    setIsDeleteConfirmOpen(false);
+    // Actualizar usuarios (esto es solo un ejemplo de lógica de eliminación)
   };
 
-  // Editar usuario (por ahora solo logueo los datos)
+  // Editar usuario
   const handleEdit = () => {
+    // Actualizar el usuario con los nuevos datos
     console.log("Usuario editado:", selectedUser);
-    closeModal();
+    setIsModalOpen(false);
+    // Lógica para actualizar el usuario
+  };
+
+  // Agregar nuevo usuario
+  const handleAddUser = () => {
+    // Lógica para agregar nuevo usuario
+    console.log("Nuevo usuario agregado:", newUser);
+    setIsModalOpen(false);
+  };
+
+  // Restablecer filtros
+  const resetFilters = () => {
+    setSearch("");
+    setEstadoFilter("");
+    setTipoFilter("");
+    setFechaFilter("");
+    setUbicacionFilter("");
   };
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 col-span-1">
-      <h1 className="text-lg font-bold mb-4 text-gray-700 text-center">Gestion de Users</h1>
+      <h1 className="text-lg font-bold mb-4 text-gray-700 text-center">Gestión de Usuarios</h1>
 
       {/* Barra de métricas rápidas */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -91,7 +127,7 @@ export default function UserManagement() {
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-700">Usuarios Activos</h3>
-            <p className="text-3xl font-bold text-green-700 text-center">{usuarios.filter(v => v.estado === "activo").length}</p>
+            <p className="text-3xl font-bold text-green-700 text-center">{usuarios.filter(v => v.estado === "Activo").length}</p>
           </div>
         </div>
 
@@ -102,7 +138,7 @@ export default function UserManagement() {
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-700">Usuarios Inactivos</h3>
-            <p className="text-3xl font-bold text-red-700 text-center">{usuarios.filter(v => v.estado === "inactivo").length}</p>
+            <p className="text-3xl font-bold text-red-700 text-center">{usuarios.filter(v => v.estado === "Inactivo").length}</p>
           </div>
         </div>
       </div>
@@ -119,24 +155,34 @@ export default function UserManagement() {
 
         {/* Filtros */}
         <select
-          value={edadFilter}
-          onChange={(e) => setEdadFilter(e.target.value)}
-          className="px-3 py-2 border rounded-lg text-sm"
-        >
-          <option value="">Filtro por Edad</option>
-          <option value="18-25">18-25</option>
-          <option value="26-40">26-40</option>
-          <option value="41-60">41-60</option>
-        </select>
-
-        <select
           value={estadoFilter}
           onChange={(e) => setEstadoFilter(e.target.value)}
           className="px-3 py-2 border rounded-lg text-sm"
         >
           <option value="">Filtro por Estado</option>
-          <option value="activo">Activo</option>
-          <option value="inactivo">Inactivo</option>
+          <option value="Activo">Activo</option>
+          <option value="Inactivo">Inactivo</option>
+        </select>
+
+        <select
+          value={tipoFilter}
+          onChange={(e) => setTipoFilter(e.target.value)}
+          className="px-3 py-2 border rounded-lg text-sm"
+        >
+          <option value="">Filtro por Tipo</option>
+          <option value="Admin">Admin</option>
+          <option value="Empleado">Empleado</option>
+        </select>
+
+        <select
+          value={fechaFilter}
+          onChange={(e) => setFechaFilter(e.target.value)}
+          className="px-3 py-2 border rounded-lg text-sm"
+        >
+          <option value="">Filtro por Fecha</option>
+          <option value="2025-01-15">15 Enero 2025</option>
+          <option value="2025-03-12">12 Marzo 2025</option>
+          <option value="2025-06-23">23 Junio 2025</option>
         </select>
 
         <select
@@ -151,6 +197,14 @@ export default function UserManagement() {
           <option value="Cancún">Cancún</option>
           <option value="Tijuana">Tijuana</option>
         </select>
+
+        {/* Botón para restablecer filtros */}
+        <button
+          onClick={resetFilters}
+          className="px-3 py-2 bg-gray-300 text-sm rounded-lg"
+        >
+          Restablecer Filtros
+        </button>
       </div>
 
       {/* Tabla de usuarios */}
@@ -158,9 +212,9 @@ export default function UserManagement() {
         <thead>
           <tr className="bg-gray-100">
             <th className="p-2 text-left text-sm font-semibold text-gray-700">Nombre</th>
-            <th className="p-2 text-left text-sm font-semibold text-gray-700">Edad</th>
-            <th className="p-2 text-left text-sm font-semibold text-gray-700">Ubicación</th>
+            <th className="p-2 text-left text-sm font-semibold text-gray-700">Tipo</th>
             <th className="p-2 text-left text-sm font-semibold text-gray-700">Estado</th>
+            <th className="p-2 text-left text-sm font-semibold text-gray-700">Fecha</th>
             <th className="p-2 text-left text-sm font-semibold text-gray-700">Acciones</th>
           </tr>
         </thead>
@@ -169,9 +223,9 @@ export default function UserManagement() {
           {filteredUsers.map((usuario) => (
             <tr key={usuario.id} className="hover:bg-gray-50">
               <td className="p-2 text-sm text-gray-700">{usuario.nombre}</td>
-              <td className="p-2 text-sm text-gray-700">{usuario.edad}</td>
-              <td className="p-2 text-sm text-gray-700">{usuario.ubicacion}</td>
+              <td className="p-2 text-sm text-gray-700">{usuario.tipo}</td>
               <td className="p-2 text-sm text-gray-700">{usuario.estado}</td>
+              <td className="p-2 text-sm text-gray-700">{usuario.fecha}</td>
               <td className="p-2 text-sm">
                 <button
                   onClick={() => openModal(usuario)}
@@ -207,20 +261,29 @@ export default function UserManagement() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-600">Edad</label>
+                <label className="block text-sm text-gray-600">Tipo</label>
                 <input
-                  type="number"
-                  value={selectedUser.edad}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, edad: e.target.value })}
+                  type="text"
+                  value={selectedUser.tipo}
+                  onChange={(e) => setSelectedUser({ ...selectedUser, tipo: e.target.value })}
                   className="w-full px-3 py-2 border rounded-md"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-600">Ubicación</label>
+                <label className="block text-sm text-gray-600">Estado</label>
                 <input
                   type="text"
-                  value={selectedUser.ubicacion}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, ubicacion: e.target.value })}
+                  value={selectedUser.estado}
+                  onChange={(e) => setSelectedUser({ ...selectedUser, estado: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-600">Fecha</label>
+                <input
+                  type="text"
+                  value={selectedUser.fecha}
+                  onChange={(e) => setSelectedUser({ ...selectedUser, fecha: e.target.value })}
                   className="w-full px-3 py-2 border rounded-md"
                 />
               </div>

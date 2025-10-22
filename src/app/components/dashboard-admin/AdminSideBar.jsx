@@ -9,8 +9,8 @@ export default function AdminSideBar() {
     { icon: Home, label: "Inicio", href: "/dashboard-admin/administrador" },
     { icon: Users, label: "Gestión de Usuarios", href: "/dashboard-admin/administrador/usuarios" },
     { icon: Briefcase, label: "Gestión de Vacantes", href: "/dashboard-admin/administrador/vacantes" },
-    { icon: Calendar, label: "Gestión de Eventos", href: "/dashboard-admin/eventos" },
-    { icon: FileText, label: "Gestión de Contenido", href: "/dashboard-admin/contenido" },
+    { icon: Calendar, label: "Gestión de Eventos", href: "/dashboard-admin/administrador/eventos" },
+    { icon: FileText, label: "Gestión de Contenido", href: "/dashboard-admin/administrador/contenido" },
     { icon: BarChart, label: "Reportes", href: "/dashboard-admin/administrador/reportes" },
     { icon: Container, label: "Soporte Técnico", href: "/dashboard-admin/administrador/soporte-tecnico" },
   ];
