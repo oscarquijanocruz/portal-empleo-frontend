@@ -2,6 +2,7 @@ import Input from "@/app/components/ui/Input";
 import { File, Upload, User } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function StepDoc() {
   const {
@@ -59,7 +60,7 @@ export default function StepDoc() {
     }
   };
 
-  //Crear función para guardar documentos
+  // Crear función para guardar documentos
   const handleSaveDocuments = () => {
     console.log("Guardando documentos:", documentos);
     // Aquí se implementaría la lógica para guardar los documentos

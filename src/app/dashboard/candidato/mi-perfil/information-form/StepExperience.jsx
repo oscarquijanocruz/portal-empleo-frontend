@@ -13,9 +13,11 @@ import {
   X,
   Calendar,
   CheckCircle,
+  Check,
 } from "lucide-react";
 import { Controller, set, useFormContext } from "react-hook-form";  
 import { useNotification } from "@/app/contexts/NotificationContext";
+import Checkbox from "@/app/components/ui/Checkbox";
 
 export default function StepExperience() {
   const {
@@ -226,12 +228,11 @@ export default function StepExperience() {
 
         {/* Checkbox: No tengo experiencia */}
         <div className="flex items-center mb-6 p-4 bg-gray-50 rounded-lg border">
-          <input
-            type="checkbox"
+          <Checkbox
             name="noExperienciaLaboral"
             checked={noExperienciaLaboral}
             onChange={handleNoExperiencia}
-            className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 mr-3"
+            className="w-6 h-6 mr-3"
           />
           <div>
             <h3 className="font-medium text-gray-900">

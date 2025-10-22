@@ -62,30 +62,30 @@ export default function MiPerfilPage() {
       noExperienciaLaboral: false, // Checkbox para indicar sin experiencia
       experiencias: [
         // Array de experiencias
-        // {
-        //   id: 1,
-        //   nombreEmpresa: "Mentory",
-        //   cargo: "Desarrollador Frontend",
-        //   descripcionAct:
-        //     "Desarrollo de aplicaciones web con React y Next.js, implementación de componentes reutilizables.",
-        //   anioEntrada: "2022",
-        //   mesEntrada: "Marzo",
-        //   anioSalida: "2024",
-        //   mesSalida: "Diciembre",
-        //   esActual: false,
-        // },
-        // {
-        //   id: 2,
-        //   nombreEmpresa: "Tech Solutions",
-        //   cargo: "Desarrollador Junior",
-        //   descripcionAct:
-        //     "Soporte y mantenimiento de aplicaciones web, corrección de bugs.",
-        //   anioEntrada: "2020",
-        //   mesEntrada: "Enero",
-        //   anioSalida: "2022",
-        //   mesSalida: "Febrero",
-        //   esActual: false,
-        // },
+        {
+          id: 1,
+          nombreEmpresa: "Mentory",
+          cargo: "Desarrollador Frontend",
+          descripcionAct:
+            "Desarrollo de aplicaciones web con React y Next.js, implementación de componentes reutilizables.",
+          anioEntrada: "2022",
+          mesEntrada: "Marzo",
+          anioSalida: "2024",
+          mesSalida: "Diciembre",
+          esActual: false,
+        },
+        {
+          id: 2,
+          nombreEmpresa: "Tech Solutions",
+          cargo: "Desarrollador Junior",
+          descripcionAct:
+            "Soporte y mantenimiento de aplicaciones web, corrección de bugs.",
+          anioEntrada: "2020",
+          mesEntrada: "Enero",
+          anioSalida: "2022",
+          mesSalida: "Febrero",
+          esActual: false,
+        },
       ],
 
       // Step 4: Documentos

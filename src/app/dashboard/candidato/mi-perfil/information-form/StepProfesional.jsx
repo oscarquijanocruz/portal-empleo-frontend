@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from "../../../../components/ui/Button";
 import Input from "../../../../components/ui/Input";
+import Checkbox from "@/app/components/ui/Checkbox";
 import { GraduationCap, Briefcase, UserCog, Globe, X } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
 import Select from "@/app/components/ui/Select";
@@ -210,12 +211,10 @@ export default function StepProfesional({ methods }) {
               disabled={noAplicaCarrera}
             />
             <div className="flex items-center gap-2 mt-1 p-1 align-center">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={noAplicaCarrera}
                 onChange={handleNoAplicaCarrera}
                 name="noAplicaCarrera"
-                className="border-gray-300 rounded-md"
               />
               <p className="text-sm text-gray-500">No aplica</p>
             </div>
@@ -240,12 +239,10 @@ export default function StepProfesional({ methods }) {
               })}
             />
             <div className="flex items-center gap-2 mt-1 p-1 align-center">
-              <input
-                type="checkbox"
+              <Checkbox
                 name="noAplicaCarrera"
                 checked={noAplicaFechaEgreso}
                 onChange={handleNoAplicaFechaEgreso}
-                className="border-gray-300 rounded-md"
               />
               <p className="text-sm text-gray-500">No aplica</p>
             </div>

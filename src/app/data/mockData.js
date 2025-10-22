@@ -1,3 +1,13 @@
+/**
+ * MOCK DATA para desarrollo frontend
+ * 
+ * Backend team: Reemplazar con endpoints reales:
+ * - GET /api/jobs → Lista de empleos
+ * - POST /api/jobs/search → Búsqueda con filtros
+ * - GET /api/jobs/:id → Detalle de empleo
+ * 
+ * Estructura de respuesta esperada: { data: Job[] }
+ */
 
 // Datos simlados (reemplazar por el backend cuando este)
 export const mockJobs = [
