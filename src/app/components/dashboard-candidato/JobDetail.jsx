@@ -5,6 +5,8 @@ import { useState } from "react";
 import { mockJobs } from "../../data/mockData";
 import Button from "../ui/Button";
 import Image from "next/image";
+import { measureMemory } from "vm";
+import Link from "next/link";
 
 export default function JobDetail({ job }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,22 +20,17 @@ export default function JobDetail({ job }) {
     );
   }
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
+  const handleLeerMas = () => {
+    isOpen ? setIsOpen(false) : setIsOpen(true);
     console.log("Abierto:", isOpen);
-    // Aquí se implementaría la lógica para mostrar o ocultar el modal
-    alert("Toggle abierto");
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
-    console.log("Cerrado:", isOpen);
-    // Aquí se implementaría la lógica para mostrar o ocultar el modal
-    alert("Toggle cerrado");
+  const handleApply = () => {
+    console.log('Aplicando a este trabajo');
   };
 
   return (
-    <div className="p-4 sticky top-0">
+    <div className="p-4 sticky top-0 z-10 overflow-hidden overflow-y-auto">
       <div className="space-y-4">
         {/* Header */}
         <div className="justify-between mb-6">
@@ -60,8 +57,7 @@ export default function JobDetail({ job }) {
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">Sobre la empresa</h2>
           <p className="text-gray-600 text-sm leading-relaxed">
-            {job.description ||
-              "(Descripción breve de la empresa: quiénes son, qué hacen, su cultura y propósito. Ejemplo: Somos una empresa líder en el sector tecnológico con enfoque en soluciones digitales innovadoras.)"}
+            {job.descripcion}
           </p>
         </div>
 
@@ -116,8 +112,7 @@ export default function JobDetail({ job }) {
           </div>
 
           <button
-            onClick={handleToggle}
-            onChange={handleClose}
+            onClick={handleLeerMas}
             className="flex items-center text-blue-800 text-sm font-medium mt-2 hover:underline"
           >
             Leer más <ChevronDown size={20} />
@@ -126,17 +121,21 @@ export default function JobDetail({ job }) {
 
         <div className="flex items-center space-x-4">
           {/* Apply Button */}
-          <Button className="w-full font-semibold py-3 rounded-lg transition-colors">
+          <Button className="w-full font-semibold py-3 rounded-lg transition-colors" 
+          onClick={handleApply}
+          >
             ¡Postularme!
           </Button>
           {/* Chat Button */}
           <div>
-            <Button
-              variant="secondary"
-              className="w-12 h-12 rounded-full shadow-lg transition-colors flex items-center justify-center"
-            >
-              <MessageSquareText size={28} />
-            </Button>
+            <Link href={`/dashboard/candidato/mensajes`}>
+              <Button
+                variant="secondary"
+                className="h-12 shadow-md transition-colors"
+              >
+                <MessageSquareText size={28} />
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

@@ -4,10 +4,10 @@ export const mockMessages = [
     sender: {
       name: "Monserrat Guerrero",
       position: "Coordinadora de compras",
-      company: "Grupo OMESE",
+      company: "Tech Solutions",
       avatar: "/api/placeholder/40/40"
     },
-    preview: "¿Buscas servicios de limpieza y...",
+    preview: "¿Buscas servicios de soluciones tecnológicas?",
     date: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000), // 18 días atrás
     isRead: false,
     isSponsored: true,

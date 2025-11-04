@@ -238,14 +238,16 @@ export default function StepProfesional({ methods }) {
                 },
               })}
             />
-            <div className="flex items-center gap-2 mt-1 p-1 align-center">
-              <Checkbox
-                name="noAplicaCarrera"
-                checked={noAplicaFechaEgreso}
-                onChange={handleNoAplicaFechaEgreso}
-              />
-              <p className="text-sm text-gray-500">No aplica</p>
-            </div>
+            <label>
+              <div className="flex items-center gap-2 mt-1 p-1 align-center">
+                <Checkbox
+                  name="noAplicaCarrera"
+                  checked={noAplicaFechaEgreso}
+                  onChange={handleNoAplicaFechaEgreso}
+                />
+                <p className="text-sm text-gray-500">No aplica</p>
+              </div>
+            </label>
           </div>
         </div>
 

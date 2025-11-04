@@ -7,9 +7,9 @@ function cn(...classes) {
 }
 
 const variantStyles = {
-  default: "border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-900 focus:border-blue-900",
-  checked: "border-blue-900 bg-blue-900 text-white focus:ring-2 focus:ring-blue-900",
-  hover: "border-gray-400 bg-white text-gray-900 hover:border-1 hover:border-blue-500 hover:shadow-sm",
+  default: "border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 hover:border-sky-900",
+  checked: "border-sky-950 bg-sky-950 text-white focus:ring-2 focus:ring-blue-900 hover:border-sky-900 hover:bg-sky-900",
+  hover: "border-gray-400 bg-white text-gray-900 hover:border-1 hover:border-sky-900 hover:shadow-sm",
   focus: "border-blue-900 bg-white text-gray-900 focus:ring-2 focus:ring-blue-900",
   disabled: "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed",
   disabledChecked: "border-gray-300 bg-gray-300 text-gray-500 cursor-not-allowed",

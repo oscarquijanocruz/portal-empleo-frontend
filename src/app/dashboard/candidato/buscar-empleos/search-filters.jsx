@@ -42,11 +42,11 @@ export default function SearchFilters({
   ];
 
   const tipoContratoOptions = [
-    { label: "Tiempo completo", value: "tiempoCompleto" },
-    { label: "Medio tiempo", value: "medioTiempo" },
-    { label: "Prácticas profesionales / Becario", value: "practicasProfesionales" },
-    { label: "Temporal / Proyecto", value: "temporalProyecto" },
-    { label: "Fines de semana", value: "finesDeSemana" },
+    { label: "Tiempo completo", value: "Tiempo completo" },
+    { label: "Medio tiempo", value: "Medio tiempo" },
+    { label: "Por proyecto", value: "Por proyecto" },
+    { label: "Prácticas profesionales / Becario", value: "Prácticas profesionales / Becario" },
+    { label: "Fines de semana", value: "Fines de semana" },
   ];  
 
   const categoriaOptions = [
@@ -193,19 +193,7 @@ export default function SearchFilters({
           className="bg-blue-950 text-white border-sky-950 border rounded-sm text-sm"
           style={{backgroundColor: "#2A3B57"}}
         />
-
-        {/* <select
-          value={localFilters.tipoContrato}
-          onChange={(e) => handleFilterChange("tipoContrato", e.target.value)}
-          className="bg-sky-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
-        >
-          <option value="">Tipo de contrato</option>
-          <option value="Tiempo completo">Tiempo completo</option>
-          <option value="Medio tiempo">Medio tiempo</option>
-          <option value="Por proyecto">Por proyecto</option>
-          <option value="Prácticas">Prácticas</option>
-        </select> */}
-
+        
         {/* Botón limpiar filtros */}
         {hasActiveFilters && (
           <div className="">

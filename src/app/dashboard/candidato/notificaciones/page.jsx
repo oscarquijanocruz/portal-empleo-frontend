@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
   Bell,
   CheckCircle2,
@@ -17,6 +18,7 @@ import Button from "../../../components/ui/Button";
 import Input from "@/app/components/ui/Input";
 
 export default function NotificacionesPage() {
+  const router = useRouter();
   const [notifications, setNotifications] = useState(mockNotifications);
   const [filters, setFilters] = useState({
     type: "all",
@@ -98,8 +100,45 @@ export default function NotificacionesPage() {
 
   const handleNotificationAction = (notification) => {
     console.log("Notification action:", notification.action);
-    // Here you would implement the actual action based on notification.action.type
-    // For example, navigate to a specific page, open a modal, etc.
+    
+    // Mark notification as read when action is triggered
+    if (!notification.isRead) {
+      handleMarkAsRead(notification.id);
+    }
+    
+    // Navigate based on notification type and action
+    switch (notification.type) {
+      case "message":
+        // Navigate to messages page with specific message ID if available
+        if (notification.action?.messageId) {
+          router.push(`/dashboard/candidato/mensajes?messageId=${notification.action.messageId}`);
+        } else {
+          router.push("/dashboard/candidato/mensajes");
+        }
+        break;
+        
+      case "job_application":
+        // Navigate to job applications page with specific job ID if available
+        if (notification.action?.jobId) {
+          router.push(`/dashboard/candidato/mis-empleos?jobId=${notification.action.jobId}`);
+        } else {
+          router.push("/dashboard/candidato/mis-empleos");
+        }
+        break;
+        
+      case "system":
+        // For system notifications, navigate to profile or dashboard
+        if (notification.action?.type === "view_profile") {
+          router.push("/dashboard/candidato/mi-perfil");
+        } else {
+          router.push("/dashboard/candidato");
+        }
+        break;
+        
+      default:
+        console.log("Unknown notification type:", notification.type);
+        break;
+    }
   };
 
   const handleSelectNotification = (notificationId) => {

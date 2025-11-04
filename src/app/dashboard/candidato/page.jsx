@@ -4,7 +4,15 @@ import Button from "@/app/components/ui/Button";
 import { useFavorites } from "@/app/hooks/useFavorites";
 import { mockJobs } from "@/app/data/mockData";
 import Link from "next/link";
-import { Building2, CheckCircle2, Clock, MapPin } from "lucide-react";
+import {
+  Bookmark,
+  Building2,
+  CheckCircle2,
+  FileUser,
+  Clock,
+  MapPin,
+  BellRing,
+} from "lucide-react";
 import { mockNotifications } from "@/app/data/mockNotifications";
 import useTypeNotification from "../../hooks/useTypeNotification";
 
@@ -14,14 +22,13 @@ export default function DashboardPage() {
 
   const totalPostulaciones = 5; // mock por ahora
   const totalNotificaciones = 3; // mock por ahora
-
-  const recomendados = mockJobs.slice(0, 3);
-  const notificaciones = mockNotifications.slice(0, 3);
+  const recomendados = mockJobs.slice(0, 3); // mock por ahora - cambiarlo por el endpoint
+  const notificaciones = mockNotifications.slice(0, 3); // mock por ahora - cambiarlo por el endpoint
 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       {/* Hero / bienvenida */}
-      <section className="rounded-sm bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white p-6 md:p-8">
+      <section className="rounded-sm bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 text-white p-6 md:p-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-2">
             <h1 className="text-2xl md:text-3xl font-bold">¡Bienvenido/a!</h1>
@@ -44,16 +51,19 @@ export default function DashboardPage() {
       {/* KPIs */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <KpiCard
+          icon={<Bookmark size={38} className="text-yellow-500" />}
           label="Favoritos"
           value={favoriteCount}
           href="/dashboard/candidato/mis-empleos?tab=favoritos"
         />
         <KpiCard
+          icon={<FileUser size={38} className="text-blue-600" />}
           label="Postulaciones"
           value={totalPostulaciones}
           href="/dashboard/candidato/mis-empleos?tab=postulaciones"
         />
         <KpiCard
+          icon={<BellRing size={38} className="text-green-600" />}
           label="Notificaciones"
           value={totalNotificaciones}
           href="/dashboard/candidato/notificaciones"
@@ -133,7 +143,7 @@ export default function DashboardPage() {
           <section>
             <div className="bg-white rounded-xl shadow-md p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-               Notificaciones recientes
+                Notificaciones recientes
               </h2>
               <div className="space-y-4">
                 {notificaciones.map((notification) => {
@@ -213,10 +223,11 @@ export default function DashboardPage() {
   );
 }
 
-function KpiCard({ label, value, href }) {
+function KpiCard({ icon, label, value, href }) {
   return (
     <Link href={href} className="block">
       <div className="rounded-sm bg-white border border-gray-200 shadow-sm p-4 hover:shadow-md transition-shadow">
+        <div className="pb-2">{icon}</div>
         <p className="text-sm text-gray-500">{label}</p>
         <p className="text-2xl font-bold text-blue-950">{value}</p>
       </div>

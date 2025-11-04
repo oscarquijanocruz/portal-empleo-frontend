@@ -57,12 +57,12 @@ export function Tab({
   
   const isActive = activeTab === value;
   
-  const baseClasses = "px-4 py-2 font-medium text-sm transition-colors duration-200 cursor-pointer";
+  const baseClasses = "px-1 py-3 font-medium text-sm transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focues:border-sky-950";
   
   const variantClasses = {
     underline: isActive 
-      ? "text-blue-800 border-b-2 border-blue-800 pb-2" 
-      : "text-black pb-2 hover:text-blue-700",
+      ? "text-blue-800 border-b-2 border-blue-800" 
+      : "text-black hover:text-blue-700",
     boxed: isActive 
       ? "text-blue-600 border border-blue-600 rounded-md bg-blue-50" 
       : "text-blue-800 border border-transparent rounded-md hover:text-blue-700 hover:border-blue-200"

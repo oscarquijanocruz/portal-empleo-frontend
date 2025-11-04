@@ -4,9 +4,9 @@ import JobCard from "../../../components/dashboard-candidato/JobCard";
 import JobDetail from "../../../components/dashboard-candidato/JobDetail";
 import { mockJobs } from "../../../data/mockData";
 import { useFavorites } from "../../../hooks/useFavorites";
-import { useExplorer }  from "../../../hooks/useExplorer";
+// import { useJobsForMe }  from "@/app/hooks/useJobsForMe";
 import { useJobs } from "../../../hooks/useJobs";
-import Button from "@/app/components/ui/Button";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Tabs, { Tab, TabList, TabContent } from "../../../components/ui/Tab";
 import Select from "@/app/components/ui/Select";
 
@@ -26,6 +26,8 @@ export default function BuscarEmpleoPage() {
     handleSortChange,
     handleTabChange
   } = useJobs(mockJobs);
+  const searchParams = useSearchParams();
+  const currentPage = (searchParams.get("page") || 1);
   
   //  Hook de favoritos (mantiene su lógica separada)
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
@@ -37,15 +39,15 @@ export default function BuscarEmpleoPage() {
     { label: "Más relevantes", value: "mas-relevantes" },
   ];
 
-  //  Hook de explorar trabajos (mantiene su lógica separada)
-  // const { explorer } =  useExplorer(); // Hacer algoritmo
+  // Hook de trabajos para ti (mantiene su lógica separada)
+  //const { jobsForMe } =  useJobsForMe(); // Hacer algoritmo
 
   return (
     <div className="h-full flex flex-col">
       {/* Resultados */}
       <div className="h-full grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Lista de trabajos */}
-        <div className="bg-gray-100 space-y-4 p-4">
+        <div className="bg-gray-100 space-y-4 p-3">
           {/* Bar busqueda y filtros */}
           <div>
             {/* Barra de búsqueda */}
@@ -97,6 +99,7 @@ export default function BuscarEmpleoPage() {
                   onJobSelect={handleJobSelect}
                   favorites={favorites}
                   onToggleFavorite={toggleFavorite}
+                  currentPage={currentPage}
                 />
               ) : (
                 <div className="text-center py-8 text-gray-500">
@@ -128,20 +131,11 @@ export default function BuscarEmpleoPage() {
                 </div>
               )}
             </TabContent>
-
-            <TabContent value="favoritos">
-              <div className="text-center py-8 text-gray-500">
-                <p>Función de favoritos próximamente</p>
-                <p className="text-sm mt-2">
-                  Pronto podrás guardar tus trabajos favoritos
-                </p>
-              </div>
-            </TabContent>
           </Tabs>
         </div>
 
         {/* Panel de detalles */}
-        <div className="p-1 space-y-4 overflow-y-auto">
+        <div className="p-4 relative">
           <JobDetail
             job={selectedJob}
             isFavorite={isFavorite(selectedJob?.id)}

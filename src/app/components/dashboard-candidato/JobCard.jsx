@@ -1,9 +1,11 @@
 /* Tarjeta individual de vacante - VERSION CORREGIDA */
 "use client";
-import { Bookmark, Info } from "lucide-react";
+import { Bookmark, Info, X } from "lucide-react";
 import { mockJobs } from "../../data/mockData";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { set } from "react-hook-form";
 
 // ✅ RECIBE las props necesarias desde el componente padre
 export default function JobCard({
@@ -13,6 +15,8 @@ export default function JobCard({
   favorites = new Set(),
   onToggleFavorite,
 }) {
+  const [isOpenPopover, setIsOpenPopover] = useState(false);
+
   // Url params
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -27,15 +31,29 @@ export default function JobCard({
 
   const handleFavoriteClick = (e, jobId) => {
     e.stopPropagation(); // ✅ Evita que se dispare el click del job
-
     onToggleFavorite?.(jobId);
   };
 
-  const handleInfoClick = (e) => {
+  const handleInfoClick = (e, job) => {
     e.stopPropagation(); // ✅ Evita que se dispare el click del job
-    // Agregar lógica para mostrar info adicional
-    // DropwdownMenu de info
+    if (job.id === selectedJob?.id) {
+      isOpenPopover ? setIsOpenPopover(false) : setIsOpenPopover(true);
+      console.log("Abriendo popover:", isOpenPopover, "Id del trabajo:", job);
+    } else setIsOpenPopover(!isOpenPopover);
   };
+
+  // Manejar clic fuera del popover
+  useEffect(() => {
+    if (!isOpenPopover) return;
+
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".notify")) {
+        setIsOpenPopover(false);
+      }
+    };
+    window.addEventListener("click", handleClickOutside);
+    return () => window.removeEventListener("click", handleClickOutside);
+  }, [isOpenPopover, setIsOpenPopover]);
 
   return (
     <div>
@@ -45,7 +63,7 @@ export default function JobCard({
             key={job.id}
             onClick={() => handleJobClick(job)}
             defaultValue={selectedJob?.id === job.id}
-            className={`bg-white shadow-md p-4 border rounded-sm cursor-pointer transition-all ${
+            className={`bg-white shadow-md p-4 border rounded-sm cursor-pointer transition-all relative ${
               selectedJob?.id === job.id
                 ? "border-gray-400 bg-blue-50 shadow-md"
                 : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
@@ -83,12 +101,14 @@ export default function JobCard({
                       </span>
                     )}
                   </div>
-                  <p className="text-blue-800 text-md font-medium">{job.empresa}</p>
-                  <div className="flex space-x-8">
+                  <p className="text-blue-800 text-md font-medium">
+                    {job.empresa}
+                  </p>
+                  <div className="flex flex-row">
                     <p className="text-gray-500 text-sm">
-                      {job.ubicacion}, {job.modalidad}, {job.jornada}
+                      {job.ubicacion} • {job.modalidad} • {job.jornada}
                     </p>
-                    <p className="text-sm text-gray-900">
+                    <p className="text-sm text-gray-900 text-right ml-auto">
                       Salario: <br />${job.salario}
                     </p>
                   </div>
@@ -114,13 +134,46 @@ export default function JobCard({
                   />
                 </button>
                 <button
-                  onClick={handleInfoClick}
+                  onClick={(e) => handleInfoClick(e, job.id)}
                   className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
                   title="Más información"
                 >
                   <Info size={22} />
                 </button>
               </div>
+
+              {/* Popover de información */}
+              {isOpenPopover && job.id === selectedJob?.id ? (
+                <div
+                  key={job.id}
+                  className="w-72 h-auto bg-white text-black border-1 border-gray-200 rounded-lg shadow-md text-left p-4 absolute z-999"
+                  style={{
+                    left: 300,
+                    top: -125,
+                  }}
+                >
+                  <div className="flex items-center">
+                    <p className="font-bold text-md mb-2 flex">
+                      Detalles de la vacante
+                    </p>
+                    <button
+                      onClick={() => setIsOpenPopover(false)}
+                      className="text-blue-600 hover:text-blue-800 transition-colors flex ml-auto"
+                    >
+                      <X
+                        size={14}
+                        className="text-gray-400 mt-2 mb-3 hover:text-gray-600 cursor-pointer"
+                      />
+                    </button>
+                  </div>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>ID: {job.id}</li>
+                    <li>Estado de la vacante: {job.status_vacante}</li>
+                    <li>Fecha de publicación: {job.fechaPublicacion}</li>
+                    <li>Fecha de cierre: fecha</li>
+                  </ul>
+                </div>
+              ) : null}
             </div>
           </div>
         ))}

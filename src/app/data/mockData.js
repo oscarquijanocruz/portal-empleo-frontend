@@ -8,7 +8,6 @@
  * 
  * Estructura de respuesta esperada: { data: Job[] }
  */
-
 // Datos simlados (reemplazar por el backend cuando este)
 export const mockJobs = [
   {
@@ -21,7 +20,9 @@ export const mockJobs = [
     categoria: "tecnologia",
     salario: "45,000",
     logo: "/api/placeholder/50/50",
-    description: "Buscamos un desarrollador Frontend con experiencia en React...",
+    status_vacante: "Activa", // Activa, Cerrada, En Pausa
+    fechaPublicacion: "2025/05/20",
+    descripcion: "Somos una empresa que vende soluciones tecnológicas",
     responsabilidades: [
       "Diseñar, desarrollar y optimizar aplicaciones web",
       "Colaborar con el equipo de diseño UX/UI",
@@ -40,7 +41,14 @@ export const mockJobs = [
         "Certificaciones en tecnologías web",
         "Idiomas adicionales (inglés)"
       ]
-    }
+    },
+    beneficios: [
+      "Trabajo en equipo",
+      "Experiencia en el desarrollo de aplicaciones web",
+      "Conocimientos en React, Next.js y TypeScript",
+      "Habilidades en comunicación y trabajo en equipo",
+      "Certificaciones en tecnologías web"
+    ],
   },
   {
     id: 2,
@@ -52,6 +60,8 @@ export const mockJobs = [
     categoria: "ventas",
     salario: "38,000",
     logo: "/api/placeholder/50/50",
+    status_vacante: "Activa", // Activa, Cerrada, En Pausa
+    fechaPublicacion: "2025/10/09",
     descripcion: "Únete a nuestro equipo creativo como Diseñador UX/UI...",
     responsabilidades: [
       "Crear wireframes y prototipos",
@@ -83,6 +93,8 @@ export const mockJobs = [
     categoria: "diseno",
     salario: "90,000",
     logo: "/api/placeholder/50/50",
+    status_vacante: "Cerrada", // Activa, Cerrada, En Pausa
+    fechaPublicacion: "2025/05/20",
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
       "Gestionar campañas en redes sociales",
@@ -114,6 +126,8 @@ export const mockJobs = [
     categoria: "diseno",
     salario: "14,000",
     logo: "/api/placeholder/50/50",
+    status_vacante: "Cerrada", // Activa, Cerrada, En Pausa
+    fechaPublicacion: "2025/02/20",
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
       "Gestionar campañas en redes sociales",
@@ -145,6 +159,8 @@ export const mockJobs = [
     categoria: "diseno",
     salario: "50,000",
     logo: "/api/placeholder/50/50",
+    status_vacante: "En Pausa", // Activa, Cerrada, En Pausa
+    fechaPublicacion: "2025/02/20",
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
       "Gestionar campañas en redes sociales",
@@ -206,7 +222,7 @@ export const mockJobs = [
     categoria: "administracion",
     salario: "30,000",
     logo: "/api/placeholder/50/50",
-    descripcion: "Especialista en marketing digital para campañas innovadoras...",
+    descripcion: "Somos una empresa que se dedica a vender pizzas",
     responsabilidades: [
       "Gestionar campañas en redes sociales",
       "Análisis de métricas y KPIs",
@@ -233,7 +249,7 @@ export const mockJobs = [
     empresa: "Clinica Nutricional",
     ubicacion: "Queretaro",
     modalidad: "Presencial",
-    jornada: "Tiempo completo",
+    jornada: "Prácticas profesionales / Becario",
     categoria: "Salud / Medicina / Farmacia",
     salario: "300,000",
     logo: "/api/placeholder/50/50",

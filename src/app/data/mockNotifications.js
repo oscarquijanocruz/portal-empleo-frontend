@@ -58,12 +58,12 @@ export const mockNotifications = [
     priority: "medium",
     action: {
       type: "view_application",
-      jobId: "fullstack-dev-002",
+      jobId: "mesero-kfc-001",
       candidateId: "carlos-mendoza-456"
     },
     metadata: {
-      jobTitle: "Desarrollador Full Stack",
-      company: "TechCorp",
+      jobTitle: "Mesero",
+      company: "KFC",
       candidateName: "Carlos Mendoza"
     }
   },
