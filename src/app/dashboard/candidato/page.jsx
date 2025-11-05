@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Button from "@/app/components/ui/Button";
+import Badge from "@/app/components/ui/Badge";
 import { useFavorites } from "@/app/hooks/useFavorites";
 import { mockJobs } from "@/app/data/mockData";
 import Link from "next/link";
@@ -12,6 +13,7 @@ import {
   Clock,
   MapPin,
   BellRing,
+  ArrowRightIcon
 } from "lucide-react";
 import { mockNotifications } from "@/app/data/mockNotifications";
 import useTypeNotification from "../../hooks/useTypeNotification";
@@ -28,21 +30,25 @@ export default function DashboardPage() {
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       {/* Hero / bienvenida */}
-      <section className="rounded-sm bg-gradient-to-r from-gray-900 via-gray-700 to-gray-500 text-white p-6 md:p-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div className="space-y-2">
-            <h1 className="text-2xl md:text-3xl font-bold">¡Bienvenido/a!</h1>
-            <p className="text-blue-100 max-w-2xl">
+      <section className="w-full h-96 rounded-sm bg-gray-800 text-white p-6 md:p-8 content-center">
+        <div className="grid grid-cols-1 md:flex-row md:items-center md:justify-between gap-6 text-center justify-center items-center">
+          <div className="space-y-4 px-72">
+            <Badge variant="primary" size="sm" className={"text-white bg-violet-900"}>Nuevo Portal</Badge>
+            <h1 className="text-3xl md:text-4xl font-bold">Tu próximo empleo te espera: Descubre oportunidades con Mentory.</h1>
+            <p className="text-blue-100 text-sm">
               Explora empleos recomendados, revisa tus postulaciones y mantente
               al día con tus notificaciones desde un solo lugar.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 justify-center">
             <Link href="/dashboard/candidato/buscar-empleos">
-              <Button variant="secondary">Buscar empleos</Button>
+              <Button variant="secondary" >
+                Buscar empleos
+                <ArrowRightIcon size={20} className="ml-2" />
+              </Button>
             </Link>
             <Link href="/dashboard/candidato/mi-perfil">
-              <Button variant="outline">Completar perfil</Button>
+              <Button variant="outline" className={"border-1 border-white text-white"}>Completar perfil</Button>
             </Link>
           </div>
         </div>

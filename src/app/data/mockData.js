@@ -49,6 +49,15 @@ export const mockJobs = [
       "Habilidades en comunicación y trabajo en equipo",
       "Certificaciones en tecnologías web"
     ],
+    beneficios: [
+      "Sueldo competitivo",
+      "Experiencia en el desarrollo de aplicaciones web",
+      "Prestaciones de ley",
+      "Prima vacacional",
+      "1 Hora de desayuno"
+    ],
+    sueldoMinimo: 30000,
+    sueldoMaximo: 55000,
   },
   {
     id: 2,
@@ -81,7 +90,15 @@ export const mockJobs = [
         "Conocimiento básico de HTML/CSS",
         "Inglés conversacional"
       ]
-    }
+    },
+    beneficios: [
+      "Sueldo competitivo",
+      "Seguro médico",
+      "Prestaciones de ley",
+      "Prima vacacional"
+    ],
+    sueldoMinimo: 10000,
+    sueldoMaximo: 15000,
   },
   {
     id: 3,

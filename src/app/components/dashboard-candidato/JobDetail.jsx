@@ -1,15 +1,14 @@
 // Panel derecho con detalle
 "use client";
-import { ChevronDown, MessageSquareText } from "lucide-react";
+import { ChevronDown, ChevronUp, CircleDollarSign, Clock, LayoutGrid, MessageSquareText } from "lucide-react";
 import { useState } from "react";
-import { mockJobs } from "../../data/mockData";
 import Button from "../ui/Button";
 import Image from "next/image";
-import { measureMemory } from "vm";
 import Link from "next/link";
 
 export default function JobDetail({ job }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   // ✅ Ahora recibe job como prop
   if (!job) {
@@ -20,7 +19,8 @@ export default function JobDetail({ job }) {
     );
   }
 
-  const handleLeerMas = () => {
+  const handleLeerMas = (e) => {
+    e.stopPropagation();
     isOpen ? setIsOpen(false) : setIsOpen(true);
     console.log("Abierto:", isOpen);
   };
@@ -83,10 +83,6 @@ export default function JobDetail({ job }) {
         {/* Requirements */}
         <div className="mb-8">
           <h2 className="text-lg font-semibold mb-3">Requisitos</h2>
-          <p className="text-sm text-gray-600 mb-3">
-            (Puede dividirse en indispensables y deseables)
-          </p>
-
           <div className="mb-4">
             <h3 className="font-medium text-gray-900 mb-2">Indispensables:</h3>
             <ul className="space-y-1 text-sm text-gray-600">
@@ -103,6 +99,18 @@ export default function JobDetail({ job }) {
             <h3 className="font-medium text-gray-900 mb-2">Deseables:</h3>
             <ul className="space-y-1 text-sm text-gray-600">
               {job.requisitos?.deseables?.map((req, index) => (
+                <li key={index} className="flex items-start mb-2">
+                  <span className="mr-2">•</span>
+                  <span>{req}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-medium text-gray-900 mb-2">Beneficios:</h3>
+            <ul className="space-y-1 text-sm text-gray-600">
+              {job.beneficios?.map((req, index) => (
                 <li key={index} className="flex items-start">
                   <span className="mr-2">•</span>
                   <span>{req}</span>
@@ -111,18 +119,43 @@ export default function JobDetail({ job }) {
             </ul>
           </div>
 
-          <button
-            onClick={handleLeerMas}
-            className="flex items-center text-blue-800 text-sm font-medium mt-2 hover:underline"
-          >
-            Leer más <ChevronDown size={20} />
-          </button>
+          <div className="grid grid-cols-3 border-t-1 border-gray-200 mt-4 mb-4 py-2 text-sm px-1 text-gray-700">
+            <p className="flex items-center">
+              <CircleDollarSign size={18} className="mr-1" />
+              Sueldo: ${job.sueldoMinimo} - ${job.sueldoMaximo} Mensual
+            </p>
+            <p className="flex items-center border-x-1 border-gray-200 px-2">
+              <Clock size={18} className="mr-1" />
+              Jornada: {job.jornada}
+            </p>
+            <p className="flex items-center">
+              <LayoutGrid size={18} className="mr-1 px-2" />
+              Categoría: {job.categoria}
+            </p>
+          </div>
+
+          {isOpen ? (
+            <button
+              onClick={handleLeerMas}
+              className="flex items-center text-blue-800 text-sm font-medium mt-2 hover:underline"
+            >
+              Leer más <ChevronDown size={20} />
+            </button>
+          ) : (
+            <button
+              onClick={handleLeerMas}
+              className="flex items-center text-blue-800 text-sm font-medium mt-2 hover:underline"
+            >
+              Leer menos <ChevronUp size={20} />
+            </button>
+          )}
         </div>
 
         <div className="flex items-center space-x-4">
           {/* Apply Button */}
-          <Button className="w-full font-semibold py-3 rounded-lg transition-colors" 
-          onClick={handleApply}
+          <Button
+            className="w-full font-semibold py-3 rounded-lg transition-colors"
+            onClick={handleApply}
           >
             ¡Postularme!
           </Button>

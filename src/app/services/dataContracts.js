@@ -8,13 +8,14 @@
 export const JobContract = {
   id: 0,
   titulo: "string", // Nombre del trabajo
-  empresa: "string", 
+  empresaId: 0, // ID de la empresa
+  empresa: "string", // Derivado (join)
   ubicacion: "string", 
   modalidad: "string", // "Remoto" | "Híbrido" | "Presencial"
   jornada: "string", // "Tiempo completo" | "Medio tiempo" | "Proyecto/Temporal" | "Practicas profesionales/Becario" | "Fines de semana"
   categoria: "string", // A determinar
-  salario: "string", // "Sin salario" | "15,000" | "25,000" | "35,000" | "45,000" | "+50,000"
-  logo: "", // URL de la imagen
+  salarioFijo: "string", // "Sin salario" | "15,000" | "25,000" | "35,000" | "45,000" | "+50,000"
+  urlEmpresaLogo: "", // URL de la imagen
   status_vacante: "string", // "Activa" | "Cerrada" | "En Pausa"
   fechaPublicacion: "", // ISO 8601
   descripcion: {
@@ -26,8 +27,11 @@ export const JobContract = {
     },
     beneficios: [], // Array de strings 
   },
-  sueldoMinimo: 0,
-  sueldoMaximo: 0,
+  sueldoMinimo: 0, // number | null
+  sueldoMaximo: 0, // number | null
+  moneda: "MXN",
+  periodicidad: "Mensual", // "Mensual" | "Anual"
+  esDestacada: Boolean,
 };
 
 // ========== APPLICATION / Postulaciones ==========
@@ -35,18 +39,19 @@ export const ApplicationContract = {
   id: 0,
   candidateId: 0,
   jobId: 0, 
-  estado: "string", // "postulado" | "en_revision" | "aceptado" | "rechazado"
-  fechaPostulacion: "", // ISO 8601
+  estadoPostulacion: "string", // "En revisión" | "Entrevista" | "Contratado/Aceptado" | "Rechazado"
+  fechaPostulacion: "", // ISO 8601 ejemplo: "2025-01-15T10:30:00Z"
   fechaActualizacion: "", // ISO 8601
   notas: "string", 
   createdAtAdmin: "", // Fecha de creación por el admin
   //AGREGADO - Para evitar peticiones adicionales en mis-empleos
-  job: JobContract // OPCIONAL: Información del trabajo relacionado
+  job: JobContract // JobContract (OBLIGATORIO para Mis Empleos)
 };
 
 // ========== MESSAGE ==========
 export const MessageContract = {
   id: 0,
+  conversationId: 0,
   senderId: 0, // Persona que envía el mensaje
   sender: { // Datos que se extraen del que envia el mensaje
     name: "string",
@@ -55,42 +60,35 @@ export const MessageContract = {
     avatar: "" // URL de la imagen
   },
   preview: "string", // Texto corto que se muestra en la lista de mensajes
-  date: null, // ISO 8601 o Date
+  content: "string", // Texto completo
+  date: "string", // ISO 8601 o Date
   isRead: Boolean, 
   isSponsored: Boolean,
   hasAttachment: Boolean,
-  // ✅ CORREGIDO - Estructura de conversación
-  conversation: [
-    {
-      id: 0,
-      content: "string",
-      timestamp: null, // ISO 8601 o Date
-      hasAttachment: Boolean // OPCIONAL
-    }
-  ]
 };
 
+export const ConversationContract = {
+  id: 0,
+  asunto: "string",
+  participants: [ { id: 0, name: "string", avatar: "string" } ],
+  lastMessage: null, // MessageContract | null
+  unreadCount: 0
+};
+
+
 // ========== NOTIFICATION ==========
-export const NotificationContract = {
-  id: 0,  
-  type: "string", // "job_application" | "message" | "system"
-  title: "string",
+export const NotificationContract = { // Se necesita notificaciones personalizadas para cada usuario
+  id: 0,
+  userId: 0,  
+  tipo: "string", // "Informativa" | "Alerta" | "Mantenimiento"
+  titulo: "string",
   message: "string",
-  timestamp: null, // ISO 8601 o Date
+  timestamp: "", // ISO 8601 o Date
   isRead: Boolean,
   action: {
-    type: "", // "view_application" | "view_message" | "view_profile"
+    tipo: "", // "Informativa" | "Alerta" | "Mantenimiento"
     jobId: 0,
     candidateId: 0,
     messageId: 0 
   },
-  metadata: { // Estructura específica
-    jobTitle: "string", // OPCIONAL
-    company: "string", // OPCIONAL
-    candidateName: "string", // OPCIONAL
-    senderName: "string", // OPCIONAL para mensajes
-    senderPosition: "string", // OPCIONAL para mensajes
-    hasAttachment: Boolean, // OPCIONAL para mensajes
-    isFeatured: Boolean // OPCIONAL
-  }
 };

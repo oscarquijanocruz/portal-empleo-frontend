@@ -106,7 +106,7 @@ export default function JobCard({
                   </p>
                   <div className="flex flex-row">
                     <p className="text-gray-500 text-sm">
-                      {job.ubicacion} • {job.modalidad} • {job.jornada}
+                      {job.ubicacion}, {job.modalidad}, {job.jornada}
                     </p>
                     <p className="text-sm text-gray-900 text-right ml-auto">
                       Salario: <br />${job.salario}
