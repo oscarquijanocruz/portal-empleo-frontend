@@ -64,10 +64,10 @@ export default function MiPerfilPage() {
         // Array de experiencias
         {
           id: 1,
-          nombreEmpresa: "Mentory",
-          cargo: "Desarrollador Frontend",
+          nombreEmpresa: "KFC",
+          cargo: "Cajero",
           descripcionAct:
-            "Desarrollo de aplicaciones web con React y Next.js, implementación de componentes reutilizables.",
+            "Hice el seguimiento de los pedidos de los clientes y realizó el seguimiento de las ventas.",
           anioEntrada: "2022",
           mesEntrada: "Marzo",
           anioSalida: "2024",
@@ -76,15 +76,15 @@ export default function MiPerfilPage() {
         },
         {
           id: 2,
-          nombreEmpresa: "Tech Solutions",
-          cargo: "Desarrollador Junior",
+          nombreEmpresa: "McDonald's",
+          cargo: "Director General",
           descripcionAct:
-            "Soporte y mantenimiento de aplicaciones web, corrección de bugs.",
+            "Dirigí la operación de la tienda de McDonald's en Nueva York.",
           anioEntrada: "2020",
           mesEntrada: "Enero",
           anioSalida: "2022",
           mesSalida: "Febrero",
-          esActual: false,
+          esActual: true,
         },
       ],
 
@@ -93,7 +93,7 @@ export default function MiPerfilPage() {
       curriculumVitae: null,
       portafolio: null,
       notificaciones: false,
-      perfilPublico: true,
+      perfilPublico: false,
       recibirOfertas: false,
     },
   });

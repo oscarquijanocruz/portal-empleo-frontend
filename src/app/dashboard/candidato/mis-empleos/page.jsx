@@ -1,12 +1,14 @@
 "use client";
 import JobCard from "../../../components/dashboard-candidato/JobCard";
 import JobDetail from "../../../components/dashboard-candidato/JobDetail";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useJobs } from "../../../hooks/useJobs";
 import { useFavorites } from "../../../hooks/useFavorites";
 import { mockJobs } from "../../../data/mockData";
 
 export default function MisEmpleosPage() {
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("favoritos");
   
   // DATOS SIMPLES - Solo para maquetado
@@ -41,6 +43,26 @@ export default function MisEmpleosPage() {
 
   const { selectedJob, handleJobSelect } = useJobs(mockJobs);
   const { favorites, toggleFavorite, isFavorite, getFavoriteJobs } = useFavorites();
+
+  // Handle specific job selection from URL parameter
+  useEffect(() => {
+    const jobId = searchParams.get('jobId');
+    if (jobId) {
+      // Find job by ID in mockJobs
+      const specificJob = mockJobs.find(job => 
+        job.id.toString() === jobId || 
+        job.titulo.toLowerCase().includes(jobId.toLowerCase())
+      );
+      if (specificJob) {
+        handleJobSelect(specificJob);
+        // Set appropriate tab based on job status
+        const postulacion = misPostulaciones.find(p => p.jobId === specificJob.id);
+        if (postulacion) {
+          setActiveTab(postulacion.estado);
+        }
+      }
+    }
+  }, [searchParams, handleJobSelect]);
 
   // FUNCIÓN SIMPLE - Combinar datos de mock con estados
   const getJobsWithStatus = (estado) => {
@@ -97,8 +119,8 @@ export default function MisEmpleosPage() {
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 border-b border-gray-200">
-        <div className="flex space-x-8">
+      <div className="mb-4 border-b border-gray-200">
+        <div className="flex space-x-7">
           {[
             { key: "favoritos", label: "Favoritos", count: counts.favoritos },
             { key: "postulados", label: "Postulados", count: counts.postulados },
@@ -124,7 +146,7 @@ export default function MisEmpleosPage() {
       {/* Contenido */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
         {/* Lista de trabajos */}
-        <div className="space-y-4">
+        <div className="space-y-4 p-3">
           {currentJobs.length > 0 ? (
             <JobCard 
               jobs={currentJobs}
@@ -186,6 +208,7 @@ export default function MisEmpleosPage() {
               
               {/* Detalles del trabajo */}
               <JobDetail 
+                className="relative"
                 job={selectedJob}
                 isFavorite={isFavorite(selectedJob?.id)}
                 onToggleFavorite={() => toggleFavorite(selectedJob?.id)}

@@ -3,13 +3,30 @@ import { Edit2Icon, Ellipsis, Search } from "lucide-react"
 import MessageCard from '../../../components/dashboard-candidato/MessageCard'
 import MessageDetail from '../../../components/dashboard-candidato/MessageDetail'
 import Input from "../../../components/ui/Input"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { mockMessages } from "../../../data/mockDataMessages"
 
 export default function MensajesPage() {
+    const searchParams = useSearchParams()
     const [selectedMessage, setSelectedMessage] = useState(mockMessages[0])
     const [searchTerm, setSearchTerm] = useState("")
     const [showOnlyCandidates, setShowOnlyCandidates] = useState(false)
+
+    // Handle specific message selection from URL parameter
+    useEffect(() => {
+        const messageId = searchParams.get('messageId')
+        if (messageId) {
+            // Find message by ID or by sender name matching
+            const specificMessage = mockMessages.find(msg => 
+                msg.id.toString() === messageId || 
+                msg.sender.name.toLowerCase().includes(messageId.toLowerCase())
+            )
+            if (specificMessage) {
+                setSelectedMessage(specificMessage)
+            }
+        }
+    }, [searchParams])
 
     // Filter messages based on search term and candidate filter
     const filteredMessages = mockMessages.filter(message => {

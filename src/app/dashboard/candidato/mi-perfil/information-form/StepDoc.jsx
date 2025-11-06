@@ -1,8 +1,9 @@
 import Input from "@/app/components/ui/Input";
-import { File, Upload, User } from "lucide-react";
+import { File, Upload, User, X } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { useState } from "react";
 import Image from "next/image";
+import Checkbox from "@/app/components/ui/Checkbox";
 
 export default function StepDoc() {
   const {
@@ -48,6 +49,16 @@ export default function StepDoc() {
     }
   };
 
+  // Eliminar curriculum vitae
+  const eliminarCV = () => {
+    setCvPreview(null);
+    // Limpiar el input file
+    const fileInput = document.querySelector('input[name="curriculumVitae"]');
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
+
   // Manejar subida de portafolio
   const handlePortafolioChange = (e) => {
     const file = e.target.files?.[0];
@@ -60,25 +71,9 @@ export default function StepDoc() {
     }
   };
 
-  // Crear función para guardar documentos
-  const handleSaveDocuments = () => {
-    console.log("Guardando documentos:", documentos);
-    // Aquí se implementaría la lógica para guardar los documentos
-    // Por ejemplo, enviar los documentos a un servidor y almacenarlos en una base de datos
-
-    // Limpiar documentos
-    setDocumentos([]);
-    setFotoPerfilPreview(null);
-    setCvPreview(null);
-    setPortafolioPreview(null);
-    alert("Documentos guardados exitosamente");
-  };
-
-
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-6">Documentos</h1>
-      
       <div className="border-y-1 pt-6 space-y-8">
         {/* Foto de Perfil */}
         <div>
@@ -104,7 +99,6 @@ export default function StepDoc() {
                 type="file"
                 accept="image/*"
                 onChange={handleFotoPerfilChange}
-                className="hidden"
                 id="foto-perfil"
                 {...register("fotoPerfil", {
                   validate: {
@@ -114,9 +108,11 @@ export default function StepDoc() {
                     },
                     fileType: (files) => {
                       if (!files?.[0]) return true;
-                      return files[0].type.startsWith('image/') || "Solo imágenes";
-                    }
-                  }
+                      return (
+                        files[0].type.startsWith("image/") || "Solo imágenes"
+                      );
+                    },
+                  },
                 })}
               />
               <label
@@ -146,23 +142,43 @@ export default function StepDoc() {
             Currículum Vitae en PDF
           </h2>
 
-          <div className="flex flex-col gap-4 items-center text-center">
-            <div className="w-full h-24 bg-gray-200 rounded-lg flex items-center justify-center">
+          <div className="space-y-4">
+            {/* Preview del archivo */}
+            <div className="w-full bg-gray-50 rounded-lg p-4">
               {cvPreview ? (
-                <div className="text-center">
-                  <File className="w-12 h-12 text-green-500 mx-auto mb-2" />
-                  <p className="text-sm text-gray-700">{cvPreview}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <File className="w-8 h-8 text-green-500" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">{cvPreview}</p>
+                      <p className="text-xs text-gray-500">PDF subido correctamente</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={eliminarCV}
+                    className="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-50 transition-colors"
+                    title="Eliminar archivo"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
               ) : (
-                <File className="w-12 h-12 text-gray-400" />
+                <div className="flex items-center justify-center space-x-3 text-gray-500">
+                  <File className="w-8 h-8" />
+                  <span className="text-sm">Ningún archivo seleccionado</span>
+                </div>
               )}
             </div>
 
-            <div className="w-full">
+            {/* Input file */}
+            <div>
               <input
                 type="file"
                 accept="application/pdf"
                 onChange={handleCurriculumVitaeChange}
+                id="curriculum-vitae"
+                // className="hidden"
                 {...register("curriculumVitae", {
                   required: "Curriculum Vitae requerido",
                   validate: {
@@ -172,19 +188,20 @@ export default function StepDoc() {
                     },
                     fileType: (files) => {
                       if (!files?.[0]) return true;
-                      return files[0].type === 'application/pdf' || "Solo archivos PDF";
-                    }
-                  }
+                      return (
+                        files[0].type === "application/pdf" ||
+                        "Solo archivos PDF"
+                      );
+                    },
+                  },
                 })}
-                className="hidden"
-                id="curriculum-vitae"
               />
               <label
                 htmlFor="curriculum-vitae"
                 className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer transition-colors"
               >
                 <Upload className="w-4 h-4" />
-                Subir CV
+                {cvPreview ? "Cambiar CV" : "Subir CV"}
               </label>
               {errors.curriculumVitae && (
                 <p className="text-red-500 text-sm mt-1">
@@ -192,7 +209,9 @@ export default function StepDoc() {
                 </p>
               )}
               {!errors.curriculumVitae && (
-                <p className="text-sm text-gray-500 mt-1">Solo PDF (máx. 5MB)</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Solo PDF (máx. 5MB)
+                </p>
               )}
             </div>
           </div>
@@ -203,7 +222,7 @@ export default function StepDoc() {
           <h2 className="text-xl font-semibold text-gray-900 mb-6">
             Portafolio (opcional)
           </h2>
-          
+
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -213,12 +232,12 @@ export default function StepDoc() {
                 type="url"
                 placeholder="https://www.website.com"
                 error={errors.portfolioUrl?.message}
-                {...register("portfolioUrl", { 
+                {...register("portfolioUrl", {
                   required: false,
                   pattern: {
                     value: /^https?:\/\/.+/,
-                    message: "URL inválida"
-                  }
+                    message: "URL inválida",
+                  },
                 })}
               />
             </div>
@@ -228,7 +247,6 @@ export default function StepDoc() {
                 type="file"
                 accept=".pdf,.jpg,.jpeg,.png"
                 onChange={handlePortafolioChange}
-                className="hidden"
                 id="portfolio"
                 {...register("portfolioFile")}
               />
@@ -254,16 +272,17 @@ export default function StepDoc() {
         </div>
 
         {/* Preferencias */}
-        <div className="border-t-1 pt-6">
+        <div className="border-t-1 py-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">
             Preferencias
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-2">
             <label className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
-              <input
-                type="checkbox"
+              <Checkbox
                 {...register("notificaciones")}
+                name="notificaciones"
+                checked={notificaciones}
                 className="mr-3 w-4 h-4"
               />
               <span className="text-gray-700">
@@ -272,9 +291,10 @@ export default function StepDoc() {
             </label>
 
             <label className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
-              <input
-                type="checkbox"
+              <Checkbox
                 {...register("perfilPublico")}
+                name="perfilPublico"
+                checked={perfilPublico}
                 className="mr-3 w-4 h-4"
               />
               <span className="text-gray-700">
@@ -283,14 +303,13 @@ export default function StepDoc() {
             </label>
 
             <label className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
-              <input
-                type="checkbox"
+              <Checkbox
                 {...register("recibirOfertas")}
+                name="recibirOfertas"
+                checked={recibirOfertas}
                 className="mr-3 w-4 h-4"
               />
-              <span className="text-gray-700">
-                Recibir ofertas de trabajo
-              </span>
+              <span className="text-gray-700">Recibir ofertas de trabajo</span>
             </label>
           </div>
         </div>

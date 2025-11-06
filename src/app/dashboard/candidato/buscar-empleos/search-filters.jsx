@@ -16,7 +16,7 @@ export default function SearchFilters({
   // Url params
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const {replace} = useRouter();
+  const { replace } = useRouter();
   // filtros locales
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
   const [localFilters, setLocalFilters] = useState({
@@ -42,12 +42,15 @@ export default function SearchFilters({
   ];
 
   const tipoContratoOptions = [
-    { label: "Tiempo completo", value: "tiempoCompleto" },
-    { label: "Medio tiempo", value: "medioTiempo" },
-    { label: "Prácticas profesionales / Becario", value: "practicasProfesionales" },
-    { label: "Temporal / Proyecto", value: "temporalProyecto" },
-    { label: "Fines de semana", value: "finesDeSemana" },
-  ];  
+    { label: "Tiempo completo", value: "Tiempo completo" },
+    { label: "Medio tiempo", value: "Medio tiempo" },
+    { label: "Por proyecto", value: "Por proyecto" },
+    {
+      label: "Prácticas profesionales / Becario",
+      value: "Prácticas profesionales / Becario",
+    },
+    { label: "Fines de semana", value: "Fines de semana" },
+  ];
 
   const categoriaOptions = [
     { label: "Tecnología / Sistemas / Programación", value: "tecnologia" },
@@ -137,7 +140,9 @@ export default function SearchFilters({
         <input
           type="text"
           placeholder="Busca tu trabajo ideal..."
-          defaultValue={localSearchTerm || searchParams.get("query")?.toString()}
+          defaultValue={
+            localSearchTerm || searchParams.get("query")?.toString()
+          }
           className="flex-1 outline-none bg-transparent px-2"
           //value={localSearchTerm}
           onChange={(event) => handleSearch(event.target.value)}
@@ -163,8 +168,8 @@ export default function SearchFilters({
           value={localFilters.modalidad}
           onChange={(value) => handleFilterChange("modalidad", value)}
           size="md"
-          className="bg-sky-950 text-white border-sky-950 border rounded-sm text-sm"
-          style={{backgroundColor: "#2A3B57"}}
+          className={"bg-sky-950 text-white border-sky-950 rounded-sm text-sm"}
+          style={{ backgroundColor: "#2A3B57" }}
         />
         <Select
           placeholder="Sueldo"
@@ -172,8 +177,10 @@ export default function SearchFilters({
           value={localFilters.sueldo}
           onChange={(value) => handleFilterChange("sueldo", value)}
           size="md"
-          className="bg-sky-950 text-white border-sky-950 border rounded-sm text-sm"
-          style={{backgroundColor: "#2A3B57"}}
+          className={
+            "bg-sky-950 text-white border-sky-950 border rounded-sm text-sm"
+          }
+          style={{ backgroundColor: "#2A3B57" }}
         />
         <Select
           placeholder="Tipo de contrato"
@@ -182,7 +189,7 @@ export default function SearchFilters({
           onChange={(value) => handleFilterChange("tipoContrato", value)}
           size="md"
           className="bg-sky-950 text-white border-sky-950 border rounded-sm text-sm"
-          style={{backgroundColor: "#2A3B57"}}
+          style={{ backgroundColor: "#2A3B57" }}
         />
         <Select
           placeholder="Categoría"
@@ -191,24 +198,12 @@ export default function SearchFilters({
           onChange={(value) => handleFilterChange("categoria", value)}
           size="md"
           className="bg-blue-950 text-white border-sky-950 border rounded-sm text-sm"
-          style={{backgroundColor: "#2A3B57"}}
+          style={{ backgroundColor: "#2A3B57" }}
         />
-
-        {/* <select
-          value={localFilters.tipoContrato}
-          onChange={(e) => handleFilterChange("tipoContrato", e.target.value)}
-          className="bg-sky-950 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors"
-        >
-          <option value="">Tipo de contrato</option>
-          <option value="Tiempo completo">Tiempo completo</option>
-          <option value="Medio tiempo">Medio tiempo</option>
-          <option value="Por proyecto">Por proyecto</option>
-          <option value="Prácticas">Prácticas</option>
-        </select> */}
 
         {/* Botón limpiar filtros */}
         {hasActiveFilters && (
-          <div className="">
+          <div>
             <button
               onClick={handleClearFilters}
               className="text-blue-800 text-sm hover:underline flex items-center gap-1"

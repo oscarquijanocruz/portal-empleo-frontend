@@ -1,10 +1,20 @@
 "use client";
 import Image from "next/image";
 import Button from "@/app/components/ui/Button";
+import Badge from "@/app/components/ui/Badge";
 import { useFavorites } from "@/app/hooks/useFavorites";
 import { mockJobs } from "@/app/data/mockData";
 import Link from "next/link";
-import { Building2, CheckCircle2, Clock, MapPin } from "lucide-react";
+import {
+  Bookmark,
+  Building2,
+  CheckCircle2,
+  FileUser,
+  Clock,
+  MapPin,
+  BellRing,
+  ArrowRightIcon
+} from "lucide-react";
 import { mockNotifications } from "@/app/data/mockNotifications";
 import useTypeNotification from "../../hooks/useTypeNotification";
 
@@ -14,28 +24,31 @@ export default function DashboardPage() {
 
   const totalPostulaciones = 5; // mock por ahora
   const totalNotificaciones = 3; // mock por ahora
-
-  const recomendados = mockJobs.slice(0, 3);
-  const notificaciones = mockNotifications.slice(0, 3);
+  const recomendados = mockJobs.slice(0, 3); // mock por ahora - cambiarlo por el endpoint
+  const notificaciones = mockNotifications.slice(0, 3); // mock por ahora - cambiarlo por el endpoint
 
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6">
       {/* Hero / bienvenida */}
-      <section className="rounded-sm bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white p-6 md:p-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div className="space-y-2">
-            <h1 className="text-2xl md:text-3xl font-bold">¡Bienvenido/a!</h1>
-            <p className="text-blue-100 max-w-2xl">
+      <section className="w-full h-96 rounded-sm bg-gray-800 text-white p-6 md:p-8 content-center">
+        <div className="grid grid-cols-1 md:flex-row md:items-center md:justify-between gap-6 text-center justify-center items-center">
+          <div className="space-y-4 px-72">
+            <Badge variant="primary" size="sm" className={"text-white bg-violet-900"}>Nuevo Portal</Badge>
+            <h1 className="text-3xl md:text-4xl font-bold">Tu próximo empleo te espera: Descubre oportunidades con Mentory.</h1>
+            <p className="text-blue-100 text-sm">
               Explora empleos recomendados, revisa tus postulaciones y mantente
               al día con tus notificaciones desde un solo lugar.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 justify-center">
             <Link href="/dashboard/candidato/buscar-empleos">
-              <Button variant="secondary">Buscar empleos</Button>
+              <Button variant="secondary" >
+                Buscar empleos
+                <ArrowRightIcon size={20} className="ml-2" />
+              </Button>
             </Link>
             <Link href="/dashboard/candidato/mi-perfil">
-              <Button variant="outline">Completar perfil</Button>
+              <Button variant="outline" className={"border-1 border-white text-white"}>Completar perfil</Button>
             </Link>
           </div>
         </div>
@@ -44,16 +57,19 @@ export default function DashboardPage() {
       {/* KPIs */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <KpiCard
+          icon={<Bookmark size={38} className="text-yellow-500" />}
           label="Favoritos"
           value={favoriteCount}
           href="/dashboard/candidato/mis-empleos?tab=favoritos"
         />
         <KpiCard
+          icon={<FileUser size={38} className="text-blue-600" />}
           label="Postulaciones"
           value={totalPostulaciones}
           href="/dashboard/candidato/mis-empleos?tab=postulaciones"
         />
         <KpiCard
+          icon={<BellRing size={38} className="text-green-600" />}
           label="Notificaciones"
           value={totalNotificaciones}
           href="/dashboard/candidato/notificaciones"
@@ -133,7 +149,7 @@ export default function DashboardPage() {
           <section>
             <div className="bg-white rounded-xl shadow-md p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-               Notificaciones recientes
+                Notificaciones recientes
               </h2>
               <div className="space-y-4">
                 {notificaciones.map((notification) => {
@@ -213,10 +229,11 @@ export default function DashboardPage() {
   );
 }
 
-function KpiCard({ label, value, href }) {
+function KpiCard({ icon, label, value, href }) {
   return (
     <Link href={href} className="block">
       <div className="rounded-sm bg-white border border-gray-200 shadow-sm p-4 hover:shadow-md transition-shadow">
+        <div className="pb-2">{icon}</div>
         <p className="text-sm text-gray-500">{label}</p>
         <p className="text-2xl font-bold text-blue-950">{value}</p>
       </div>
