@@ -1,76 +1,76 @@
 "use client";
-import { useState } from "react";
-import { Bell, MessageSquare, Search, CheckCircle, Eye } from "lucide-react"; // Iconos de lucide-react
-import { format } from "date-fns"; // Para manejar la fecha
-
-// Datos simulados de eventos y solicitudes
-const initialEvents = [
-  { id: 1, name: "Evento 1", date: "2026-07-15", description: "Descripción del Evento 1", status: "pending" },
-  { id: 2, name: "Evento 2", date: "2026-07-20", description: "Descripción del Evento 2", status: "approved" },
-  { id: 3, name: "Evento 3", date: "2026-07-25", description: "Descripción del Evento 3", status: "pending" },
-];
-
-const upcomingEvents = [
-  { id: 1, name: "Evento 1", description: "Descripción del Evento 1", date: "2026-07-15" },
-  { id: 2, name: "Evento 2", description: "Descripción del Evento 2", date: "2026-07-20" },
-];
+import { useState, useEffect } from "react";
+import { Bell, MessageSquare, Search, Trash2, Upload, Eye, ArrowUp, ArrowDown } from "lucide-react";
 
 export default function ContentManagement() {
-  const [filter, setFilter] = useState(""); // Filtro por evento
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal de eventos
-  const [selectedEvent, setSelectedEvent] = useState(null); // Evento seleccionado para más detalles
-  const [events, setEvents] = useState(initialEvents); // Estado de los eventos
-  const [selectedDate, setSelectedDate] = useState(new Date()); // Fecha seleccionada en el calendario
+  const [filter, setFilter] = useState("");
+  const [banners, setBanners] = useState([]);
+  const [newsletter, setNewsletter] = useState({ title: "", content: "" });
+  const [showPreview, setShowPreview] = useState(null);
+  const [history, setHistory] = useState([]);
 
-  // Filtrar eventos por nombre
-  const filteredEvents = events.filter((event) =>
-    event.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  // Cargar banners guardados localmente
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("banners"));
+    if (saved) setBanners(saved);
+  }, []);
 
-  // Función para aprobar evento
-  const handleApproveEvent = (id) => {
-    const updatedEvents = events.map((event) =>
-      event.id === id ? { ...event, status: "approved" } : event
-    );
-    setEvents(updatedEvents); // Actualizamos el estado de los eventos
+  // Guardar banners en localStorage
+  useEffect(() => {
+    localStorage.setItem("banners", JSON.stringify(banners));
+  }, [banners]);
+
+  // Subir imagen
+  const handleAddBanner = (e) => {
+    const file = e.target.files[0];
+    if (file && banners.length < 5) {
+      const url = URL.createObjectURL(file);
+      setBanners([...banners, { id: Date.now(), url }]);
+    } else if (banners.length >= 5) {
+      alert("Solo se permiten 5 banners como máximo.");
+    }
   };
 
-  // Función para abrir el modal con los detalles del evento
-  const openModal = (event) => {
-    setSelectedEvent(event);
-    setIsModalOpen(true);
+  // Eliminar un banner
+  const handleDeleteBanner = (id) => {
+    setBanners(banners.filter((b) => b.id !== id));
   };
 
-  // Función para cerrar el modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedEvent(null);
+  // Limpiar toda la galería
+  const handleClearAll = () => {
+    if (confirm("¿Deseas eliminar todos los banners?")) {
+      setBanners([]);
+    }
   };
 
-  // Manejo del calendario de eventos
-  const getDaysInMonth = (year, month) => {
-    return new Array(31)
-      .fill(0)
-      .map((_, i) => new Date(year, month, i + 1).getDate())
-      .filter((day) => new Date(year, month, day).getMonth() === month);
+  // Cambiar orden
+  const moveBanner = (index, direction) => {
+    const newBanners = [...banners];
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= newBanners.length) return;
+    [newBanners[index], newBanners[targetIndex]] = [newBanners[targetIndex], newBanners[index]];
+    setBanners(newBanners);
   };
 
-  const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-  const daysInMonth = getDaysInMonth(selectedDate.getFullYear(), selectedDate.getMonth());
-  const dayOfWeek = firstDayOfMonth.getDay(); // Día de la semana en que empieza el mes
-  const currentDay = selectedDate.getDate();
-
-  const handlePrevMonth = () => {
-    setSelectedDate(new Date(selectedDate.setMonth(selectedDate.getMonth() - 1)));
-  };
-
-  const handleNextMonth = () => {
-    setSelectedDate(new Date(selectedDate.setMonth(selectedDate.getMonth() + 1)));
+  // Enviar newsletter
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (newsletter.title && newsletter.content) {
+      const newEntry = {
+        ...newsletter,
+        date: new Date().toLocaleString(),
+      };
+      setHistory([newEntry, ...history]);
+      setNewsletter({ title: "", content: "" });
+      alert("✅ Newsletter enviada correctamente.");
+    } else {
+      alert("Por favor, completa todos los campos.");
+    }
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      {/* Barra de búsqueda */}
+    <div className="bg-gray-100 min-h-screen p-4">
+      {/* Barra superior */}
       <header className="bg-white rounded-lg shadow mb-6 px-4 py-2 flex items-center">
         <div className="flex items-center flex-1">
           <input
@@ -78,7 +78,7 @@ export default function ContentManagement() {
             placeholder="Buscar..."
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500"
             value={filter}
-            onChange={(e) => setFilter(e.target.value)} // Filtro por nombre de evento
+            onChange={(e) => setFilter(e.target.value)}
           />
         </div>
         <div className="flex items-center gap-4 ml-6 text-gray-600">
@@ -91,116 +91,160 @@ export default function ContentManagement() {
         </div>
       </header>
 
-      {/* Contenedor blanco que envuelve toda la sección */}
+      {/* Contenedor principal */}
       <div className="bg-white rounded-xl shadow-lg p-6">
-        {/* Título de la sección */}
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Gestión de Contenidos</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+          Gestión de Contenidos
+        </h2>
 
-        {/* Sección de contenido */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Calendario de eventos */}
-          <div className="bg-white rounded-xl shadow-md p-3">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Calendario de Eventos</h3>
-            <div className="w-full flex justify-center items-center">
-              <div className="border border-gray-400 p-6 rounded-md text-center">
-                <div className="font-semibold text-lg text-blue-700 mb-2">{format(selectedDate, "MMMM yyyy")}</div>
-                <div className="flex justify-between mb-4">
-                  <button
-                    onClick={handlePrevMonth}
-                    className="px-4 py-2 bg-gray-300 rounded-md text-white hover:bg-gray-400"
-                  >
-                    &lt;
-                  </button>
-                  <button
-                    onClick={handleNextMonth}
-                    className="px-4 py-2 bg-gray-300 rounded-md text-white hover:bg-gray-400"
-                  >
-                    &gt;
-                  </button>
-                </div>
-                <div className="grid grid-cols-7 gap-2">
-                  {/* Días de la semana */}
-                  {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
-                    <div key={d} className="font-semibold text-gray-700">{d}</div>
-                  ))}
-                  {/* Días del mes */}
-                  {Array.from({ length: dayOfWeek }).map((_, i) => (
-                    <div key={`empty-${i}`} className="p-1"></div>
-                  ))}
-                  {daysInMonth.map((day) => (
-                    <div
-                      key={`${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${day}`} // Clave única
-                      className={`w-8 h-8 rounded-full flex items-center justify-center ${day === currentDay ? 'bg-blue-600 text-white' : 'hover:bg-blue-100'}`}
-                    >
-                      {day}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+        {/* Galería de banners */}
+        <div className="mb-10">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-700">
+              Galería de Banners ({banners.length}/5)
+            </h3>
+            {banners.length > 0 && (
+              <button
+                onClick={handleClearAll}
+                className="text-red-600 text-sm hover:underline"
+              >
+                Eliminar todos
+              </button>
+            )}
           </div>
 
-          {/* Solicitudes de eventos */}
-          <div className="bg-white rounded-xl shadow-md p-4">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Solicitudes de Eventos</h3>
-            <div className="space-y-4">
-              {/* Solicitudes */}
-              {filteredEvents.map((event) => (
-                <div key={event.id} className="bg-blue-100 p-4 rounded-md shadow-sm">
-                  <h4 className="font-semibold text-gray-700">Aprueba este evento</h4>
-                  <p className="text-sm text-gray-600">{event.name}</p>
-                  <div className="flex justify-between items-center mt-2">
-                    <button
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
-                      onClick={() => handleApproveEvent(event.id)} // Aprobar evento
-                    >
-                      <CheckCircle size={18} />
-                      Aprobar
-                    </button>
-                    <button
-                      className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 flex items-center gap-2"
-                      onClick={() => openModal(event)} // Ver detalles
-                    >
-                      <Eye size={18} />
-                      Ver Detalles
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Subir imagen */}
+            <label className="flex flex-col items-center justify-center w-40 h-32 border-2 border-dashed border-gray-400 rounded-xl cursor-pointer hover:bg-gray-50">
+              <Upload size={32} className="text-gray-500 mb-1" />
+              <span className="text-sm text-gray-600">Subir imagen</span>
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAddBanner}
+              />
+            </label>
 
-        {/* Próximos eventos */}
-        <div className="bg-white rounded-xl shadow-md p-4 mt-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">Próximos Eventos</h3>
-          <div className="space-y-4">
-            {/* Eventos */}
-            {upcomingEvents.map((event, index) => (
-              <div key={index} className="p-4 border border-gray-200 rounded-md shadow-sm">
-                <h4 className="font-semibold text-gray-700">{event.name}</h4>
-                <p className="text-xs text-gray-600">14 Jul 2026</p>
-                <p className="text-sm text-gray-700">Descripción del evento...</p>
-                <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                  Ver Más
-                </button>
+            {/* Imágenes cargadas */}
+            {banners.map((banner, index) => (
+              <div
+                key={banner.id}
+                className="relative w-40 h-32 border rounded-xl overflow-hidden shadow-sm group"
+              >
+                <img
+                  src={banner.url}
+                  alt="Banner"
+                  className="object-cover w-full h-full cursor-pointer"
+                  onClick={() => setShowPreview(banner.url)}
+                />
+                <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                  <button
+                    onClick={() => moveBanner(index, "up")}
+                    className="bg-gray-200 p-1 rounded"
+                  >
+                    <ArrowUp size={14} />
+                  </button>
+                  <button
+                    onClick={() => moveBanner(index, "down")}
+                    className="bg-gray-200 p-1 rounded"
+                  >
+                    <ArrowDown size={14} />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteBanner(banner.id)}
+                    className="bg-red-500 text-white p-1 rounded"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Newsletter */}
+        <div>
+          <h3 className="text-lg font-semibold text-gray-700 mb-4">
+            Newsletter
+          </h3>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Título
+              </label>
+              <input
+                type="text"
+                value={newsletter.title}
+                onChange={(e) =>
+                  setNewsletter({ ...newsletter, title: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Escribe el título del newsletter..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Contenido
+              </label>
+              <textarea
+                rows="4"
+                value={newsletter.content}
+                onChange={(e) =>
+                  setNewsletter({ ...newsletter, content: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="Escribe el contenido del newsletter..."
+              ></textarea>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Enviar
+              </button>
+            </div>
+          </form>
+
+          {/* Historial de newsletters */}
+          {history.length > 0 && (
+            <div className="mt-6">
+              <h4 className="font-semibold text-gray-700 mb-3">
+                Historial de newsletters enviados
+              </h4>
+              <ul className="space-y-2 text-sm text-gray-600">
+                {history.map((item, index) => (
+                  <li
+                    key={index}
+                    className="border p-3 rounded-md hover:bg-gray-50"
+                  >
+                    <strong>{item.title}</strong> — {item.date}
+                    <p className="text-gray-500 text-xs">
+                      {item.content.slice(0, 60)}...
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Modal de detalles del evento */}
-      {isModalOpen && selectedEvent && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h3 className="text-xl font-semibold mb-4">{selectedEvent.name}</h3>
-            <p className="text-sm text-gray-600">{selectedEvent.date}</p>
-            <p className="text-sm text-gray-700">{selectedEvent.description}</p>
-            <div className="flex justify-end gap-4 mt-4">
-              <button onClick={closeModal} className="px-4 py-2 bg-gray-200 rounded-md text-sm">Cerrar</button>
-            </div>
-          </div>
+      {/* Modal de vista previa */}
+      {showPreview && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50"
+          onClick={() => setShowPreview(null)}
+        >
+          <img
+            src={showPreview}
+            alt="Vista previa"
+            className="max-w-3xl max-h-[80vh] rounded-lg shadow-lg"
+          />
         </div>
       )}
     </div>
