@@ -22,6 +22,7 @@ export const mockJobs = [
     logo: "/api/placeholder/50/50",
     status_vacante: "Activa", // Activa, Cerrada, En Pausa
     fechaPublicacion: "2025/05/20",
+    isSponsored: true,
     descripcion: "Somos una empresa que vende soluciones tecnológicas",
     responsabilidades: [
       "Diseñar, desarrollar y optimizar aplicaciones web",
@@ -42,13 +43,6 @@ export const mockJobs = [
         "Idiomas adicionales (inglés)"
       ]
     },
-    beneficios: [
-      "Trabajo en equipo",
-      "Experiencia en el desarrollo de aplicaciones web",
-      "Conocimientos en React, Next.js y TypeScript",
-      "Habilidades en comunicación y trabajo en equipo",
-      "Certificaciones en tecnologías web"
-    ],
     beneficios: [
       "Sueldo competitivo",
       "Experiencia en el desarrollo de aplicaciones web",
@@ -71,6 +65,7 @@ export const mockJobs = [
     logo: "/api/placeholder/50/50",
     status_vacante: "Activa", // Activa, Cerrada, En Pausa
     fechaPublicacion: "2025/10/09",
+    isSponsored: true,
     descripcion: "Únete a nuestro equipo creativo como Diseñador UX/UI...",
     responsabilidades: [
       "Crear wireframes y prototipos",
@@ -110,8 +105,9 @@ export const mockJobs = [
     categoria: "diseno",
     salario: "90,000",
     logo: "/api/placeholder/50/50",
-    status_vacante: "Cerrada", // Activa, Cerrada, En Pausa
+    status_vacante: "Activa", // Activa, Cerrada, En Pausa
     fechaPublicacion: "2025/05/20",
+    isSponsored: true,
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
       "Gestionar campañas en redes sociales",
@@ -131,7 +127,13 @@ export const mockJobs = [
         "Experiencia en e-commerce",
         "Conocimiento en herramientas de automatización"
       ]
-    }
+    },
+    beneficios: [
+      "Sueldo competitivo",
+      "Prestaciones de ley",
+      "Prima vacacional",
+      "1 Hora de desayuno"
+    ],
   },
   {
     id: 4,
@@ -143,8 +145,9 @@ export const mockJobs = [
     categoria: "diseno",
     salario: "14,000",
     logo: "/api/placeholder/50/50",
-    status_vacante: "Cerrada", // Activa, Cerrada, En Pausa
+    status_vacante: "Activa", // Activa, Cerrada, En Pausa
     fechaPublicacion: "2025/02/20",
+    isSponsored: true,
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
       "Gestionar campañas en redes sociales",
@@ -164,7 +167,13 @@ export const mockJobs = [
         "Experiencia en e-commerce",
         "Conocimiento en herramientas de automatización"
       ]
-    }
+    },
+    beneficios: [
+      "Sueldo competitivo",
+      "Prestaciones de ley",
+      "Prima vacacional",
+      "Nada",
+    ],
   },
   {
     id: 5,
@@ -178,6 +187,7 @@ export const mockJobs = [
     logo: "/api/placeholder/50/50",
     status_vacante: "En Pausa", // Activa, Cerrada, En Pausa
     fechaPublicacion: "2025/02/20",
+    isSponsored: true,
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
       "Gestionar campañas en redes sociales",
@@ -209,6 +219,9 @@ export const mockJobs = [
     categoria: "diseno",
     salario: "30,000",
     logo: "/api/placeholder/50/50",
+    status_vacante: "Activa", // Activa, Cerrada, En Pausa
+    fechaPublicacion: "2023/12/10",
+    isSponsored: true,
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
       "Gestionar campañas en redes sociales",
@@ -239,6 +252,7 @@ export const mockJobs = [
     categoria: "administracion",
     salario: "30,000",
     logo: "/api/placeholder/50/50",
+    status_vacante: "Cerrada", // Activa, Cerrada, En Pausa
     descripcion: "Somos una empresa que se dedica a vender pizzas",
     responsabilidades: [
       "Gestionar campañas en redes sociales",
@@ -270,6 +284,7 @@ export const mockJobs = [
     categoria: "Salud / Medicina / Farmacia",
     salario: "300,000",
     logo: "/api/placeholder/50/50",
+    status_vacante: "En Pausa", // Activa, Cerrada, En Pausa
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
       "Gestionar campañas en redes sociales",
@@ -289,6 +304,14 @@ export const mockJobs = [
         "Experiencia en e-commerce",
         "Conocimiento en herramientas de automatización"
       ]
-    }
-  }
+    },
+    beneficios: [
+      "Sueldo competitivo",
+      "Prestaciones de ley",
+      "Prima vacacional",
+      "1 Hora de desayuno"
+    ],
+    sueldoMinimo: 10000,
+    sueldoMaximo: 15000,
+  }, 
 ];

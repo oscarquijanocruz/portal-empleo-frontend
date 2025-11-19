@@ -1,5 +1,5 @@
 "use client";
-import { User2Icon, Star, Paperclip, CheckCircle } from "lucide-react";
+import { User2Icon, Star, Paperclip, CheckCircle, Send } from "lucide-react";
 
 export default function MessageCard({ messages, selectedMessage, onMessageSelect }) {
   const formatDate = (date) => {
@@ -70,11 +70,6 @@ export default function MessageCard({ messages, selectedMessage, onMessageSelect
                     {isCandidateMessage(message) && (
                       <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         Candidato
-                      </span>
-                    )}
-                    {message.isSponsored && (
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                        Patrocinado
                       </span>
                     )}
                   </div>

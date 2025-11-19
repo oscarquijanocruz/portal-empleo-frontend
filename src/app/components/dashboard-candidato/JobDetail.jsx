@@ -1,14 +1,15 @@
 // Panel derecho con detalle
 "use client";
-import { ChevronDown, ChevronUp, CircleDollarSign, Clock, LayoutGrid, MessageSquareText } from "lucide-react";
+import { ChevronDown, ChevronUp, CircleDollarSign, Clock, LayoutGrid, MessageSquareText, Share2 } from "lucide-react";
 import { useState } from "react";
 import Button from "../ui/Button";
 import Image from "next/image";
 import Link from "next/link";
+import { useNotification } from "@/app/contexts/NotificationContext";
 
 export default function JobDetail({ job }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const { notify } = useNotification();
+  const [expanded, setExpanded] = useState(false);
 
   // ✅ Ahora recibe job como prop
   if (!job) {
@@ -18,15 +19,14 @@ export default function JobDetail({ job }) {
       </div>
     );
   }
-
-  const handleLeerMas = (e) => {
-    e.stopPropagation();
-    isOpen ? setIsOpen(false) : setIsOpen(true);
-    console.log("Abierto:", isOpen);
-  };
-
+  // Función para mostrar el botón de aplicar
   const handleApply = () => {
     console.log('Aplicando a este trabajo');
+  };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    return notify.success("¡Compartido!", "Vacante copiado al portapapeles.");
   };
 
   return (
@@ -34,7 +34,14 @@ export default function JobDetail({ job }) {
       <div className="space-y-4">
         {/* Header */}
         <div className="justify-between mb-6">
-          <div className="grid justify-center text-center items-center place-items-center">
+          <div className="grid justify-center text-center items-center place-items-center relative">
+            <div className="text-left ml-auto absolute top-0 right-0">
+              <Button variant="outline" size="xs" className={"bg-[#efefefff] hover:bg-[#c9c9c9ff] rounded-sm items-center"}
+               //style={{background: "#efefefff", padding: "5px"}} 
+               onClick={() => handleShare()}>
+                <Share2 size={22} className="text-gray-500 hover:text-gray-900 transition-colors" />
+              </Button>
+            </div>
             <div className="w-24 h-24 bg-sky-100 rounded-xs flex items-center justify-center m-4">
               <Image
                 src="/logo_cardjob.png"
@@ -94,8 +101,7 @@ export default function JobDetail({ job }) {
               ))}
             </ul>
           </div>
-
-          <div>
+          <div className="mb-6">
             <h3 className="font-medium text-gray-900 mb-2">Deseables:</h3>
             <ul className="space-y-1 text-sm text-gray-600">
               {job.requisitos?.deseables?.map((req, index) => (
@@ -107,48 +113,59 @@ export default function JobDetail({ job }) {
             </ul>
           </div>
 
-          <div>
-            <h3 className="font-medium text-gray-900 mb-2">Beneficios:</h3>
-            <ul className="space-y-1 text-sm text-gray-600">
-              {job.beneficios?.map((req, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>{req}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="grid grid-cols-3 border-t-1 border-gray-200 mt-4 mb-4 py-2 text-sm px-1 text-gray-700">
-            <p className="flex items-center">
-              <CircleDollarSign size={18} className="mr-1" />
-              Sueldo: ${job.sueldoMinimo} - ${job.sueldoMaximo} Mensual
-            </p>
-            <p className="flex items-center border-x-1 border-gray-200 px-2">
-              <Clock size={18} className="mr-1" />
-              Jornada: {job.jornada}
-            </p>
-            <p className="flex items-center">
-              <LayoutGrid size={18} className="mr-1 px-2" />
-              Categoría: {job.categoria}
-            </p>
-          </div>
-
-          {isOpen ? (
-            <button
-              onClick={handleLeerMas}
-              className="flex items-center text-blue-800 text-sm font-medium mt-2 hover:underline"
-            >
-              Leer más <ChevronDown size={20} />
-            </button>
-          ) : (
-            <button
-              onClick={handleLeerMas}
-              className="flex items-center text-blue-800 text-sm font-medium mt-2 hover:underline"
-            >
-              Leer menos <ChevronUp size={20} />
-            </button>
+          {/* Beneficios */}
+          {expanded && (
+            <div className="animate-in fade-in slide-in-from-bottom-5 duration-500">
+              <h2 className="text-lg font-semibold mb-3">Beneficios</h2>
+              <ul className="space-y-1 text-sm text-gray-600 leading-relaxed" id="beneficios">
+                {job.beneficios?.map((beneficio, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="mr-2">•</span>
+                    <span>{beneficio}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
+  
+          {/* Info adicional */}
+          {expanded && (
+            <div className="flex flex-col sm:flex-row border-t-1 border-gray-200 mt-4 mb-4 py-2 text-sm px-1 text-gray-700 gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <p className="flex items-center pr-2">
+                <CircleDollarSign size={18} className="mr-2 shrink-0" />
+                Sueldo: ${job.sueldoMinimo} - ${job.sueldoMaximo} Mensual
+              </p>
+              <p className="flex items-center sm:border-x-1 border-gray-200 sm:px-2">
+                <Clock size={18} className="mr-2 shrink-0" />
+                Jornada: {job.jornada}
+              </p>
+              <p className="flex items-center sm:pl-2">
+                <LayoutGrid size={18} className="mr-2 shrink-0" />
+                Categoría: {job.categoria}
+              </p>
+            </div>
+          )}
+
+          {/* Botón para expandir contenido */}
+          <button
+            type="button"
+            onClick={() => setExpanded(!expanded)}
+            className="flex items-center text-blue-800 text-sm font-medium mt-2 hover:underline"
+            aria-label="Expandir contenido"
+            aria-expanded={expanded ? "Leer más" : "Leer menos"}
+            aria-controls="beneficios"
+            title={expanded ? "Leer menos detalles" : "Leer más detalles"}
+          >
+            {expanded ? (
+              <>
+                Leer menos <ChevronUp size={20} />
+              </>
+            ) : (
+              <>
+                Leer más <ChevronDown size={20} />
+              </>
+            )}
+          </button>
         </div>
 
         <div className="flex items-center space-x-4">

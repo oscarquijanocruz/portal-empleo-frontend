@@ -1,17 +1,20 @@
 "use client";
-import { Edit2Icon, Ellipsis, Search } from "lucide-react"
+import { Ellipsis, Search, SquarePen } from "lucide-react"
 import MessageCard from '../../../components/dashboard-candidato/MessageCard'
 import MessageDetail from '../../../components/dashboard-candidato/MessageDetail'
 import Input from "../../../components/ui/Input"
 import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { mockMessages } from "../../../data/mockDataMessages"
+import SendMessageDialog from "../../../components/dashboard-candidato/SendMessageDialog"
 
 export default function MensajesPage() {
-    const searchParams = useSearchParams()
-    const [selectedMessage, setSelectedMessage] = useState(mockMessages[0])
-    const [searchTerm, setSearchTerm] = useState("")
-    const [showOnlyCandidates, setShowOnlyCandidates] = useState(false)
+    const searchParams = useSearchParams();
+    const [selectedMessage, setSelectedMessage] = useState(mockMessages[0]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [showOnlyCandidates, setShowOnlyCandidates] = useState(false);
+    const [isOpenDialog, setIsOpenDialog] = useState(false);
+
 
     // Handle specific message selection from URL parameter
     useEffect(() => {
@@ -46,8 +49,13 @@ export default function MensajesPage() {
         return matchesSearch
     })
 
+    const handleSendMessage = (message, e) => {
+        // e.stopPropagation(); // Evita que se dispare el click del botón
+        isOpenDialog ? setIsOpenDialog(false) : setIsOpenDialog(true);
+    };
+
     return(
-        <div className="h-full flex flex-col">
+        <div className="h-full flex flex-col ">
             {/* Header */}
             <div className="flex p-4 items-center space-x-4 border-b border-gray-300 bg-white">
                 <h1 className="text-xl font-semibold">Mensajes</h1>
@@ -58,7 +66,7 @@ export default function MensajesPage() {
                         placeholder="Buscar mensajes"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="flex-1"
+                        className={"flex-1 text-gray-400 bg-gray-blue-50 border-0"}
                     />
                 </div>
                 <div className="flex items-center space-x-2">
@@ -73,11 +81,16 @@ export default function MensajesPage() {
                         Solo Candidatos
                     </button>
                     <button className="p-2 hover:bg-gray-100 rounded">
-                        <Ellipsis size={20} className="text-gray-600"/>
+                        <Ellipsis size={26} className="text-gray-600"/>
                     </button>
-                    <button className="p-2 hover:bg-gray-100 rounded">
-                        <Edit2Icon size={20} className="text-gray-600"/>
+                    <button 
+                        onClick={() => handleSendMessage()}
+                        className="p-2 hover:bg-gray-100 rounded">
+                        <SquarePen size={26} className="text-gray-600"/>
+                        {/* {isOpenDialog && <SendMessageDialog />} */}
                     </button>
+                    {/* Dialogo de envio de mensaje */}
+                    {isOpenDialog && <SendMessageDialog />}
                 </div>    
             </div>
 

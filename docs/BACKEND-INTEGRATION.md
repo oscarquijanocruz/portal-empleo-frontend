@@ -280,7 +280,6 @@ Basado en las tablas: `conversaciones`, `conversacion_participantes`, `mensajes`
         "content": "Hola...",
         "date": "2025-01-21T15:30:00Z",
         "isRead": false,
-        "isSponsored": false,
         "hasAttachment": false
       },
       "unreadCount": 2
