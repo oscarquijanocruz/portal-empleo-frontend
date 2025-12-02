@@ -5,21 +5,19 @@ import {
   Ellipsis,
   Paperclip,
   Download,
-  CheckCircle,
-  Reply,
-  Archive,
   Trash2,
   SendHorizonal,
-  ShieldCheck,
   VolumeOff,
+  CheckCircle,
 } from "lucide-react";
 import { useState } from "react";
 import Button from "@/app/components/ui/Button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
+import Textarea from "@/app/components/ui/Textarea";
 
 export default function MessageDetail({ message }) {
-  const [isStarred, setIsStarred] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   //const [isSilenced, setIsSilenced] = useState(false);
 
@@ -80,8 +78,14 @@ export default function MessageDetail({ message }) {
     );
   };
 
-  const handleDelete = () => {
-    onMessageDelete?.(message);
+  const isFavoriteMessage = () => {
+    const favorites = message.isFavorite;
+    return favorites;
+  };
+
+  const handleDelete = (message) => {
+    console.log("Eliminar mensaje:", message.id);
+    onMessageDelete?.(message.id);
   };
 
   const handleSilence = () => {
@@ -113,20 +117,13 @@ export default function MessageDetail({ message }) {
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            {/* <button
-              //onClick={() => deleteMessage()}
-              className="flex items-center space-x-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded"
-            >
-              <Trash2 size={16} />
-              <span>Eliminar</span>
-            </button> */}
             <button
-              onClick={() => setIsStarred(!isStarred)}
+              onClick={() => setIsFavorite(!isFavorite)}
               className={`p-2 rounded-full hover:bg-gray-100 ${
-                isStarred ? "text-yellow-500" : "text-gray-400"
+                isFavorite ? "text-yellow-500" : "text-gray-400"
               }`}
             >
-              <Star size={20} fill={isStarred ? "currentColor" : "none"} />
+              <Star size={20} fill={isFavorite ? "currentColor" : "none"} />
             </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -212,8 +209,9 @@ export default function MessageDetail({ message }) {
             <button className="flex items-center space-x-2 px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded">
               <Paperclip size={16} className="shrink-0" />
             </button>
-            <textarea
-              className="w-full px-3 py-2 text-sm text-black border rounded-md field-sizing-content min-h-[50] max-h-[100px] overflow-y-auto resize-none"
+            <Textarea
+              size="sm"
+              className="field-sizing-content max-h-[100px] overflow-y-auto resize-none"
               placeholder="Escribe tu respuesta..."
             />
             <Button

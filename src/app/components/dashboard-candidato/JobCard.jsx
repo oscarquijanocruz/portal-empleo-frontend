@@ -75,7 +75,7 @@ export default function JobCard({
               }
             ${
               selectedJob?.id === job.id
-                ? "border-blue-900 shadow-lg"
+                ? "border-blue-950 bg-blue-300 shadow-lg"
                 : "border-gray-200 hover:border-gray-300"
             }`}
             >
@@ -179,7 +179,7 @@ export default function JobCard({
                           <Badge
                             variant="primary"
                             size="xs"
-                            className={"bg-sky-200 text-sky-950 text-[9px]"}
+                            className={"bg-sky-100 text-sky-950 text-[9px]"}
                           >
                             Patrocinado
                           </Badge>

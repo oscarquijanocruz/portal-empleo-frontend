@@ -36,7 +36,9 @@ export default function DashboardPage() {
             <Badge
               variant="primary"
               size="sm"
-              className={"text-purple-100 bg-violet-900 border-2 border-violet-950"}
+              className={
+                "text-purple-100 bg-violet-900 border-2 border-violet-950"
+              }
             >
               Nuevo Portal
             </Badge>
@@ -230,11 +232,11 @@ export default function DashboardPage() {
                 Subir CV
               </li>
             </ul>
-            <a href="/dashboard/candidato/mi-perfil">
+            <Link href="/dashboard/candidato/mi-perfil">
               <Button variant="primary" className="w-full mt-4 px-4 py-2">
                 Completar Perfil
               </Button>
-            </a>
+            </Link>
           </div>
         </section>
       </div>

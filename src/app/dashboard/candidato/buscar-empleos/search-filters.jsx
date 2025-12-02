@@ -138,7 +138,7 @@ export default function SearchFilters({
       >
         <Search size={22} className="text-gray-400" />
         <input
-          type="text"
+          type="search"
           placeholder="Busca tu trabajo ideal..."
           defaultValue={
             localSearchTerm || searchParams.get("query")?.toString()

@@ -1,4 +1,5 @@
 //Logica de card jobs
+// TODO: Refactorizar este hook para que maneje todo mediante una llamada a la API: fetch('/api/jobs?q=...').
 "use client";
 import { useState, useCallback, useMemo } from "react";
 import { mockJobs } from "../data/mockData";
@@ -67,8 +68,13 @@ export const useJobs = (initialJobs = mockJobs) => {
           const salarioB = parseInt(b.salario.replace(/[,$]/g, ""));
           return salarioB - salarioA;
         });
-      case "mas-relevantes":
-        return jobs;
+      case "mas-relevantes": 
+        // TODO: Cambiar funcionalidad para que funciones con la base de datos y el backend
+        return jobs.sort((a, b) => {
+          const sponsoredDiff = Number(!!b.isSponsored) - Number(!!a.isSponsored);
+          if (sponsoredDiff !== 0) return sponsoredDiff;
+          return (a.id ?? 0) - (b.id ?? 0);
+        });
       case "recientes":
         return [...jobs].reverse();
       default:

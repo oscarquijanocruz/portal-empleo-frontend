@@ -107,7 +107,7 @@ export const mockJobs = [
     logo: "/api/placeholder/50/50",
     status_vacante: "Activa", // Activa, Cerrada, En Pausa
     fechaPublicacion: "2025/05/20",
-    isSponsored: true,
+    isSponsored: false,
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
       "Gestionar campañas en redes sociales",
@@ -221,7 +221,7 @@ export const mockJobs = [
     logo: "/api/placeholder/50/50",
     status_vacante: "Activa", // Activa, Cerrada, En Pausa
     fechaPublicacion: "2023/12/10",
-    isSponsored: true,
+    isSponsored: false,
     descripcion: "Especialista en marketing digital para campañas innovadoras...",
     responsabilidades: [
       "Gestionar campañas en redes sociales",

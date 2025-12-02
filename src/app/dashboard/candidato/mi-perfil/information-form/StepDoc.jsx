@@ -57,6 +57,8 @@ export default function StepDoc() {
     if (fileInput) {
       fileInput.value = '';
     }
+    // Limpiar el error del form si existe
+  clearErrors?.('curriculumVitae');
   };
 
   // Manejar subida de portafolio

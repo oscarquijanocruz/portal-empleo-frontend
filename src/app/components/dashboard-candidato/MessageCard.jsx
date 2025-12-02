@@ -27,11 +27,26 @@ export default function MessageCard({ messages, selectedMessage, onMessageSelect
 
   const isCandidateMessage = (message) => {
     const preview = getMessagePreview(message).toLowerCase();
-    return preview.includes('cv') || 
-           preview.includes('enviar') || 
-           message.sender.position.toLowerCase().includes('desarrollador') ||
-           message.sender.position.toLowerCase().includes('ingeniero') ||
-           message.sender.position.toLowerCase().includes('freelancer');
+    return (
+      preview.includes("cv") ||
+      preview.includes("enviar") ||
+      message.sender.position.toLowerCase().includes("desarrollador") ||
+      message.sender.position.toLowerCase().includes("ingeniero") ||
+      message.sender.position.toLowerCase().includes("freelancer")
+    );
+  };
+
+  const getMessageFavorites = (message) => {
+    if (Array.isArray(message.isFavorite)) {
+      return message.isFavorite;
+    }
+    return [message.isFavorite];
+  };
+
+  const isFavoriteMessage = (message) => {
+    const favorites = getMessageFavorites(message).includes(true);
+    //console.log("isFavorite:", message.id, getMessageFavorites(message));
+    return favorites;
   };
 
   return (
@@ -63,13 +78,18 @@ export default function MessageCard({ messages, selectedMessage, onMessageSelect
               {/* Message Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1">
                     <h3 className="font-semibold text-gray-900 truncate">
                       {message.sender.name}
                     </h3>
                     {isCandidateMessage(message) && (
                       <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         Candidato
+                      </span>
+                    )}
+                    {isFavoriteMessage(message) && (
+                      <span className="inline-flex ml-auto items-center px-1 rounded-full text-xs font-medium text-yellow-500">
+                        <Star size={16} fill="currentColor" />
                       </span>
                     )}
                   </div>
