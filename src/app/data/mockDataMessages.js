@@ -10,13 +10,14 @@ export const mockMessages = [
     preview: "¿Buscas servicios de soluciones tecnológicas?",
     date: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000), // 18 días atrás
     isRead: false,
-    isSponsored: true,
-    conversation:
+    isFavorite: true,
+    conversation: [
       {
-        content: "Hola, vi tu perfil y me parece que podrías ser un gran candidato para nuestra empresa. ¿Buscas servicios de limpieza y mantenimiento?",
-        timestamp: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000),
-        isOwn: false
-      },
+      content: "Hola, vi tu perfil y me parece que podrías ser un gran candidato para nuestra empresa. ¿Buscas servicios de limpieza y mantenimiento?",
+      timestamp: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000),
+      isOwn: false
+    }
+   ],
   },
   {
     id: 2,
@@ -29,7 +30,7 @@ export const mockMessages = [
     preview: "Hola, Mentory Grupo: Gracias por...",
     date: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000),
     isRead: true,
-    isSponsored: false,
+    isFavorite: true,
     conversation: [
       {
         id: 1,
@@ -50,7 +51,7 @@ export const mockMessages = [
     preview: "Luis Adan: Le envío mi CV",
     date: new Date(Date.now() - 155 * 24 * 60 * 60 * 1000), // 8 jul aprox
     isRead: true,
-    isSponsored: false,
+    isFavorite: false,
     conversation: 
       {
         id: 1,
@@ -70,7 +71,7 @@ export const mockMessages = [
     preview: "Jimena: Hola Mentory Grupo Cómo estás? Me encanta la...",
     date: new Date(Date.now() - 83 * 24 * 60 * 60 * 1000), // 22 mar aprox
     isRead: true,
-    isSponsored: false,
+    isFavorite: false,
     conversation: [
       {
         id: 1,
@@ -91,7 +92,7 @@ export const mockMessages = [
     preview: "Federico: Puedo enviarles mi cv a través de este medio?",
     date: new Date(Date.now() - 68 * 24 * 60 * 60 * 1000), // 7 mar aprox
     isRead: true,
-    isSponsored: false,
+    isFavorite: false,
     conversation: [
       {
         id: 1,
@@ -118,7 +119,7 @@ export const mockMessages = [
     preview: "Ximena: ¡Hola! Soy Ximena Badía, de Involve RH. Vi tu...",
     date: new Date(Date.now() - 59 * 24 * 60 * 60 * 1000), // 1 mar aprox
     isRead: true,
-    isSponsored: false,
+    isFavorite: false,
     conversation: [
       {
         id: 1,
@@ -139,15 +140,15 @@ export const mockMessages = [
     preview: "🔗 Alejandro ha enviado un adjunto",
     date: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000), // 9 feb aprox
     isRead: true,
-    isSponsored: false,
+    isFavorite: false,
     hasAttachment: true,
     conversation: [
       {
         id: 1,
         content: "Hola, te envío información sobre un proyecto que podría interesarte. Adjunto los detalles.",
         timestamp: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000),
-        isOwn: false,
-        hasAttachment: true
+        isOwn : false,
+        hasAttachment: true,
       }
     ]
   },
@@ -161,8 +162,8 @@ export const mockMessages = [
     },
     preview: "María: Hola, me interesa la vacante de diseñadora que publicaron",
     date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 días atrás
-    isRead: false,
-    isSponsored: false,
+    isRead : false,
+    isFavorite: true,
     conversation: [
       {
         id: 1,
@@ -189,14 +190,14 @@ export const mockMessages = [
     preview: "Carlos: ¿Podrían revisar mi aplicación para la posición de desarrollador?",
     date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000), // 12 días atrás
     isRead: true,
-    isSponsored: false,
+    isFavorite: false,
     conversation: [
       {
         id: 1,
         content: "Buenos días, he aplicado para la posición de desarrollador full stack. ¿Podrían revisar mi aplicación? Adjunto mi CV actualizado.",
         timestamp: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
         isOwn: false,
-        hasAttachment: true
+        hasAttachment: true,
       },
       {
         id: 2,
@@ -217,7 +218,7 @@ export const mockMessages = [
     preview: "Ana: Estoy interesada en colaborar con ustedes como freelancer",
     date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 días atrás
     isRead: false,
-    isSponsored: false,
+    isFavorite: true,
     conversation: [
       {
         id: 1,

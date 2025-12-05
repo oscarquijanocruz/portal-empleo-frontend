@@ -1,4 +1,4 @@
-//logica para populares
+//logica para trabajos segun el perfil del usuario
 'use client'
 import { useState } from 'react';
 

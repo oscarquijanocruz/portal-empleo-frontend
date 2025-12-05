@@ -5,7 +5,7 @@ function cn(...classes) {
 }
 
 const variantStyles = {
-  default: "bg-gray-100 text-gray-800",
+  default: "bg-gray-100 text-gray-800 border-1 border-gray-300",
   primary: "bg-blue-100 text-blue-800",
   secondary: "bg-gray-100 text-gray-600",
   success: "bg-green-100 text-green-800",

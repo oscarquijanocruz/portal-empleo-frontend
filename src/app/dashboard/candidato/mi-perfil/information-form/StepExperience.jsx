@@ -18,6 +18,7 @@ import {
 import { Controller, set, useFormContext } from "react-hook-form";  
 import { useNotification } from "@/app/contexts/NotificationContext";
 import Checkbox from "@/app/components/ui/Checkbox";
+import Textarea from "@/app/components/ui/Textarea";
 
 export default function StepExperience() {
   const {
@@ -508,12 +509,13 @@ export default function StepExperience() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Descripción de Actividades
                     </label>
-                    <textarea
+                    <Textarea
+                      size="md"
                       name="descripcionAct"
                       value={formData.descripcionAct}
                       onChange={handleInputChange}
                       rows={4}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                      className="resize-none"
                       placeholder="Describe tus responsabilidades, logros y metologías utilizadas..."
                     />
                     <p className="text-xs text-gray-500 mt-1">

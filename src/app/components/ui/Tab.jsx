@@ -61,7 +61,7 @@ export function Tab({
   
   const variantClasses = {
     underline: isActive 
-      ? "text-blue-800 border-b-2 border-blue-800" 
+      ? "text-blue-800 border-b-2 border-blue-800"
       : "text-black hover:text-blue-700",
     boxed: isActive 
       ? "text-blue-600 border border-blue-600 rounded-md bg-blue-50" 

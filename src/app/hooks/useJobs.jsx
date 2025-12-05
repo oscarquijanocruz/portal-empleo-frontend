@@ -1,8 +1,8 @@
 //Logica de card jobs
-
-'use client'
-import { useState, useCallback, useMemo } from 'react';
-import { mockJobs } from '../data/mockData';
+// TODO: Refactorizar este hook para que maneje todo mediante una llamada a la API: fetch('/api/jobs?q=...').
+"use client";
+import { useState, useCallback, useMemo } from "react";
+import { mockJobs } from "../data/mockData";
 
 export const useJobs = (initialJobs = mockJobs) => {
   // Estados principales
@@ -10,13 +10,13 @@ export const useJobs = (initialJobs = mockJobs) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("para-ti");
   const [sortOrder, setSortOrder] = useState("");
-  
+
   // Estados de filtros
   const [filters, setFilters] = useState({
-    modalidad: '',
-    sueldo: '',
-    tipoContrato: '',
-    categoria: ''
+    modalidad: "",
+    sueldo: "",
+    tipoContrato: "",
+    categoria: "",
   });
 
   // Lógica de filtrado y ordenamiento
@@ -35,42 +35,47 @@ export const useJobs = (initialJobs = mockJobs) => {
 
     // Aplicar filtros
     if (filters.modalidad) {
-      jobs = jobs.filter(job => 
-        job.modalidad.toLowerCase() === filters.modalidad.toLowerCase()
+      jobs = jobs.filter(
+        (job) => job.modalidad.toLowerCase() === filters.modalidad.toLowerCase()
       );
     }
 
     if (filters.sueldo) {
-      const salarioFiltro = parseInt(filters.sueldo.replace(/[,$]/g, ''));
-      jobs = jobs.filter(job => {
-        const salarioJob = parseInt(job.salario.replace(/[,$]/g, ''));
+      const salarioFiltro = parseInt(filters.sueldo.replace(/[,$]/g, ""));
+      jobs = jobs.filter((job) => {
+        const salarioJob = parseInt(job.salario.replace(/[,$]/g, ""));
         return salarioJob >= salarioFiltro;
       });
     }
 
     if (filters.tipoContrato) {
-      jobs = jobs.filter(job => 
+      jobs = jobs.filter((job) =>
         job.jornada.toLowerCase().includes(filters.tipoContrato.toLowerCase())
       );
     }
 
     if (filters.categoria) {
-      jobs = jobs.filter(job => 
+      jobs = jobs.filter((job) =>
         job.categoria.toLowerCase().includes(filters.categoria.toLowerCase())
       );
     }
 
     // Ordenar trabajos
     switch (sortOrder) {
-      case 'mejor-pagados':
+      case "mejor-pagados":
         return jobs.sort((a, b) => {
-          const salarioA = parseInt(a.salario.replace(/[,$]/g, ''));
-          const salarioB = parseInt(b.salario.replace(/[,$]/g, '')); 
+          const salarioA = parseInt(a.salario.replace(/[,$]/g, ""));
+          const salarioB = parseInt(b.salario.replace(/[,$]/g, ""));
           return salarioB - salarioA;
         });
-      case 'mas-relevantes':
-        return jobs;  
-      case 'recientes':
+      case "mas-relevantes": 
+        // TODO: Cambiar funcionalidad para que funciones con la base de datos y el backend
+        return jobs.sort((a, b) => {
+          const sponsoredDiff = Number(!!b.isSponsored) - Number(!!a.isSponsored);
+          if (sponsoredDiff !== 0) return sponsoredDiff;
+          return (a.id ?? 0) - (b.id ?? 0);
+        });
+      case "recientes":
         return [...jobs].reverse();
       default:
         return jobs;
@@ -89,10 +94,10 @@ export const useJobs = (initialJobs = mockJobs) => {
   const handleClearFilters = useCallback(() => {
     setSearchTerm("");
     setFilters({
-      modalidad: '',
-      sueldo: '',
-      tipoContrato: '',
-      categoria: ''
+      modalidad: "",
+      sueldo: "",
+      tipoContrato: "",
+      categoria: "",
     });
   }, []);
 
@@ -110,7 +115,7 @@ export const useJobs = (initialJobs = mockJobs) => {
 
   // Reset selectedJob si no está en los trabajos filtrados
   useMemo(() => {
-    if (selectedJob && !filteredJobs.find(job => job.id === selectedJob.id)) {
+    if (selectedJob && !filteredJobs.find((job) => job.id === selectedJob.id)) {
       setSelectedJob(filteredJobs[0] || null);
     }
   }, [filteredJobs, selectedJob]);
@@ -123,7 +128,7 @@ export const useJobs = (initialJobs = mockJobs) => {
     sortOrder,
     filters,
     filteredJobs,
-    
+
     // Handlers
     handleSearch,
     handleFilterChange,
@@ -131,12 +136,12 @@ export const useJobs = (initialJobs = mockJobs) => {
     handleJobSelect,
     handleSortChange,
     handleTabChange,
-    
+
     // Setters directos (por si necesitas más control)
     setSelectedJob,
     setSearchTerm,
     setActiveTab,
     setSortOrder,
-    setFilters
+    setFilters,
   };
 };

@@ -1,4 +1,3 @@
-// Input UI Component
 import { TriangleAlert } from "lucide-react";
 import { useId } from "react";
 
@@ -12,8 +11,7 @@ const sizeStyles = {
   lg: "text-lg px-4 py-3",
 };
 
-export default function Input({
-  type = "text",
+export default function Textarea({
   placeholder = "",
   size = "md",
   disabled = false,
@@ -22,10 +20,12 @@ export default function Input({
   errorMessage,
   className,
   id,
+  label,
+  rows = 4,
   ...props
 }) {
   const reactId = useId();
-  const inputId = id ?? `input-${reactId}`;
+  const textareaId = id ?? `textarea-${reactId}`;
   const isError = Boolean(error);
   const errorText = isError
     ? typeof error === "string"
@@ -35,29 +35,33 @@ export default function Input({
   const sizeClass = sizeStyles[size] ?? sizeStyles.md;
   const helperContent = !errorText ? helperText : undefined;
   const messageId = errorText
-    ? `${inputId}-error`
+    ? `${textareaId}-error`
     : helperContent
-    ? `${inputId}-helper`
+    ? `${textareaId}-helper`
     : undefined;
 
   return (
     <div className="w-full">
-      <input
-        id={inputId}
-        type={type}
+      {label && (
+        <label htmlFor={textareaId} className="block text-gray-600 mb-1 text-sm font-medium">
+          {label}
+        </label>
+      )}
+      <textarea
+        id={textareaId}
         placeholder={placeholder}
         disabled={disabled}
+        rows={rows}
         aria-invalid={isError || undefined}
         aria-describedby={messageId}
         className={cn(
-          "block w-full rounded-md border-1 transition focus:outline-none focus:ring-1 focus:ring-offset-0",
-          "bg-white text-gray-900 placeholder:text-gray-400 hover:border-1 hover:border-sky-900 focus:border-sky-900",
+          "block w-full rounded-md border transition focus:outline-none focus:ring-2 focus:ring-offset-0 resize-none",
+          "bg-white text-gray-900 placeholder:text-gray-400 hover:border-sky-900 focus:border-sky-900",
           sizeClass,
           isError
-            ? "border-red-500 focus:border-red-500"
-            : "border-gray-300 focus:border-blue-900 focus:ring-blue-900 transition-colors",
-          disabled &&
-            "cursor-not-allowed border-gray-300 bg-gray-500 text-gray-300",
+            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+            : "border-gray-300 focus:border-sky-900 focus:ring-sky-900",
+          disabled && "cursor-not-allowed border-gray-300 bg-gray-100 text-gray-400",
           className
         )}
         {...props}

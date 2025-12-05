@@ -63,7 +63,6 @@ export const MessageContract = {
   content: "string", // Texto completo
   date: "string", // ISO 8601 o Date
   isRead: Boolean, 
-  isSponsored: Boolean,
   hasAttachment: Boolean,
 };
 

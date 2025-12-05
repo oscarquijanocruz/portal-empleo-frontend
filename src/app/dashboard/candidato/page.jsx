@@ -33,8 +33,18 @@ export default function DashboardPage() {
       <section className="w-full h-96 rounded-sm bg-gray-800 text-white p-6 md:p-8 content-center">
         <div className="grid grid-cols-1 md:flex-row md:items-center md:justify-between gap-6 text-center justify-center items-center">
           <div className="space-y-4 px-72">
-            <Badge variant="primary" size="sm" className={"text-white bg-violet-900"}>Nuevo Portal</Badge>
-            <h1 className="text-3xl md:text-4xl font-bold">Tu próximo empleo te espera: Descubre oportunidades con Mentory.</h1>
+            <Badge
+              variant="primary"
+              size="sm"
+              className={
+                "text-purple-100 bg-violet-900 border-2 border-violet-950"
+              }
+            >
+              Nuevo Portal
+            </Badge>
+            <h1 className="text-3xl md:text-4xl font-bold">
+              Tu próximo empleo te espera: Descubre oportunidades con Mentory.
+            </h1>
             <p className="text-blue-100 text-sm">
               Explora empleos recomendados, revisa tus postulaciones y mantente
               al día con tus notificaciones desde un solo lugar.
@@ -42,13 +52,18 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-3 justify-center">
             <Link href="/dashboard/candidato/buscar-empleos">
-              <Button variant="secondary" >
+              <Button variant="secondary">
                 Buscar empleos
                 <ArrowRightIcon size={20} className="ml-2" />
               </Button>
             </Link>
             <Link href="/dashboard/candidato/mi-perfil">
-              <Button variant="outline" className={"border-1 border-white text-white"}>Completar perfil</Button>
+              <Button
+                variant="outline"
+                className={"border-1 border-white text-white"}
+              >
+                Completar perfil
+              </Button>
             </Link>
           </div>
         </div>
@@ -63,7 +78,7 @@ export default function DashboardPage() {
           href="/dashboard/candidato/mis-empleos?tab=favoritos"
         />
         <KpiCard
-          icon={<FileUser size={38} className="text-blue-600" />}
+          icon={<FileUser size={38} className="text-sky-900" />}
           label="Postulaciones"
           value={totalPostulaciones}
           href="/dashboard/candidato/mis-empleos?tab=postulaciones"
@@ -217,11 +232,11 @@ export default function DashboardPage() {
                 Subir CV
               </li>
             </ul>
-            <a href="/dashboard/candidato/mi-perfil">
+            <Link href="/dashboard/candidato/mi-perfil">
               <Button variant="primary" className="w-full mt-4 px-4 py-2">
                 Completar Perfil
               </Button>
-            </a>
+            </Link>
           </div>
         </section>
       </div>
@@ -232,7 +247,7 @@ export default function DashboardPage() {
 function KpiCard({ icon, label, value, href }) {
   return (
     <Link href={href} className="block">
-      <div className="rounded-sm bg-white border border-gray-200 shadow-sm p-4 hover:shadow-md transition-shadow">
+      <div className="rounded-sm bg-white border border-gray-200 shadow-lg p-4 hover:shadow-xl transition-shadow">
         <div className="pb-2">{icon}</div>
         <p className="text-sm text-gray-500">{label}</p>
         <p className="text-2xl font-bold text-blue-950">{value}</p>
