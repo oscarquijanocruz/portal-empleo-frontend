@@ -166,6 +166,26 @@ export const mockNotifications = [
       company: "Tech Startup",
       // candidateName: "Federico Jasso",
     }
+  },
+  {
+    id: 11,
+    type: "job_similar",
+    title: "Trabajos similares",
+    message: "Se han encontrado trabajos similares para el puesto de Desarrollador Full Stack",
+    timestamp: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000), // 11 días atrás
+    isRead: true,
+    priority: "medium",
+    action: {
+      type: "view_similar_jobs",
+      jobId: "senior-frontend-003",
+      candidateId: "luis-adan-sanchez-789"
+    },
+    metadata: {
+      jobTitle: "Desarrollador Full Stack",
+      company: "StartupTech",
+      isFeatured: true,
+      //candidateName: "Luis Adan Sánchez Hernández"
+    },
   }
 ];
 
@@ -184,5 +204,10 @@ export const notificationTypes = {
     label: "Sistema",
     icon: "⚙️",
     color: "gray"
-  }
+  },
+  job_similar: {
+    label: "Trabajos similares",
+    icon: "🧰",
+    color: "red"
+  },
 };

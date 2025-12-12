@@ -505,6 +505,19 @@ export default function StepProfesional({ methods }) {
               )}
             />
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Percepción salarial esperada
+            </label>
+            <Input
+              {...register("percepcionSalarial", {
+                required: "Escribe tu percepción salarial",
+              })}
+              type="number"
+              placeholder="Escribe tu salario esperado"
+              error={errors.percepcionSalarial?.message}
+            />
+          </div>
         </div>
       </div>
     </div>

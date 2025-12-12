@@ -7,8 +7,6 @@ import {
   Circle,
   Filter,
   Search,
-  MoreVertical,
-  Archive,
   Trash2,
 } from "lucide-react";
 import NotificationCard from "../../../components/dashboard-candidato/NotificationCard";
@@ -16,6 +14,7 @@ import NotificationFilters from "../../../components/dashboard-candidato/Notific
 import { mockNotifications } from "@/app/data/mockNotifications";
 import Button from "../../../components/ui/Button";
 import Input from "@/app/components/ui/Input";
+import Checkbox from "@/app/components/ui/Checkbox";
 
 export default function NotificacionesPage() {
   const router = useRouter();
@@ -247,33 +246,67 @@ export default function NotificacionesPage() {
           ) : (
             <div className="h-full overflow-y-auto">
               {/* Select All */}
-              <div className="bg-white border-b border-gray-200 px-6 py-3">
+              <div className="bg-white border-b border-gray-200 px-3 py-3">
                 <label className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="checkbox"
+                  <Checkbox
+                    size="sm"
                     checked={
                       selectedNotifications.length ===
                         filteredNotifications.length &&
                       filteredNotifications.length > 0
                     }
                     onChange={handleSelectAll}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <span className="text-sm text-gray-700">
                     Seleccionar todas ({filteredNotifications.length})
                   </span>
                 </label>
+                {selectedNotifications.length > 0 && (
+                  <div className="bg-blue-50 border-t border-b border-blue-200 px-6 py-3 mt-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-blue-700">
+                          {selectedNotifications.length} notificaciones
+                          seleccionadas
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => handleBulkAction("mark_read")}
+                          className="flex items-center space-x-1 px-3 py-1 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded transition-colors"
+                        >
+                          <CheckCircle2 size={14} />
+                          <span>Marcar como leídas</span>
+                        </button>
+                        <button
+                          onClick={() => handleBulkAction("mark_unread")}
+                          className="flex items-center space-x-1 px-3 py-1 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded transition-colors"
+                        >
+                          <Circle size={14} />
+                          <span>Marcar como no leídas</span>
+                        </button>
+                        <button
+                          onClick={() => handleBulkAction("delete")}
+                          className="flex items-center space-x-1 px-3 py-1 text-sm text-red-600 hover:text-red-800 hover:bg-red-100 rounded transition-colors"
+                        >
+                          <Trash2 size={14} />
+                          <span>Eliminar</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Notification Cards */}
-              <div className="divide-y divide-gray-200">  
+              <div className="divide-y divide-gray-200">
                 {filteredNotifications.map((notification) => (
-                  <div key={notification.id} className="relative border-r-1 ">  
-                    <input
-                      type="checkbox"
+                  <div key={notification.id} className="relative border-r-1 ">
+                    <Checkbox
+                      size="sm"
                       checked={selectedNotifications.includes(notification.id)}
                       onChange={() => handleSelectNotification(notification.id)}
-                      className="absolute left-4 top-6 z-10 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="absolute left-4 top-6 z-10"
                     />
                     <div className="pl-12">
                       <NotificationCard
@@ -293,7 +326,7 @@ export default function NotificacionesPage() {
         <div className="flex col-span-12 justify-center lg:col-span-3 lg:sticky lg:top-6">
           {/* Filtros */}
           {/* Bulk Actions */}
-          {selectedNotifications.length > 0 && (
+          {/* {selectedNotifications.length > 0 && (
             <div className="bg-blue-50 border-b border-blue-200 px-6 py-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -326,7 +359,7 @@ export default function NotificacionesPage() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Filters */}
           <NotificationFilters

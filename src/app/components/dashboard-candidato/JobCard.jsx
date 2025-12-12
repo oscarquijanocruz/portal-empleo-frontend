@@ -98,7 +98,7 @@ export default function JobCard({
                           ? "grayscale-100 opacity-70"
                           : ""
                       }`}
-                    />
+                    />  
                   </div>
                   <div
                     className={`flex-1 flex-col filter-grayscale ${
