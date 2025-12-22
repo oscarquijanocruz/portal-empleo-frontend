@@ -33,7 +33,7 @@ export default function SearchFilters({
   ];
 
   const sueldoOptions = [
-    { label: "Sin salario", value: "sin-salario" },
+    { label: "Sin Sueldo", value: "sin-salario" },
     { label: "$15,000+", value: "15000" },
     { label: "$25,000+", value: "25000" },
     { label: "$35,000+", value: "35000" },
@@ -53,19 +53,30 @@ export default function SearchFilters({
   ];
 
   const categoriaOptions = [
-    { label: "Tecnología / Sistemas / Programación", value: "tecnologia" },
-    { label: "Ventas / Comercial", value: "ventas" },
-    { label: "Marketing / Publicidad / Comunicación", value: "marketing" },
-    { label: "Logística / Transporte / Almacén", value: "logistica" },
+    { label: "Administración / Oficina", value: "administracion" },
+    { label: "Almacén / Logística / Transporte", value: "logistica" },
+    { label: "Atención al cliente", value: "atencion-al-cliente" },
+    { label: "Calidad", value: "calidad" },
+    { label: "CallCenter / Telemarketing", value: "callcenter" },
+
+    { label: "Compras / Comercio Exterior", value: "compras" },
+    { label: "Construcción y Obra", value: "construccion" },
+    { label: "Contabilidad / Finanzas", value: "contabilidad" },
+    { label: "Dirección / Gerencia", value: "direccion" },
+    { label: "Diseño / Artes gráficas", value: "diseno" },
+    { label: "Docencia", value: "docencia" },
+    { label: "Hostelería y Turismo", value: "hosteleria" },
+    { label: "Informática / Telecomunicaciones", value: "informatica" },
     { label: "Ingeniería", value: "ingenieria" },
-    { label: "Manufactura / Producción / Operarios", value: "manufactura" },
-    { label: "Salud / Medicina / Farmacia", value: "salud" },
-    { label: "Educación / Docencia", value: "educacion" },
-    { label: "Diseño / Arte / Multimedia", value: "diseno" },
-    { label: "Legal / Jurídico", value: "legal" },
-    { label: "Construcción / Arquitectura", value: "construccion" },
-    { label: "Hotelería / Turismo / Restaurantes", value: "hoteleria" },
-    { label: "Otros / Generales", value: "otros" },
+    { label: "Legal / Asesoría", value: "legal" },
+    { label: "Manteniemiento", value: "mantenimiento" },
+    { label: "Medicina / Salud", value: "medicina" },
+    { label: "Mercadotecnia / Publicidad / Comunicación", value: "publicidad" },
+    { label: "Otros", value: "otros" },
+    { label: "Producción / Manufactura", value: "produccion" },
+    { label: "Recursos Humanos", value: "recursos-humanos" },
+    { label: "Servicios Generales / Aseo / Seguridad", value: "servicios-generales" },
+    { label: "Ventas", value: "ventas" },
   ];
 
   // Search params
@@ -112,7 +123,8 @@ export default function SearchFilters({
     } else {
       delete newFilters[filterType];
     }
-    //replace(`${pathname}?${new URLSearchParams(newFilters).toString()}`);
+    // Actualizar URL con los nuevos filtros seleccionados
+    replace(`${pathname}?${new URLSearchParams(newFilters).toString()}`);
   };
 
   const handleClearFilters = () => {
@@ -200,20 +212,27 @@ export default function SearchFilters({
           className="bg-blue-950 text-white border-sky-950 border rounded-sm text-sm"
           style={{ backgroundColor: "#2A3B57" }}
         />
+      </div>
 
-        {/* Botón limpiar filtros */}
-        {hasActiveFilters && (
-          <div>
+      {/* Botón limpiar filtros */}
+      {hasActiveFilters && (
+        <div className="flex w-full mt-2">
+          <div className="border-b border-1.5 border-gray-300 p-2 w-full flex justify-end">
+            <p className="text-sm text-gray-900">
+              Filtros seleccionados 
+              ({Object.values(localFilters).filter((f) => f).length +
+                (localSearchTerm ? 1 : 0)})
+            </p>
             <button
               onClick={handleClearFilters}
-              className="text-blue-800 text-sm hover:underline flex items-center gap-1"
+              className="text-blue-800 text-sm hover:underline flex items-center gap-1 ml-auto"
             >
               <X size={14} />
-              Borrar filtros
+              Limpiar filtros
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Mostrar filtros activos */}
       {hasActiveFilters && (

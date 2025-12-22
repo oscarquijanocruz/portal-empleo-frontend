@@ -35,7 +35,7 @@ export default function UserProfile() {
           {/* Usamos asChild para que el Link sea el elemento interactivo directo */}
           <Link href="/dashboard/candidato/mi-perfil" className="cursor-pointer w-full flex items-center gap-2">
             <User size={16} />
-            <span>Ver mi perfil</span>
+            <span>Mi CV</span>
           </Link>
         </DropdownMenuItem>
         

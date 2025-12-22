@@ -1,6 +1,5 @@
 // Dialogo de envio de mensaje
 "use client";
-import { useState } from "react";
 import Button from "@/app/components/ui/Button";
 import Input from "@/app/components/ui/Input";
 import Textarea from "@/app/components/ui/Textarea";
@@ -34,7 +33,7 @@ export default function SendMessageDialog({
   const attachedFile = watch("attachedFile")?.[0];
   
   // Funcion que se ejecuta el form es válido
-  const onSubmit = async (data) => {
+  const onSubmit = async (data) => {  
     
     const messageData = {
       to: data.recipientUsername,
@@ -111,7 +110,13 @@ export default function SendMessageDialog({
   //   // window.location.href = '/messages';
   // };
     
-    reset();
+    reset(
+      {
+        recipientUsername: watch(""),
+        message: watch(""),
+        attachedFile: null,
+      }
+    );
     onClose();
   };
 
@@ -147,7 +152,7 @@ export default function SendMessageDialog({
       role="dialog"
       aria-modal="true"
     >
-      {/* Backdrop oscuro - debe estar FUERA del form y con z-index menor */}
+      {/* Backdrop oscuro */}
       <div
         className="fixed -z-10 inset-0 bg-black backdrop-opacity-70 opacity-50 transition-opacity animate-in fade-in duration-300"
         aria-hidden="true"
@@ -284,12 +289,12 @@ export default function SendMessageDialog({
             {attachedFile && (
               <div className="w-full mt-5 sm:mt-4 sm:flex sm:flex-row-reverse py-2 gap-3 border-t-1 border-gray-300">
                 <div className="flex-1 flex flex-col items-center">
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center pt-1">
                     <Paperclip
                       size={16}
                       className="shrink-0 text-gray-600 mr-1"
                     />
-                    <p className="text-sm text-gray-600">Archivo adjunto</p>
+                    <p className="text-sm text-gray-600">1 Archivo adjunto</p>
                   </div>
                   <div className="relative">
                     <Button

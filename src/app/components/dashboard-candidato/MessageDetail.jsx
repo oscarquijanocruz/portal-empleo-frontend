@@ -15,11 +15,17 @@ import Button from "@/app/components/ui/Button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import Textarea from "@/app/components/ui/Textarea";
+import { useMessageFavorites } from '@/app/hooks/useMessageFavorites';
 
 export default function MessageDetail({ message }) {
-  const [isFavorite, setIsFavorite] = useState(false);
+  //const [isFavorite, setIsFavorite] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   //const [isSilenced, setIsSilenced] = useState(false);
+  const { 
+    isFavorite, 
+    toggleFavorite, 
+    isLoading 
+  } = useMessageFavorites();
 
   if (!message) {
     return (
@@ -117,13 +123,22 @@ export default function MessageDetail({ message }) {
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <button
+            {/* <button
               onClick={() => setIsFavorite(!isFavorite)}
               className={`p-2 rounded-full hover:bg-gray-100 ${
                 isFavorite ? "text-yellow-500" : "text-gray-400"
               }`}
             >
               <Star size={20} fill={isFavorite ? "currentColor" : "none"} />
+            </button> */}
+            <button
+              onClick={() => toggleFavorite(message.id)}
+              disabled={isLoading}
+              className={`p-2 rounded-full hover:bg-gray-100 ${
+                isFavorite ? "text-yellow-500" : "text-gray-400"
+              }`}
+            >
+              <Star size={20} fill={isFavorite(message.id) ? "currentColor" : "none"} />
             </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -148,7 +163,10 @@ export default function MessageDetail({ message }) {
                   />
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-red-600" onClick={handleDelete}>
+                <DropdownMenuItem
+                  className="text-red-600"
+                  onClick={handleDelete}
+                >
                   <Trash2 size={16} className="text-red-600" /> Eliminar
                 </DropdownMenuItem>
               </DropdownMenuContent>

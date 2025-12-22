@@ -67,7 +67,7 @@ export default function NotificationFilters({
     <div className="items-center align-center w-full md:w-full shrink-0">
       <Accordion type="single" collapsible className="w-full bg-gray-100">
         <AccordionItem value="item-1">
-          <AccordionTrigger className="p-3 pl-3 gap-2 text-left justify-between">
+          <AccordionTrigger className="p-3 pl-3 gap-2 text-left justify-between border-b border-gray-300 rounded-none">
             <span className="font-semibold inline-flex items-center gap-2">
               <Filter size={18} />
               Filtros</span>
@@ -79,7 +79,7 @@ export default function NotificationFilters({
                   <h3 className="text-sm font-medium text-gray-700 mb-3">
                     Tipo de notificación
                   </h3>
-                  <div className="flex flex-wrap items-center gap-2">
+                  <div className="grid grid-cols-1 items-center gap-2">
                     {filterOptions.map((option) => (
                       <button
                         key={option.key}

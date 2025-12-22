@@ -6,10 +6,13 @@ import Button from "../ui/Button";
 import Image from "next/image";
 import Link from "next/link";
 import { useNotification } from "@/app/contexts/NotificationContext";
+import PostulationDialog from "./PostulationDialog";
+import SendMessageDialog from "./SendMessageDialog";
 
 export default function JobDetail({ job }) {
   const { notify } = useNotification();
   const [expanded, setExpanded] = useState(false);
+  const [isOpenDialogPostulate, setIsOpenDialogPostulate] = useState(false);
 
   // ✅ Ahora recibe job como prop
   if (!job) {
@@ -20,9 +23,10 @@ export default function JobDetail({ job }) {
     );
   }
   // Función para mostrar el botón de aplicar
-  const handleApply = () => {
-    console.log('Aplicando a este trabajo');
-  };
+  // const handlePostulate = () => {
+  //   console.log('Postularme a este trabajo');
+  //   return setIsOpenDialog(true);
+  // };
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -36,10 +40,19 @@ export default function JobDetail({ job }) {
         <div className="justify-between mb-6">
           <div className="grid justify-center text-center items-center place-items-center relative">
             <div className="text-left ml-auto absolute top-0 right-0">
-              <Button variant="outline" size="xs" className={"bg-[#efefefff] hover:bg-[#c9c9c9ff] rounded-sm items-center"}
-               //style={{background: "#efefefff", padding: "5px"}} 
-               onClick={() => handleShare()}>
-                <Share2 size={22} className="text-gray-500 hover:text-gray-900 transition-colors" />
+              <Button
+                variant="outline"
+                size="xs"
+                className={
+                  "bg-[#efefefff] hover:bg-[#c9c9c9ff] rounded-sm items-center"
+                }
+                //style={{background: "#efefefff", padding: "5px"}}
+                onClick={() => handleShare()}
+              >
+                <Share2
+                  size={22}
+                  className="text-gray-500 hover:text-gray-900 transition-colors"
+                />
               </Button>
             </div>
             <div className="w-24 h-24 bg-sky-100 rounded-xs flex items-center justify-center m-4">
@@ -117,7 +130,10 @@ export default function JobDetail({ job }) {
           {expanded && (
             <div className="animate-in fade-in slide-in-from-bottom-5 duration-500">
               <h2 className="text-lg font-semibold mb-3">Beneficios</h2>
-              <ul className="space-y-1 text-sm text-gray-600 leading-relaxed" id="beneficios">
+              <ul
+                className="space-y-1 text-sm text-gray-600 leading-relaxed"
+                id="beneficios"
+              >
                 {job.beneficios?.map((beneficio, index) => (
                   <li key={index} className="flex items-start">
                     <span className="mr-2">•</span>
@@ -127,7 +143,7 @@ export default function JobDetail({ job }) {
               </ul>
             </div>
           )}
-  
+
           {/* Info adicional */}
           {expanded && (
             <div className="flex flex-col sm:flex-row border-t-1 border-gray-200 mt-4 mb-4 py-2 text-sm px-1 text-gray-700 gap-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
@@ -172,14 +188,25 @@ export default function JobDetail({ job }) {
           {/* Apply Button */}
           <Button
             className="w-full font-semibold py-3 rounded-lg transition-colors"
-            onClick={handleApply}
+            onClick={() => setIsOpenDialogPostulate (true)}
+            // disabled={isLoading}
           >
+            {/* {isLoading && <Spinner size={16} className="ml-2 text-white" />} */}
             ¡Postularme!
           </Button>
+          {/* Dialogo de envio de mensaje */}
+          <PostulationDialog
+            isOpen={isOpenDialogPostulate}
+            onClose={() => setIsOpenDialogPostulate(false)}
+            // isLoading={isLoading}
+            // onPostulate={handlePostulate}
+          />
           {/* Chat Button */}
           <div>
             <Link href={`/dashboard/candidato/mensajes`}>
               <Button
+                type="button"
+                onClick={() => <SendMessageDialog isOpen={true} />} // Al hacer click debe abrir el dialog para mandar un mensaje nuevo
                 variant="secondary"
                 className="h-12 shadow-md transition-colors"
               >

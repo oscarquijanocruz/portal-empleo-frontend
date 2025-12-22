@@ -7,6 +7,7 @@ import { useJobs } from "../../../hooks/useJobs";
 import { useFavorites } from "../../../hooks/useFavorites";
 import { mockJobs } from "../../../data/mockData";
 import Tabs, { Tab, TabList, TabContent } from "@/app/components/ui/Tab";
+import { BookmarkCheck } from "lucide-react";
 
 export default function MisEmpleosPage() {
   const searchParams = useSearchParams();
@@ -210,9 +211,9 @@ export default function MisEmpleosPage() {
 
               {/* Indicador de favorito */}
               {activeTab === "favoritos" && (
-                <div className="mb-4 p-2 rounded-lg bg-yellow-50 border border-yellow-200">
-                  <p className="text-sm text-yellow-800">
-                    ⭐ Trabajo guardado en favoritos
+                <div className="mb-4 p-2 rounded-sm bg-yellow-50 border border-yellow-200">
+                  <p className="text-sm text-yellow-800 flex">
+                    <BookmarkCheck size={20} className="mr-2" /> Trabajo guardado en favoritos
                   </p>
                 </div>
               )}

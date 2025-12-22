@@ -10,7 +10,7 @@ export const mockMessages = [
     preview: "¿Buscas servicios de soluciones tecnológicas?",
     date: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000), // 18 días atrás
     isRead: false,
-    isFavorite: true,
+    isFavorite: "",
     conversation: [
       {
       content: "Hola, vi tu perfil y me parece que podrías ser un gran candidato para nuestra empresa. ¿Buscas servicios de limpieza y mantenimiento?",

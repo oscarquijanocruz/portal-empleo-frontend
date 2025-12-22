@@ -7,6 +7,7 @@ import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { mockMessages } from "../../../data/mockDataMessages"
 import SendMessageDialog from "../../../components/dashboard-candidato/SendMessageDialog"
+import { useMessageFavorites } from '@/app/hooks/useMessageFavorites';
 
 export default function MensajesPage() {
   const searchParams = useSearchParams();
@@ -15,6 +16,7 @@ export default function MensajesPage() {
   const [showOnlyCandidates, setShowOnlyCandidates] = useState(false);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const { isFavorite, toggleFavorite, isLoading } = useMessageFavorites();
 
   // Handle specific message selection from URL parameter
   useEffect(() => {
@@ -53,8 +55,7 @@ export default function MensajesPage() {
     if(showOnlyFavorites){
       // Filter for favorites messages
       const Favorite =
-        message.isFavorite ||
-        message.preview.toLowerCase().includes("linkedin");
+        isFavorite(message.id);
       return matchesSearch && Favorite;
     }
     

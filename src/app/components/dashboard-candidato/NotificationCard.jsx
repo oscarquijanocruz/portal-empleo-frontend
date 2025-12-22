@@ -79,15 +79,8 @@ export default function NotificationCard({
 
   return (
     <div
-      className={`
-        relative p-4 cursor-pointer transition-all
-        ${!notification.isRead ? 'shadow-sm' : ''}
-        hover:shadow-md
-        ${isHovered ? 'shadow-md' : ''}
-      `}
+      className="relative p-4 cursor-pointer transition-all"
       onClick={handleCardClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex items-start space-x-3">
         {/* Type Icon */}

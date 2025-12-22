@@ -1,7 +1,14 @@
 "use client";
 import { User2Icon, Star, Paperclip, CheckCircle, Send } from "lucide-react";
+import { useMessageFavorites } from '@/app/hooks/useMessageFavorites';
 
 export default function MessageCard({ messages, selectedMessage, onMessageSelect }) {
+  const { 
+      isFavorite, 
+      toggleFavorite, 
+      isLoading 
+    } = useMessageFavorites();
+  
   const formatDate = (date) => {
     const now = new Date();
     const messageDate = new Date(date);
@@ -87,7 +94,7 @@ export default function MessageCard({ messages, selectedMessage, onMessageSelect
                         Candidato
                       </span>
                     )}
-                    {isFavoriteMessage(message) && (
+                    {isFavorite(message.id) && (
                       <span className="inline-flex ml-auto items-center px-1 rounded-full text-xs font-medium text-yellow-500">
                         <Star size={16} fill="currentColor" />
                       </span>

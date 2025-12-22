@@ -57,6 +57,7 @@ export default function MiPerfilPage() {
       modalidadPreferida: "remoto",
       tipoPuesto: "operativo",
       tipoJornada: "tiempoCompleto",
+      percepcionSalarial: 25000,
 
       // Step 3: Experiencia Laboral - NUEVA ESTRUCTURA
       noExperienciaLaboral: false, // Checkbox para indicar sin experiencia
