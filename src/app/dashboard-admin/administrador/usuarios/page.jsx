@@ -1,313 +1,835 @@
 "use client";
 
-import { useState } from "react";
-import { Pencil, Trash, UserCheck, UserX, Calendar, PlusCircle } from "lucide-react"; // Agregar íconos para los filtros y acciones
+import { useEffect, useState } from "react";
+import {
+  Pencil,
+  Trash,
+  UserCheck,
+  UserX,
+  FileText,
+  PlusCircle,
+  X,
+} from "lucide-react";
 
-// Datos simulados de usuarios
-const usuarios = [
-  { id: 1, nombre: "Juan Pérez", tipo: "Admin", estado: "Activo", fecha: "2025-01-15", ubicacion: "Ciudad de México" },
-  { id: 2, nombre: "Ana García", tipo: "Empleado", estado: "Inactivo", fecha: "2025-03-12", ubicacion: "Guadalajara" },
-  { id: 3, nombre: "Carlos López", tipo: "Admin", estado: "Activo", fecha: "2025-06-23", ubicacion: "Monterrey" },
-  { id: 4, nombre: "Lucía Martínez", tipo: "Empleado", estado: "Activo", fecha: "2025-07-18", ubicacion: "Cancún" },
-  { id: 5, nombre: "José Gómez", tipo: "Empleado", estado: "Inactivo", fecha: "2025-09-10", ubicacion: "Tijuana" },
+const usuariosIniciales = [
+  {
+    id: 1,
+    nombre: "Carolina Quintana Sánchez",
+    tipo: "Candidata",
+    estado: "En proceso",
+    fecha: "2025-08-12",
+    ubicacion: "Puebla",
+    telefono: "5610461939",
+    correo: "caroquintana.s@gmail.com",
+    percepcion: "$8,364.00",
+    edad: 18,
+    fechaNacimiento: "2007-10-03",
+    lugarNacimiento: "Puebla",
+    distanciaDomicilio: "30 minutos",
+    gastosMensual: "$3,000.00",
+    gradoEstudios: "Preparatoria",
+    ingles: "Intermedio",
+    estadoCivil: "Soltera",
+    hijos: 0,
+    quienAporta: "Solo ella",
+    domicilio: "PRIVADA 143 C Poniente No. 92 Valle del Paraíso",
+    tiempoDomicilio: "2 meses",
+    costoRenta: "$2,500.00",
+    trabajaActualmente: "Trabaja",
+    estadoSalud: "Bueno",
+    tratamientoPsicologico: "No",
+    enfermedadCronica: "No",
+    vacunasCovid: 3,
+    disponibilidad: "A partir del día 15 de diciembre",
+    conocidosEmpresa: "No",
+    empresas: [
+      {
+        nombre: "RESTAURANTE DELICIAS CABO SAN LUCAS",
+        contacto: "Lic. Gonzalez",
+        ubicacion: "Blvd del Niño Poblano",
+        puesto: "Garrotera - Hostess - Ayudante General",
+        tiempo: "Junio 2024 - actualmente",
+        sueldo: "$8364 + propinas",
+        motivoSalida: "Busca una mejor opción",
+        referencia: "NO PEDIR REFERENCIAS, AÚN LABORA",
+      },
+      { nombre: "", ubicacion: "", puesto: "", tiempo: "", sueldo: "", motivoSalida: "", referencia: "" },
+      { nombre: "", ubicacion: "", puesto: "", tiempo: "", sueldo: "", motivoSalida: "", referencia: "" },
+    ],
+    fortalezas: ["ATENCIÓN AL CLIENTE", "ATENTA", ""],
+    debilidades: ["PERFECCIONISTA", "", ""],
+    inconvenienteEmpresa: "NP",
+    comentarios: "Podría ir a entrevista jueves o viernes",
+    entrevistas: [],
+  },
+  // puedes agregar más usuarios de ejemplo...
 ];
 
-export default function UserManagement() {
-  // Estados de búsqueda y filtros
-  const [search, setSearch] = useState(""); // Filtro por nombre
-  const [estadoFilter, setEstadoFilter] = useState(""); // Filtro por estado
-  const [tipoFilter, setTipoFilter] = useState(""); // Filtro por tipo
-  const [fechaFilter, setFechaFilter] = useState(""); // Filtro por fecha
-  const [ubicacionFilter, setUbicacionFilter] = useState(""); // Filtro por ubicación
+/* --------------------------
+   Componente principal
+   -------------------------- */
+export default function UserManagementWithInterviews() {
+  const [usuarios, setUsuarios] = useState(usuariosIniciales);
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal para agregar o editar usuario
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false); // Modal para confirmar eliminación
-  const [selectedUser, setSelectedUser] = useState(null); // Usuario seleccionado para editar o eliminar
+  // filtros & búsquedas
+  const [q, setQ] = useState("");
+  const [estadoFilter, setEstadoFilter] = useState("");
+  const [tipoFilter, setTipoFilter] = useState("");
 
-  const [newUser, setNewUser] = useState({
-    nombre: "",
-    tipo: "",
-    estado: "",
-    fecha: "",
-    ubicacion: "",
+  // modales
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isInterviewOpen, setIsInterviewOpen] = useState(false);
+
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  // edición usuario (simple)
+  const [editForm, setEditForm] = useState(null);
+
+  // entrevista form (estructura completa)
+  const emptyInterview = {
+    fecha: "", // ISO date
+    elaboro: "",
+    comentariosGenerales: "",
+
+    // Información personal (capturada de usuario, pero editable)
+    vacanteSolicitada: "",
+    telefono: "",
+    correo: "",
+    edad: "",
+    percepcion: "",
+    lugarNacimiento: "",
+    fechaNacimiento: "",
+    experiencia: "",
+    distanciaDomicilio: "",
+    gastosMensual: "",
+    gradoEstudios: "",
+    ingles: "",
+
+    estadoCivil: "",
+    parejaOcupacion: "",
+    numeroHijos: "",
+    quienAporta: "",
+
+    domicilio: "",
+    referenciaDomicilio: "",
+    conQuienesVive: "",
+    tiempoEnDomicilio: "",
+    estadoDomicilio: "", // Propia, Rentada, Prestada
+    costoRenta: "",
+
+    dedicadaActualmente: "", // Trabaja/Estudia/Negocio/SinEmpleo
+    comentarios: "",
+
+    estadoSalud: "", // Bueno/Regular/Malo
+    tratamientoPsicologico: "",
+    enfermedadCronica: "",
+    noVacunasCovid: "",
+
+    disponibilidad: "", // SI/NO/Fecha
+    conocidosEmpresa: "",
+
+    // Empresas (3)
+    empresas: [
+      { nombre: "", ubicacion: "", contacto: "", puesto: "", tiempoLaborado: "", sueldo: "", motivoSalida: "", referencia: "" },
+      { nombre: "", ubicacion: "", contacto: "", puesto: "", tiempoLaborado: "", sueldo: "", motivoSalida: "", referencia: "" },
+      { nombre: "", ubicacion: "", contacto: "", puesto: "", tiempoLaborado: "", sueldo: "", motivoSalida: "", referencia: "" },
+    ],
+
+    // Fortalezas / Debilidades
+    fortalezas: ["", "", ""],
+    debilidades: ["", "", ""],
+    inconvenienteEmpresa: "",
+
+    // Evaluación
+    evaluacionGeneral: "",
+    calificacion: "",
+    estadoCandidato: "", // Aprobado / Rechazado / En proceso
+  };
+
+  const [interviewForm, setInterviewForm] = useState(emptyInterview);
+
+  // pestañas del modal de entrevista
+  const tabs = [
+    "Información personal",
+    "Vivienda & Salud",
+    "Laboral (Empresas)",
+    "Fortalezas / Debilidades",
+    "Comentarios",
+    "Conclusión",
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  // helpers
+  const selectedUser = usuarios.find((u) => u.id === selectedUserId) ?? null;
+
+  // filtro aplicado
+  const filtered = usuarios.filter((u) => {
+    const text = `${u.nombre} ${u.tipo} ${u.estado}`.toLowerCase();
+    if (q && !text.includes(q.toLowerCase())) return false;
+    if (estadoFilter && u.estado !== estadoFilter) return false;
+    if (tipoFilter && u.tipo !== tipoFilter) return false;
+    return true;
   });
 
-  // Filtrar usuarios en base a los filtros
-  const filteredUsers = usuarios.filter((user) => {
-    return (
-      user.nombre.toLowerCase().includes(search.toLowerCase()) &&
-      (estadoFilter ? user.estado === estadoFilter : true) &&
-      (tipoFilter ? user.tipo === tipoFilter : true) &&
-      (fechaFilter ? user.fecha === fechaFilter : true) &&
-      (ubicacionFilter ? user.ubicacion === ubicacionFilter : true)
+  /* --------------------------
+     Modales: abrir editar
+     -------------------------- */
+  const openEditModal = (user) => {
+    setSelectedUserId(user.id);
+    setEditForm({
+      nombre: user.nombre,
+      tipo: user.tipo,
+      estado: user.estado,
+      ubicacion: user.ubicacion,
+      telefono: user.telefono ?? "",
+      correo: user.correo ?? "",
+    });
+    setIsEditOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsEditOpen(false);
+    setSelectedUserId(null);
+    setEditForm(null);
+  };
+
+  /* --------------------------
+     Modales: abrir entrevista
+     -------------------------- */
+  const openInterviewModal = (user, prefillFromUser = true) => {
+    setSelectedUserId(user.id);
+
+    // prefill interview form with user data if requested
+    const prefill = {
+      ...emptyInterview,
+    };
+
+    if (prefillFromUser) {
+      prefill.vacanteSolicitada = user.vacanteSolicitada ?? "ANFITRIONA - LOS MANTELES";
+      prefill.telefono = user.telefono ?? user.telefono ?? "";
+      prefill.correo = user.correo ?? user.correo ?? "";
+      prefill.percepcion = user.percepcion ?? "";
+      prefill.edad = user.edad ?? "";
+      prefill.lugarNacimiento = user.lugarNacimiento ?? "";
+      prefill.fechaNacimiento = user.fechaNacimiento ?? "";
+      prefill.distanciaDomicilio = user.distanciaDomicilio ?? "";
+      prefill.gastosMensual = user.gastosMensual ?? "";
+      prefill.gradoEstudios = user.gradoEstudios ?? "";
+      prefill.ingles = user.ingles ?? "";
+      prefill.estadoCivil = user.estadoCivil ?? "";
+      prefill.numeroHijos = user.hijos ?? "";
+      prefill.quienAporta = user.quienAporta ?? "";
+      prefill.domicilio = user.domicilio ?? "";
+      prefill.tiempoEnDomicilio = user.tiempoDomicilio ?? "";
+      prefill.costoRenta = user.costoRenta ?? "";
+      prefill.tratamientoPsicologico = user.tratamientoPsicologico ?? "";
+      prefill.enfermedadCronica = user.enfermedadCronica ?? "";
+      prefill.noVacunasCovid = user.vacunasCovid ?? "";
+      prefill.empresas = user.empresas ? JSON.parse(JSON.stringify(user.empresas)) : [ ...emptyInterview.empresas ];
+      prefill.fortalezas = user.fortalezas ? [...user.fortalezas] : ["", "", ""];
+      prefill.debilidades = user.debilidades ? [...user.debilidades] : ["", "", ""];
+      prefill.inconvenienteEmpresa = user.inconvenienteEmpresa ?? "";
+      prefill.comentariosGenerales = user.comentarios ?? "";
+    }
+
+    setInterviewForm(prefill);
+    setActiveTab(tabs[0]);
+    setIsInterviewOpen(true);
+  };
+
+  const closeInterviewModal = () => {
+    setIsInterviewOpen(false);
+    setSelectedUserId(null);
+    setInterviewForm(emptyInterview);
+  };
+
+  /* --------------------------
+     Guardar / actualizar usuario
+     -------------------------- */
+  const saveUserEdits = () => {
+    setUsuarios((prev) =>
+      prev.map((u) =>
+        u.id === selectedUserId
+          ? {
+              ...u,
+              nombre: editForm.nombre,
+              tipo: editForm.tipo,
+              estado: editForm.estado,
+              ubicacion: editForm.ubicacion,
+              telefono: editForm.telefono,
+              correo: editForm.correo,
+            }
+          : u
+      )
     );
-  });
-
-  // Abrir modal de agregar usuario
-  const openAddUserModal = () => {
-    setIsModalOpen(true);
-    setNewUser({ nombre: "", tipo: "", estado: "", fecha: "", ubicacion: "" });
+    closeEditModal();
   };
 
-  // Abrir modal de edición
-  const openModal = (user) => {
-    setSelectedUser(user);
-    setIsModalOpen(true);
+  /* --------------------------
+     Guardar entrevista (temporal en cliente)
+     -------------------------- */
+  const saveInterview = () => {
+    if (!selectedUserId) return;
+    const entrevistaGuardada = {
+      ...interviewForm,
+      id: Date.now(),
+      fechaCaptura: new Date().toISOString(),
+    };
+
+    setUsuarios((prev) =>
+      prev.map((u) =>
+        u.id === selectedUserId ? { ...u, entrevistas: [...(u.entrevistas || []), entrevistaGuardada] } : u
+      )
+    );
+
+    // opcional: actualizar campos principales del usuario desde el formulario
+    setUsuarios((prev) =>
+      prev.map((u) =>
+        u.id === selectedUserId
+          ? {
+              ...u,
+              telefono: interviewForm.telefono ?? u.telefono,
+              correo: interviewForm.correo ?? u.correo,
+              percepcion: interviewForm.percepcion ?? u.percepcion,
+              domicilio: interviewForm.domicilio ?? u.domicilio,
+            }
+          : u
+      )
+    );
+
+    // cerrar modal o dejar abierto para otra entrevista
+    setIsInterviewOpen(false);
+    setInterviewForm(emptyInterview);
   };
 
-  // Cerrar modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedUser(null);
-  };
-
-  // Confirmar eliminación
-  const openDeleteConfirm = (user) => {
-    setSelectedUser(user);
-    setIsDeleteConfirmOpen(true);
-  };
-
-  const closeDeleteConfirm = () => {
-    setIsDeleteConfirmOpen(false);
-    setSelectedUser(null);
-  };
-
-  const handleDelete = () => {
-    // Lógica para eliminar el usuario
-    console.log("Usuario eliminado:", selectedUser);
-    setIsDeleteConfirmOpen(false);
-    // Actualizar usuarios (esto es solo un ejemplo de lógica de eliminación)
-  };
-
-  // Editar usuario
-  const handleEdit = () => {
-    // Actualizar el usuario con los nuevos datos
-    console.log("Usuario editado:", selectedUser);
-    setIsModalOpen(false);
-    // Lógica para actualizar el usuario
-  };
-
-  // Agregar nuevo usuario
-  const handleAddUser = () => {
-    // Lógica para agregar nuevo usuario
-    console.log("Nuevo usuario agregado:", newUser);
-    setIsModalOpen(false);
-  };
-
-  // Restablecer filtros
-  const resetFilters = () => {
-    setSearch("");
-    setEstadoFilter("");
-    setTipoFilter("");
-    setFechaFilter("");
-    setUbicacionFilter("");
-  };
-
+  /* --------------------------
+     UI Render
+     -------------------------- */
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 col-span-1">
-      <h1 className="text-lg font-bold mb-4 text-gray-700 text-center">Gestión de Usuarios</h1>
+     <div className="bg-white rounded-lg shadow-md p-6 col-span-1">
+      <div className="max-w-[1200px] mx-auto">
 
-      {/* Barra de métricas rápidas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        {/* Total de Usuarios */}
-        <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-6 rounded-xl shadow-md flex items-center">
-          <div className="mr-4">
-            <UserCheck size={30} className="text-blue-600" />
-          </div>
+        <header className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-lg font-semibold text-gray-700">Total de Usuarios</h3>
-            <p className="text-3xl font-bold text-blue-700 text-center">{usuarios.length}</p>
+            <h1 className="text-2xl font-semibold">Gestión de Usuarios</h1>
+            <p className="text-sm text-gray-500">Administración y registro de entrevistas — expediente candidato</p>
           </div>
+        </header>
+
+        {/* filtros */}
+        <div className="flex gap-3 mb-4">
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar por nombre, correo..." className="px-3 py-2 rounded border w-72" />
+          <select value={estadoFilter} onChange={(e) => setEstadoFilter(e.target.value)} className="px-3 py-2 rounded border">
+            <option value="">Todos los estados</option>
+            <option value="En proceso">En proceso</option>
+            <option value="Contratado">Contratado</option>
+            <option value="Rechazado">Rechazado</option>
+          </select>
+          <select value={tipoFilter} onChange={(e) => setTipoFilter(e.target.value)} className="px-3 py-2 rounded border">
+            <option value="">Todos los tipos</option>
+            <option value="Candidata">Candidata</option>
+            <option value="Empleado">Empleado</option>
+            <option value="Admin">Admin</option>
+          </select>
         </div>
 
-        {/* Usuarios Activos */}
-        <div className="bg-gradient-to-r from-green-100 to-green-200 p-6 rounded-xl shadow-md flex items-center">
-          <div className="mr-4">
-            <UserCheck size={30} className="text-green-600" />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-gray-700">Usuarios Activos</h3>
-            <p className="text-3xl font-bold text-green-700 text-center">{usuarios.filter(v => v.estado === "Activo").length}</p>
-          </div>
+        {/* tabla */}
+        <div className="bg-white rounded-lg shadow overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 text-sm text-left text-gray-600">
+              <tr>
+                <th className="p-3">Nombre</th>
+                <th className="p-3">Tipo</th>
+                <th className="p-3">Estado</th>
+                <th className="p-3">Teléfono</th>
+                <th className="p-3">Entrevistas</th>
+                <th className="p-3">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((u) => (
+                <tr key={u.id} className="border-t hover:bg-gray-50">
+                  <td className="p-3">{u.nombre}</td>
+                  <td className="p-3 text-sm">{u.tipo}</td>
+                  <td className="p-3 text-sm">{u.estado}</td>
+                  <td className="p-3 text-sm">{u.telefono ?? "-"}</td>
+                  <td className="p-3 text-sm">{(u.entrevistas || []).length}</td>
+                  <td className="p-3">
+                    <div className="flex gap-2">
+                      <button title="Editar" onClick={() => openEditModal(u)} className="px-3 py-1 bg-blue-500 text-white rounded"><Pencil size={14} /></button>
+                      <button title="Entrevistas" onClick={() => openInterviewModal(u)} className="px-3 py-1 bg-purple-600 text-white rounded flex items-center gap-1"><FileText size={14} />Entrevistas</button>
+                      <button title="Eliminar" onClick={() => setUsuarios(prev => prev.filter(x => x.id !== u.id))} className="px-3 py-1 bg-red-600 text-white rounded"><Trash size={14} /></button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-        {/* Usuarios Inactivos */}
-        <div className="bg-gradient-to-r from-red-100 to-red-200 p-6 rounded-xl shadow-md flex items-center">
-          <div className="mr-4">
-            <UserX size={30} className="text-red-600" />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-gray-700">Usuarios Inactivos</h3>
-            <p className="text-3xl font-bold text-red-700 text-center">{usuarios.filter(v => v.estado === "Inactivo").length}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Barra de búsqueda y filtros */}
-      <div className="flex items-center mb-5 space-x-4">
-        <input
-          type="text"
-          placeholder="Buscar Usuario"
-          className="w-full px-3 py-2 border-gray-300 rounded-lg text-sm outline-none focus:ring-0 focus:border-transparent"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-
-        {/* Filtros */}
-        <select
-          value={estadoFilter}
-          onChange={(e) => setEstadoFilter(e.target.value)}
-          className="px-3 py-2 border rounded-lg text-sm"
-        >
-          <option value="">Filtro por Estado</option>
-          <option value="Activo">Activo</option>
-          <option value="Inactivo">Inactivo</option>
-        </select>
-
-        <select
-          value={tipoFilter}
-          onChange={(e) => setTipoFilter(e.target.value)}
-          className="px-3 py-2 border rounded-lg text-sm"
-        >
-          <option value="">Filtro por Tipo</option>
-          <option value="Admin">Admin</option>
-          <option value="Empleado">Empleado</option>
-        </select>
-
-        <select
-          value={fechaFilter}
-          onChange={(e) => setFechaFilter(e.target.value)}
-          className="px-3 py-2 border rounded-lg text-sm"
-        >
-          <option value="">Filtro por Fecha</option>
-          <option value="2025-01-15">15 Enero 2025</option>
-          <option value="2025-03-12">12 Marzo 2025</option>
-          <option value="2025-06-23">23 Junio 2025</option>
-        </select>
-
-        <select
-          value={ubicacionFilter}
-          onChange={(e) => setUbicacionFilter(e.target.value)}
-          className="px-3 py-2 border rounded-lg text-sm"
-        >
-          <option value="">Filtro por Ubicación</option>
-          <option value="Ciudad de México">Ciudad de México</option>
-          <option value="Guadalajara">Guadalajara</option>
-          <option value="Monterrey">Monterrey</option>
-          <option value="Cancún">Cancún</option>
-          <option value="Tijuana">Tijuana</option>
-        </select>
-
-        {/* Botón para restablecer filtros */}
-        <button
-          onClick={resetFilters}
-          className="px-3 py-2 bg-gray-300 text-sm rounded-lg"
-        >
-          Restablecer Filtros
-        </button>
-      </div>
-
-      {/* Tabla de usuarios */}
-      <table className="min-w-full bg-white border border-gray-200">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 text-left text-sm font-semibold text-gray-700">Nombre</th>
-            <th className="p-2 text-left text-sm font-semibold text-gray-700">Tipo</th>
-            <th className="p-2 text-left text-sm font-semibold text-gray-700">Estado</th>
-            <th className="p-2 text-left text-sm font-semibold text-gray-700">Fecha</th>
-            <th className="p-2 text-left text-sm font-semibold text-gray-700">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* Mostrar usuarios filtrados */}
-          {filteredUsers.map((usuario) => (
-            <tr key={usuario.id} className="hover:bg-gray-50">
-              <td className="p-2 text-sm text-gray-700">{usuario.nombre}</td>
-              <td className="p-2 text-sm text-gray-700">{usuario.tipo}</td>
-              <td className="p-2 text-sm text-gray-700">{usuario.estado}</td>
-              <td className="p-2 text-sm text-gray-700">{usuario.fecha}</td>
-              <td className="p-2 text-sm">
-                <button
-                  onClick={() => openModal(usuario)}
-                  className="bg-blue-400 text-white px-4 py-2 rounded-md hover:bg-blue-700 mr-2 text-center"
-                >
-                  <Pencil size={16} />
-                </button>
-                <button
-                  onClick={() => openDeleteConfirm(usuario)}
-                  className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
-                >
-                  <Trash size={16} />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Modal de edición */}
-      {isModalOpen && selectedUser && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h3 className="text-xl font-semibold mb-4">Editar Usuario</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-gray-600">Nombre</label>
-                <input
-                  type="text"
-                  value={selectedUser.nombre}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, nombre: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                />
+        {/* Edit modal (pequeño) */}
+        {isEditOpen && selectedUser && editForm && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="absolute inset-0 bg-black/30" onClick={closeEditModal}></div>
+            <div className="relative bg-white rounded-lg w-full max-w-2xl p-6 shadow-xl">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">Editar: {selectedUser.nombre}</h2>
+                <div className="flex gap-2">
+                  <button onClick={() => openInterviewModal(selectedUser)} className="px-3 py-1 bg-purple-600 text-white rounded flex items-center gap-2"><FileText size={14} /> Entrevistas</button>
+                  <button onClick={closeEditModal} className="p-2 rounded hover:bg-gray-100"><X size={18} /></button>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm text-gray-600">Tipo</label>
-                <input
-                  type="text"
-                  value={selectedUser.tipo}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, tipo: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-sm text-gray-600">Nombre</label>
+                  <input value={editForm.nombre} onChange={(e) => setEditForm({...editForm, nombre: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600">Tipo</label>
+                  <input value={editForm.tipo} onChange={(e) => setEditForm({...editForm, tipo: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600">Estado</label>
+                  <input value={editForm.estado} onChange={(e) => setEditForm({...editForm, estado: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600">Ubicación</label>
+                  <input value={editForm.ubicacion} onChange={(e) => setEditForm({...editForm, ubicacion: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600">Teléfono</label>
+                  <input value={editForm.telefono} onChange={(e) => setEditForm({...editForm, telefono: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600">Correo</label>
+                  <input value={editForm.correo} onChange={(e) => setEditForm({...editForm, correo: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm text-gray-600">Estado</label>
-                <input
-                  type="text"
-                  value={selectedUser.estado}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, estado: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-600">Fecha</label>
-                <input
-                  type="text"
-                  value={selectedUser.fecha}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, fecha: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                />
-              </div>
-              <div className="flex justify-end gap-4 mt-4">
-                <button onClick={closeModal} className="px-4 py-2 bg-gray-200 rounded-md text-sm">Cancelar</button>
-                <button onClick={handleEdit} className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm">Guardar Cambios</button>
+
+              <div className="mt-4 flex justify-end gap-2">
+                <button onClick={closeEditModal} className="px-4 py-2 border rounded">Cancelar</button>
+                <button onClick={saveUserEdits} className="px-4 py-2 bg-blue-600 text-white rounded">Guardar</button>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Modal de confirmación de eliminación */}
-      {isDeleteConfirmOpen && selectedUser && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h3 className="text-xl font-semibold mb-4">¿Estás seguro de eliminar este usuario?</h3>
-            <div className="flex justify-end gap-4 mt-4">
-              <button onClick={closeDeleteConfirm} className="px-4 py-2 bg-gray-200 rounded-md text-sm">Cancelar</button>
-              <button onClick={handleDelete} className="px-4 py-2 bg-red-600 text-white rounded-md text-sm">Eliminar</button>
+        {/* Interview Fullscreen Modal (Manatal style) */}
+        {isInterviewOpen && selectedUser && (
+          <div className="fixed inset-0 z-50 flex">
+            {/* backdrop soft */}
+            <div className="absolute inset-0 bg-black/30" onClick={closeInterviewModal}></div>
+
+            {/* drawer / modal */}
+            <div className="relative ml-auto w-full md:w-[95%] lg:w-[90%] bg-white shadow-xl overflow-hidden max-h-screen rounded-l-lg">
+              {/* header */}
+              <div className="sticky top-0 bg-white border-b p-4 z-10 flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-xl font-semibold">{selectedUser.nombre}</h3>
+                  <div className="text-sm text-gray-500">{selectedUser.tipo} • {selectedUser.ubicacion}</div>
+                </div>
+
+                <div className="flex gap-2 items-center">
+                  <div className="text-sm text-gray-600">Fecha: <strong>{interviewForm.fecha || new Date().toLocaleDateString()}</strong></div>
+                  <button onClick={closeInterviewModal} className="p-2 rounded hover:bg-gray-100"><X size={20} /></button>
+                </div>
+              </div>
+
+              {/* body */}
+              <div className="p-6 overflow-y-auto max-h-[80vh]">
+                {/* tabs */}
+                <div className="flex gap-2 mb-4">
+                  {tabs.map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setActiveTab(t)}
+                      className={`px-3 py-2 text-sm rounded ${activeTab === t ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700"}`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+
+                {/* tab content */}
+                <div className="space-y-4">
+                  {/* 1: Información personal */}
+                  {activeTab === "Información personal" && (
+                    <section>
+                      <h4 className="font-semibold mb-2">Información personal</h4>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <label className="text-sm text-gray-600">Vacante solicitada</label>
+                          <input value={interviewForm.vacanteSolicitada} onChange={(e) => setInterviewForm({...interviewForm, vacanteSolicitada: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Teléfono</label>
+                          <input value={interviewForm.telefono} onChange={(e) => setInterviewForm({...interviewForm, telefono: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Correo</label>
+                          <input value={interviewForm.correo} onChange={(e) => setInterviewForm({...interviewForm, correo: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Nombre</label>
+                          <input value={selectedUser.nombre} disabled className="w-full px-3 py-2 border rounded bg-gray-50" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Edad</label>
+                          <input value={interviewForm.edad} onChange={(e) => setInterviewForm({...interviewForm, edad: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Percepción</label>
+                          <input value={interviewForm.percepcion} onChange={(e) => setInterviewForm({...interviewForm, percepcion: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Lugar de nacimiento</label>
+                          <input value={interviewForm.lugarNacimiento} onChange={(e) => setInterviewForm({...interviewForm, lugarNacimiento: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Fecha de nacimiento</label>
+                          <input type="date" value={interviewForm.fechaNacimiento} onChange={(e) => setInterviewForm({...interviewForm, fechaNacimiento: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Experiencia</label>
+                          <input value={interviewForm.experiencia} onChange={(e) => setInterviewForm({...interviewForm, experiencia: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Distancia domicilio</label>
+                          <input value={interviewForm.distanciaDomicilio} onChange={(e) => setInterviewForm({...interviewForm, distanciaDomicilio: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Gastos mensuales</label>
+                          <input value={interviewForm.gastosMensual} onChange={(e) => setInterviewForm({...interviewForm, gastosMensual: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Grado de estudios</label>
+                          <input value={interviewForm.gradoEstudios} onChange={(e) => setInterviewForm({...interviewForm, gradoEstudios: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Nivel de inglés</label>
+                          <input value={interviewForm.ingles} onChange={(e) => setInterviewForm({...interviewForm, ingles: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+                      </div>
+                    </section>
+                  )}
+
+                  {/* 2: Vivienda & Salud */}
+                  {activeTab === "Vivienda & Salud" && (
+                    <section>
+                      <h4 className="font-semibold mb-2">Vivienda y salud</h4>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <label className="text-sm text-gray-600">Estado civil</label>
+                          <input value={interviewForm.estadoCivil} onChange={(e) => setInterviewForm({...interviewForm, estadoCivil: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">¿A qué se dedica pareja o familia?</label>
+                          <input value={interviewForm.parejaOcupacion} onChange={(e) => setInterviewForm({...interviewForm, parejaOcupacion: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">No. de hijos</label>
+                          <input type="number" value={interviewForm.numeroHijos} onChange={(e) => setInterviewForm({...interviewForm, numeroHijos: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Quien aporta económicamente</label>
+                          <input value={interviewForm.quienAporta} onChange={(e) => setInterviewForm({...interviewForm, quienAporta: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div className="md:col-span-3">
+                          <label className="text-sm text-gray-600">Domicilio</label>
+                          <input value={interviewForm.domicilio} onChange={(e) => setInterviewForm({...interviewForm, domicilio: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Referencia domicilio</label>
+                          <input value={interviewForm.referenciaDomicilio} onChange={(e) => setInterviewForm({...interviewForm, referenciaDomicilio: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">¿Con quiénes vive?</label>
+                          <input value={interviewForm.conQuienesVive} onChange={(e) => setInterviewForm({...interviewForm, conQuienesVive: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Tiempo en domicilio</label>
+                          <input value={interviewForm.tiempoEnDomicilio} onChange={(e) => setInterviewForm({...interviewForm, tiempoEnDomicilio: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Estado de domicilio (Propia/Rentada/Prestada)</label>
+                          <input value={interviewForm.estadoDomicilio} onChange={(e) => setInterviewForm({...interviewForm, estadoDomicilio: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Costo de renta / comentarios</label>
+                          <input value={interviewForm.costoRenta} onChange={(e) => setInterviewForm({...interviewForm, costoRenta: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">¿A qué se dedica actualmente?</label>
+                          <input value={interviewForm.dedicadaActualmente} onChange={(e) => setInterviewForm({...interviewForm, dedicadaActualmente: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Estado de salud</label>
+                          <input value={interviewForm.estadoSalud} onChange={(e) => setInterviewForm({...interviewForm, estadoSalud: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Tratamiento psicológico</label>
+                          <input value={interviewForm.tratamientoPsicologico} onChange={(e) => setInterviewForm({...interviewForm, tratamientoPsicologico: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Enfermedad crónica</label>
+                          <input value={interviewForm.enfermedadCronica} onChange={(e) => setInterviewForm({...interviewForm, enfermedadCronica: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">No. de vacunas COVID</label>
+                          <input value={interviewForm.noVacunasCovid} onChange={(e) => setInterviewForm({...interviewForm, noVacunasCovid: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Disponibilidad inmediata / especificar</label>
+                          <input value={interviewForm.disponibilidad} onChange={(e) => setInterviewForm({...interviewForm, disponibilidad: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Conocidos en la empresa</label>
+                          <input value={interviewForm.conocidosEmpresa} onChange={(e) => setInterviewForm({...interviewForm, conocidosEmpresa: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+                      </div>
+                    </section>
+                  )}
+
+                  {/* 3: Laboral (Empresas) */}
+                  {activeTab === "Laboral (Empresas)" && (
+                    <section>
+                      <h4 className="font-semibold mb-2">Información laboral (Empresas 1 - 3)</h4>
+
+                      <div className="space-y-4">
+                        {interviewForm.empresas.map((emp, idx) => (
+                          <div key={idx} className="border rounded p-3">
+                            <h5 className="font-medium mb-2">Empresa {idx + 1}</h5>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                              <div>
+                                <label className="text-sm text-gray-600">Nombre</label>
+                                <input value={emp.nombre} onChange={(e) => {
+                                  const empresas = [...interviewForm.empresas];
+                                  empresas[idx].nombre = e.target.value;
+                                  setInterviewForm({...interviewForm, empresas});
+                                }} className="w-full px-3 py-2 border rounded" />
+                              </div>
+                              <div>
+                                <label className="text-sm text-gray-600">Ubicación</label>
+                                <input value={emp.ubicacion} onChange={(e) => {
+                                  const empresas = [...interviewForm.empresas];
+                                  empresas[idx].ubicacion = e.target.value;
+                                  setInterviewForm({...interviewForm, empresas});
+                                }} className="w-full px-3 py-2 border rounded" />
+                              </div>
+
+                              <div>
+                                <label className="text-sm text-gray-600">Contacto / Referencia</label>
+                                <input value={emp.contacto} onChange={(e) => {
+                                  const empresas = [...interviewForm.empresas];
+                                  empresas[idx].contacto = e.target.value;
+                                  setInterviewForm({...interviewForm, empresas});
+                                }} className="w-full px-3 py-2 border rounded" />
+                              </div>
+
+                              <div>
+                                <label className="text-sm text-gray-600">Puesto</label>
+                                <input value={emp.puesto} onChange={(e) => {
+                                  const empresas = [...interviewForm.empresas];
+                                  empresas[idx].puesto = e.target.value;
+                                  setInterviewForm({...interviewForm, empresas});
+                                }} className="w-full px-3 py-2 border rounded" />
+                              </div>
+
+                              <div>
+                                <label className="text-sm text-gray-600">Tiempo laborado</label>
+                                <input value={emp.tiempoLaborado} onChange={(e) => {
+                                  const empresas = [...interviewForm.empresas];
+                                  empresas[idx].tiempoLaborado = e.target.value;
+                                  setInterviewForm({...interviewForm, empresas});
+                                }} className="w-full px-3 py-2 border rounded" />
+                              </div>
+
+                              <div>
+                                <label className="text-sm text-gray-600">Sueldo</label>
+                                <input value={emp.sueldo} onChange={(e) => {
+                                  const empresas = [...interviewForm.empresas];
+                                  empresas[idx].sueldo = e.target.value;
+                                  setInterviewForm({...interviewForm, empresas});
+                                }} className="w-full px-3 py-2 border rounded" />
+                              </div>
+
+                              <div className="md:col-span-2">
+                                <label className="text-sm text-gray-600">Motivo de salida</label>
+                                <input value={emp.motivoSalida} onChange={(e) => {
+                                  const empresas = [...interviewForm.empresas];
+                                  empresas[idx].motivoSalida = e.target.value;
+                                  setInterviewForm({...interviewForm, empresas});
+                                }} className="w-full px-3 py-2 border rounded" />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* 4: Fortalezas / Debilidades */}
+                  {activeTab === "Fortalezas / Debilidades" && (
+                    <section>
+                      <h4 className="font-semibold mb-2">Fortalezas y Debilidades</h4>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <label className="text-sm text-gray-600">Fortaleza 1</label>
+                          <input value={interviewForm.fortalezas[0]} onChange={(e) => {
+                            const f = [...interviewForm.fortalezas]; f[0] = e.target.value;
+                            setInterviewForm({...interviewForm, fortalezas: f});
+                          }} className="w-full px-3 py-2 border rounded" />
+                        </div>
+                        <div>
+                          <label className="text-sm text-gray-600">Fortaleza 2</label>
+                          <input value={interviewForm.fortalezas[1]} onChange={(e) => {
+                            const f = [...interviewForm.fortalezas]; f[1] = e.target.value;
+                            setInterviewForm({...interviewForm, fortalezas: f});
+                          }} className="w-full px-3 py-2 border rounded" />
+                        </div>
+                        <div>
+                          <label className="text-sm text-gray-600">Fortaleza 3</label>
+                          <input value={interviewForm.fortalezas[2]} onChange={(e) => {
+                            const f = [...interviewForm.fortalezas]; f[2] = e.target.value;
+                            setInterviewForm({...interviewForm, fortalezas: f});
+                          }} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Debilidad 1</label>
+                          <input value={interviewForm.debilidades[0]} onChange={(e) => {
+                            const d = [...interviewForm.debilidades]; d[0] = e.target.value;
+                            setInterviewForm({...interviewForm, debilidades: d});
+                          }} className="w-full px-3 py-2 border rounded" />
+                        </div>
+                        <div>
+                          <label className="text-sm text-gray-600">Debilidad 2</label>
+                          <input value={interviewForm.debilidades[1]} onChange={(e) => {
+                            const d = [...interviewForm.debilidades]; d[1] = e.target.value;
+                            setInterviewForm({...interviewForm, debilidades: d});
+                          }} className="w-full px-3 py-2 border rounded" />
+                        </div>
+                        <div>
+                          <label className="text-sm text-gray-600">Debilidad 3</label>
+                          <input value={interviewForm.debilidades[2]} onChange={(e) => {
+                            const d = [...interviewForm.debilidades]; d[2] = e.target.value;
+                            setInterviewForm({...interviewForm, debilidades: d});
+                          }} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div className="md:col-span-3">
+                          <label className="text-sm text-gray-600">Inconveniente con alguna empresa</label>
+                          <input value={interviewForm.inconvenienteEmpresa} onChange={(e) => setInterviewForm({...interviewForm, inconvenienteEmpresa: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+                      </div>
+                    </section>
+                  )}
+
+                  {/* 5: Comentarios */}
+                  {activeTab === "Comentarios" && (
+                    <section>
+                      <h4 className="font-semibold mb-2">Comentarios</h4>
+                      <textarea value={interviewForm.comentariosGenerales} onChange={(e) => setInterviewForm({...interviewForm, comentariosGenerales: e.target.value})} className="w-full px-3 py-2 border rounded min-h-[120px]" />
+                    </section>
+                  )}
+
+                  {/* 6: Conclusión */}
+                  {activeTab === "Conclusión" && (
+                    <section>
+                      <h4 className="font-semibold mb-2">Conclusión de la entrevista</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-sm text-gray-600">Evaluación general</label>
+                          <textarea value={interviewForm.evaluacionGeneral} onChange={(e) => setInterviewForm({...interviewForm, evaluacionGeneral: e.target.value})} className="w-full px-3 py-2 border rounded min-h-[100px]" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Calificación (0-100)</label>
+                          <input type="number" value={interviewForm.calificacion} onChange={(e) => setInterviewForm({...interviewForm, calificacion: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+
+                        <div>
+                          <label className="text-sm text-gray-600">Estado del candidato</label>
+                          <select value={interviewForm.estadoCandidato} onChange={(e) => setInterviewForm({...interviewForm, estadoCandidato: e.target.value})} className="w-full px-3 py-2 border rounded">
+                            <option value="">Seleccionar</option>
+                            <option value="Aprobado">Aprobado</option>
+                            <option value="Rechazado">Rechazado</option>
+                            <option value="En proceso">En proceso</option>
+                          </select>
+                        </div>
+
+                        <div className="md:col-span-2">
+                          <label className="text-sm text-gray-600">Elabora</label>
+                          <input value={interviewForm.elaboro} onChange={(e) => setInterviewForm({...interviewForm, elaboro: e.target.value})} className="w-full px-3 py-2 border rounded" />
+                        </div>
+                      </div>
+                    </section>
+                  )}
+                </div>
+
+                {/* historial de entrevistas registradas (al lado o abajo) */}
+                <div className="mt-6">
+                  <h4 className="font-semibold mb-2">Historial de entrevistas</h4>
+                  {(selectedUser.entrevistas || []).length === 0 ? (
+                    <p className="text-sm text-gray-500">No hay entrevistas registradas.</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {(selectedUser.entrevistas || []).map((iv) => (
+                        <div key={iv.id} className="border rounded p-3 bg-gray-50">
+                          <div className="flex justify-between">
+                            <div><strong>{iv.tipo || "Entrevista"}</strong> — {iv.fecha || new Date(iv.fechaCaptura).toLocaleDateString()}</div>
+                            <div className="text-sm text-gray-600">Calif: {iv.calificacion ?? "-"}</div>
+                          </div>
+                          <div className="text-sm text-gray-700 mt-2">{iv.evaluacionGeneral ?? iv.comentariosGenerales ?? "-"}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* acciones */}
+                <div className="mt-6 flex gap-2">
+                  <button onClick={() => { setInterviewForm(emptyInterview); setActiveTab(tabs[0]); }} className="px-4 py-2 border rounded">Limpiar</button>
+                  <button onClick={saveInterview} className="px-4 py-2 bg-green-600 text-white rounded">Guardar entrevista</button>
+                  <button onClick={() => { /* aquí podrías añadir exportar a PDF/CSV */ }} className="px-4 py-2 border rounded">Exportar</button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
