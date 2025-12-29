@@ -2,6 +2,7 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 function RegisterPage() {
   const {
@@ -12,22 +13,37 @@ function RegisterPage() {
   } = useForm();
 
   const router = useRouter();
+  const { register: registerUser, loginWithGoogle } = useAuth();
   const [step, setStep] = useState(1); // control de pasos
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleGoogleRegister = () => {
+    // Iniciar OAuth con Google especificando tipo 'universidad'
+    loginWithGoogle('universidad');
+  };
 
   const onSubmit = handleSubmit(async (data) => {
-    const res = await fetch("/api/users/register", {
-      method: "POST",
-      body: JSON.stringify({
-        ...data,
-        tipo_usuario: "universidad",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    setLoading(true);
+    setError("");
 
-    if (res.ok) {
-      router.push("/login");
+    try {
+      // Preparar datos para el backend
+      const userData = {
+        correo: data.correo,
+        contrasena: data.password,
+        tipo_usuario: "universidad",
+      };
+
+      await registerUser(userData);
+      
+      // Redirigir al dashboard después de registro exitoso
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err.message || "Error al registrar universidad");
+      console.error("Error en registro:", err);
+    } finally {
+      setLoading(false);
     }
   });
 
@@ -65,6 +81,36 @@ function RegisterPage() {
           <h2 className="text-4xl font-bold text-gray-500 mb-6 capitalize">
             Universidad
           </h2>
+
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
+
+          {/* Opción rápida de Google - Siempre visible antes del formulario */}
+          <div className="mb-6">
+            <button
+              type="button"
+              onClick={handleGoogleRegister}
+              className="w-full bg-white border border-gray-300 text-gray-700 py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 shadow-sm"
+            >
+              <img src="/google.png" className="w-6 h-6" alt="Google" />
+              Registrarse rápido con Google
+            </button>
+            <p className="text-center text-gray-500 text-sm mt-2">
+              Completarás los datos de tu institución después
+            </p>
+            
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-gray-100 text-gray-500">O registra todos los datos ahora</span>
+              </div>
+            </div>
+          </div>
 
           <form onSubmit={onSubmit} className="space-y-4">
             {/* Datos de la universidad */}
@@ -226,12 +272,18 @@ function RegisterPage() {
                   <label className="block text-gray-600 mb-1">Correo electrónico:</label>
                   <input
                     type="email"
-                    {...register("email", { required: "Correo requerido" })}
+                    {...register("correo", { 
+                      required: "Correo requerido",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Correo electrónico no válido"
+                      }
+                    })}
                     className="w-full p-3 border rounded-lg"
                     placeholder="correo@universidad.com"
                   />
-                  {errors.email && (
-                    <span className="text-red-500 text-sm h-1 block">{errors.email.message}</span>
+                  {errors.correo && (
+                    <span className="text-red-500 text-sm h-1 block">{errors.correo.message}</span>
                   )}
                 </div>
 
@@ -258,14 +310,35 @@ function RegisterPage() {
                   </button>
                   <button
                     type="submit"
-                    className="bg-green-600 text-white px-6 py-2 rounded-lg mt-4 hover:bg-green-700"
+                    disabled={loading}
+                    className="bg-green-600 text-white px-6 py-2 rounded-lg mt-4 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Registrar
+                    {loading ? "Registrando..." : "Registrar"}
                   </button>
                 </div>
               </>
             )}
           </form>
+
+          {/* Separador */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">O</span>
+            </div>
+          </div>
+
+          {/* Botón de Google */}
+          <button
+            type="button"
+            onClick={handleGoogleRegister}
+            className="w-full flex items-center justify-center gap-3 border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <img src="/google.png" alt="Google" className="w-5 h-5" />
+            <span className="font-medium">Registrarse con Google</span>
+          </button>
         </div>
 
         <div

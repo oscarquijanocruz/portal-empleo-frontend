@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 function RegisterEmpresa() {
   const {
@@ -14,24 +15,51 @@ function RegisterEmpresa() {
   } = useForm();
 
   const router = useRouter();
+  const { registerEmpresa, loginWithGoogle } = useAuth();
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleGoogleRegister = () => {
+    // Iniciar OAuth con Google especificando tipo 'empresa'
+    loginWithGoogle('empresa');
+  };
 
   const onSubmit = handleSubmit(async (data) => {
-    const res = await fetch("/api/users/register", {
-      method: "POST",
-      body: JSON.stringify({
-        ...data,
-        tipo_usuario: "empresa",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    setLoading(true);
+    setError("");
 
-    if (res.ok) {
-      router.push("/login");
+    try {
+      // Preparar datos completos para el backend
+      const empresaData = {
+        // Datos de autenticación
+        correo: data.correo,
+        contrasena: data.password,
+        // Datos de la empresa
+        nombre_empresa: data.nombreEmpresa,
+        sector: data.sector,
+        tamano: data.tamano,
+        rfc: data.rfc,
+        sitio_web: data.sitioWeb || null,
+        descripcion: data.descripcion,
+        // Datos del responsable
+        nombre_responsable: data.nombreResponsable,
+        apellido_responsable: data.apellidoResponsable,
+        puesto_responsable: data.puestoResponsable,
+        telefono: data.telefonoResponsable,
+      };
+
+      await registerEmpresa(empresaData);
+      
+      // Redirigir al dashboard de empresa después de registro exitoso
+      router.push("/dashboard/empresa");
+    } catch (err) {
+      setError(err.message || "Error al registrar empresa");
+      console.error("Error en registro:", err);
+    } finally {
+      setLoading(false);
     }
   });
 
@@ -62,6 +90,36 @@ function RegisterEmpresa() {
           <h2 className="text-4xl font-bold text-gray-500 mb-6 capitalize">
             Empresa
           </h2>
+
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
+
+          {/* Opción rápida de Google - Siempre visible antes del formulario */}
+          <div className="mb-6">
+            <button
+              type="button"
+              onClick={handleGoogleRegister}
+              className="w-full bg-white border border-gray-300 text-gray-700 py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 shadow-sm"
+            >
+              <img src="/google.png" className="w-6 h-6" alt="Google" />
+              Registrarse rápido con Google
+            </button>
+            <p className="text-center text-gray-500 text-sm mt-2">
+              Completarás los datos de tu empresa después
+            </p>
+            
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-gray-100 text-gray-500">O registra todos los datos ahora</span>
+              </div>
+            </div>
+          </div>
 
           <form onSubmit={onSubmit} className="space-y-4">
             {/* Paso 1: Datos de la empresa */}
@@ -286,15 +344,19 @@ function RegisterEmpresa() {
                   </label>
                   <input
                     type="email"
-                    {...register("email", {
+                    {...register("correo", {
                       required: "Ingresa un correo electrónico válido",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Correo electrónico no válido"
+                      }
                     })}
                     className="w-full p-3 border rounded-lg"
                     placeholder="usuario@mail.com"
                   />
-                  {errors.email && (
+                  {errors.correo && (
                     <span className="text-red-500 text-sm">
-                      {errors.email.message}
+                      {errors.correo.message}
                     </span>
                   )}
                 </div>
@@ -390,29 +452,19 @@ function RegisterEmpresa() {
                   </button>
                   <button
                     type="submit"
-                    className="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800"
+                    disabled={loading}
+                    className="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Registrarme
+                    {loading ? "Registrando..." : "Registrarme"}
                   </button>
                 </div>
 
-                <p className="text-center text-gray-500 mt-2 text-sm">
+                <p className="text-center text-gray-500 mt-4 text-sm">
                   ¿Ya tienes cuenta?{" "}
                   <a href="/auth/login" className="text-blue-600">
                     Inicia Sesión
                   </a>
                 </p>
-
-                <div className="flex flex-col space-y-2 mt-4">
-                  <button
-                    type="button"
-                    className="w-full bg-blue-200 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-200"
-                  >
-                    <img src="/google.png" className="w-7 h-7" />
-                    {""}
-                    Con Google
-                  </button>
-                </div>
               </div>
             )}
           </form>

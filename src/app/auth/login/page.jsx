@@ -1,6 +1,8 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 function LoginPage() {
   const {
@@ -9,23 +11,30 @@ function LoginPage() {
     formState: { errors },
   } = useForm();
   const router = useRouter();
+  const { login, loginWithGoogle } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const onSubmit = handleSubmit(async (data) => {
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify({
-        correo: data.correo,
-        password: data.password,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    setLoading(true);
+    setError("");
 
-    if (res.ok) {
-      router.push("/dashboard"); //
+    try {
+      await login(data.correo, data.password);
+      
+      // Redirigir al dashboard después de login exitoso
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err.message || "Error al iniciar sesión. Verifica tus credenciales.");
+      console.error("Error en login:", err);
+    } finally {
+      setLoading(false);
     }
   });
+
+  const handleGoogleLogin = () => {
+    loginWithGoogle('candidato');
+  };
 
   return (
     <div className="h-screen flex justify-center items-center bg-gray-100">
@@ -37,6 +46,12 @@ function LoginPage() {
           <p className="text-gray-500 mb-6">
             ¡Un gusto volver a saludarte! ¿Listo para conocer tu próximo empleo?
           </p>
+
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
@@ -66,12 +81,35 @@ function LoginPage() {
             </div>
 
             <div className="flex justify-start">
-              <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                Iniciar Sesión
+              <button 
+                type="submit"
+                disabled={loading}
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
               </button>
-              
             </div>
           </form>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">O continúa con</span>
+              </div>
+            </div>
+
+            <button
+              onClick={handleGoogleLogin}
+              type="button"
+              className="mt-4 w-full flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50"
+            >
+              <img src="/google.png" alt="Google" className="w-5 h-5" />
+              Continuar con Google
+            </button>
+          </div>
 
           <p className="text-sm text-gray-500 mt-4">
             ¿No tienes cuenta?{" "}
@@ -79,8 +117,6 @@ function LoginPage() {
               Regístrate
             </a>
           </p>
-
-          <div className="mt-6"></div>
         </div>
 
         <div
