@@ -62,8 +62,32 @@ const usuariosIniciales = [
     comentarios: "Podría ir a entrevista jueves o viernes",
     entrevistas: [],
   },
-  // puedes agregar más usuarios de ejemplo...
+  
 ];
+const scoreMap = {
+  "Muy deficiente": 1,
+  Deficiente: 2,
+  Aceptable: 3,
+  Bueno: 4,
+  Excelente: 5,
+};
+
+const calculateAverage = (evaluacion) => {
+  const values = Object.values(evaluacion)
+    .map((v) => scoreMap[v])
+    .filter(Boolean);
+
+  if (values.length === 0) return 0;
+
+  const total = values.reduce((a, b) => a + b, 0);
+  return (total / values.length).toFixed(2);
+};
+const getFinalResult = (average) => {
+  if (average >= 4) return { label: "Apto", color: "green" };
+  if (average >= 3) return { label: "En observación", color: "yellow" };
+  return { label: "No apto", color: "red" };
+};
+
 
 /* --------------------------
    Componente principal
@@ -87,6 +111,18 @@ export default function UserManagementWithInterviews() {
 
   // entrevista form (estructura completa)
   const emptyInterview = {
+
+  evaluacion: {
+  apariencia: "",
+  expresion: "",
+  educacion: "",
+  interes: "",
+  experiencia: "",
+  estabilidad: "",
+  actitud: "",
+  potencial: "",
+},
+
     fecha: "", // ISO date
     elaboro: "",
     comentariosGenerales: "",
@@ -149,14 +185,17 @@ export default function UserManagementWithInterviews() {
   const [interviewForm, setInterviewForm] = useState(emptyInterview);
 
   // pestañas del modal de entrevista
-  const tabs = [
-    "Información personal",
-    "Vivienda & Salud",
-    "Laboral (Empresas)",
-    "Fortalezas / Debilidades",
-    "Comentarios",
-    "Conclusión",
-  ];
+const tabs = [
+  "Información personal",
+  "Vivienda & Salud",
+  "Laboral (Empresas)",
+  "Fortalezas / Debilidades",
+  "Evaluación",
+  "Comentarios",
+  "Conclusión",
+];
+
+  
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
   // helpers
@@ -698,6 +737,143 @@ export default function UserManagementWithInterviews() {
                       </div>
                     </section>
                   )}
+                  {activeTab === "Evaluación" && (
+  <section className="space-y-6">
+    <div className="border-b pb-3">
+      <h4 className="text-xl font-semibold text-gray-800">
+        Evaluación del Candidato
+      </h4>
+      <p className="text-sm text-gray-500">
+        Calificación cualitativa basada en la entrevista presencial
+      </p>
+    </div>
+
+    {[
+      { key: "apariencia", label: "Apariencia personal" },
+      { key: "expresion", label: "Forma de expresión" },
+      { key: "educacion", label: "Educación" },
+      { key: "interes", label: "Interés ocupacional" },
+      { key: "experiencia", label: "Experiencia" },
+      { key: "estabilidad", label: "Estabilidad laboral" },
+      { key: "actitud", label: "Actitud en entrevista" },
+      { key: "potencial", label: "Potencial" },
+    ].map((item) => (
+      <div
+        key={item.key}
+        className="bg-white border rounded-xl p-5 shadow-sm"
+      >
+        <div className="mb-4">
+          <h5 className="font-medium text-gray-800">{item.label}</h5>
+          <p className="text-xs text-gray-500">
+            Seleccione el nivel que mejor describa al candidato
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+          {[
+            { value: "Muy deficiente", color: "red" },
+            { value: "Deficiente", color: "orange" },
+            { value: "Aceptable", color: "yellow" },
+            { value: "Bueno", color: "blue" },
+            { value: "Excelente", color: "green" },
+          ].map((opt) => (
+            <label
+              key={opt.value}
+              className={`cursor-pointer border rounded-lg px-3 py-2 text-sm text-center transition-all
+                ${
+                  interviewForm.evaluacion[item.key] === opt.value
+                    ? "border-blue-600 bg-blue-50 font-medium"
+                    : "hover:border-gray-400 hover:bg-gray-50"
+                }`}
+            >
+              <input
+                type="radio"
+                name={item.key}
+                value={opt.value}
+                checked={interviewForm.evaluacion[item.key] === opt.value}
+                onChange={(e) =>
+                  setInterviewForm({
+                    ...interviewForm,
+                    evaluacion: {
+                      ...interviewForm.evaluacion,
+                      [item.key]: e.target.value,
+                    },
+                  })
+                }
+                className="hidden"
+              />
+              {opt.value}
+            </label>
+          ))}
+        </div>
+      </div>
+    ))}
+
+    {/* Nota del evaluador */}
+    <div className="bg-gray-50 border rounded-xl p-5">
+      <label className="block font-medium text-gray-700 mb-2">
+        Observaciones del evaluador
+      </label>
+      <textarea
+        value={interviewForm.evaluacionGeneral}
+        onChange={(e) =>
+          setInterviewForm({
+            ...interviewForm,
+            evaluacionGeneral: e.target.value,
+          })
+        }
+        className="w-full px-4 py-3 border rounded-lg min-h-[120px] focus:ring-1 focus:ring-blue-500"
+        placeholder="Comentarios generales sobre la evaluación del candidato..."
+      />
+    </div>
+  </section>
+)}
+{(() => {
+  const average = calculateAverage(interviewForm.evaluacion);
+  const result = getFinalResult(average);
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+      {/* Promedio */}
+      <div className="border rounded-xl p-4 bg-white shadow-sm">
+        <p className="text-sm text-gray-500">Promedio final</p>
+        <p className="text-3xl font-bold text-gray-800">{average}</p>
+      </div>
+
+      {/* Resultado */}
+      <div className="border rounded-xl p-4 bg-white shadow-sm">
+        <p className="text-sm text-gray-500">Resultado de la entrevista</p>
+        <span
+          className={`inline-block mt-2 px-4 py-1 rounded-full text-sm font-medium
+            ${
+              result.color === "green"
+                ? "bg-green-100 text-green-700"
+                : result.color === "yellow"
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-red-100 text-red-700"
+            }`}
+        >
+          {result.label}
+        </span>
+      </div>
+
+      {/* Indicador visual */}
+      <div className="border rounded-xl p-4 bg-gray-50">
+        <p className="text-sm text-gray-500">Interpretación</p>
+        <p className="text-sm text-gray-700 mt-1">
+          {result.label === "Apto" &&
+            "El candidato cumple con los criterios para continuar en el proceso."}
+          {result.label === "En observación" &&
+            "El candidato requiere seguimiento o una segunda evaluación."}
+          {result.label === "No apto" &&
+            "El candidato no cumple con el perfil requerido para la vacante."}
+        </p>
+      </div>
+    </div>
+  );
+})()}
+
+
 
                   {/* 4: Fortalezas / Debilidades */}
                   {activeTab === "Fortalezas / Debilidades" && (
