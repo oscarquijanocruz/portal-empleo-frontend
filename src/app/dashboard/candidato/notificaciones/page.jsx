@@ -261,6 +261,7 @@ export default function NotificacionesPage() {
                     Seleccionar todas ({filteredNotifications.length})
                   </span>
                 </label>
+                {/* Bulk Actions */}
                 {selectedNotifications.length > 0 && (
                   <div className="bg-blue-50 border-t border-b border-blue-200 px-6 py-3 mt-2">
                     <div className="flex items-center justify-between">
@@ -324,43 +325,6 @@ export default function NotificacionesPage() {
         </div>
 
         <div className="flex col-span-12 justify-center lg:col-span-3 lg:sticky lg:top-6">
-          {/* Filtros */}
-          {/* Bulk Actions */}
-          {/* {selectedNotifications.length > 0 && (
-            <div className="bg-blue-50 border-b border-blue-200 px-6 py-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-blue-700">
-                    {selectedNotifications.length} notificaciones seleccionadas
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => handleBulkAction("mark_read")}
-                    className="flex items-center space-x-1 px-3 py-1 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded transition-colors"
-                  >
-                    <CheckCircle2 size={14} />
-                    <span>Marcar como leídas</span>
-                  </button>
-                  <button
-                    onClick={() => handleBulkAction("mark_unread")}
-                    className="flex items-center space-x-1 px-3 py-1 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded transition-colors"
-                  >
-                    <Circle size={14} />
-                    <span>Marcar como no leídas</span>
-                  </button>
-                  <button
-                    onClick={() => handleBulkAction("delete")}
-                    className="flex items-center space-x-1 px-3 py-1 text-sm text-red-600 hover:text-red-800 hover:bg-red-100 rounded transition-colors"
-                  >
-                    <Trash2 size={14} />
-                    <span>Eliminar</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )} */}
-
           {/* Filters */}
           <NotificationFilters
             filters={filters}

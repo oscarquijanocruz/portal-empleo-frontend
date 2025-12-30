@@ -16,20 +16,24 @@ export default function PostulateJobFormManual() {
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-      nombreCompleto: "",
-      correoElectronico: "",
-      numCelular: "",
-      localidadResidencia: "",
-      cargoActual: "",
-      cartaPresentacion: "",
       curriculumVitae: "",
       timestamp: new Date().toISOString(),
     },
   });
   const { notify } = useNotification();
 
+  const onSubmit = async (data) => {
+    try {
+      // Simular envío de datos al servidor
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      notify.success("Datos enviados correctamente");
+    } catch (error) {
+      notify.error("Error al enviar datos");
+    }
+  };
+
   return (
-    <div className="p-4 min-w-screen md:min-w-full lg:min-w-[600px] xl:min-w-[700px] 2xl:min-w-[800px]">
+    <div className="p-4 min-w-[320px] max-w-[729px] mx-auto md:min-w-full lg:min-w-[600px] xl:min-w-[700px] 2xl:min-w-[800px]">
       <h1 className="text-3xl font-bold text-gray-900 mb-6">
         Solicitar empleo de forma manual
       </h1>
@@ -41,146 +45,38 @@ export default function PostulateJobFormManual() {
           </h2>
         </div>
 
-        {/* <form onSubmit={handleSubmit(onSubmit)} className="space-y-6"> */}
-        <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Nombre Completo
-            </label>
-            <Input
-              type="text"
-              placeholder="Nombre Completo"
-              {...register("nombreCompleto", {
-                required: "Nombre Completo requerido",
-                maxLength: {
-                  value: 50,
-                  message: "Máximo 50 caracteres",
-                },
-              })}
-              error={errors.nombreCompleto?.message}
-            />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Currículum Vitae
+              </label>
+              <Input
+                type="file"
+                accept="application/pdf"
+                placeholder="Currículum Vitae"
+                {...register("curriculumVitae", { 
+                  required: "Currículum Vitae requerido", 
+                  maxFiles: 1,
+                  
+                })}
+                error={errors.curriculumVitae?.message}
+              />
+            </div>
           </div>
+        </form>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Correo Electrónico
-            </label>
-            <Input
-              type="email"
-              placeholder="Correo Electrónico"
-              {...register("correoElectronico", {
-                required: "Correo Electrónico requerido",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Correo Electrónico no válido",
-                },
-              })}
-              error={errors.correoElectronico?.message}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Número de celular
-            </label>
-            <Input
-              type="tel"
-              placeholder="Número de celular"
-              {...register("numCelular", {
-                required: "Número de celular requerido",
-                pattern: {
-                  value: /^\+[0-9]{2,3}-[0-9]{8,9}$/,
-                  message: "Número de celular no válido",
-                },
-              })}
-              error={errors.numCelular?.message}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Localidad de Residencia
-            </label>
-            <Input
-              type="text"
-              placeholder="Localidad de Residencia"
-              {...register("localidadResidencia", {
-                required: "Localidad de Residencia requerida",
-                maxLength: {
-                  value: 50,
-                  message: "Máximo 50 caracteres",
-                },
-              })}
-              error={errors.localidadResidencia?.message}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Cargo actual
-            </label>
-            <Input
-              type="text"
-              placeholder="Cargo actual"
-              {...register("cargoActual", {
-                required: "Cargo actual requerido",
-                maxLength: {
-                  value: 50,
-                  message: "Máximo 50 caracteres",
-                },
-              })}
-              error={errors.cargoActual?.message}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Carta de presentación
-            </label>
-            <Input
-              type="text"
-              placeholder="URL de la carta de presentación"
-              {...register("cartaPresentacion", {
-                required: "Carta de presentación requerida",
-                maxLength: {
-                  value: 50,
-                  message: "Máximo 50 caracteres",
-                },
-              })}
-              error={errors.cartaPresentacion?.message}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Currículum Vitae
-            </label>
-            <Input
-              type="text"
-              placeholder="URL del Currículum Vitae"
-              {...register("curriculumVitae", {
-                required: "Currículum Vitae requerido",
-                maxLength: {
-                  value: 50,
-                  message: "Máximo 50 caracteres",
-                },
-              })}
-              error={errors.curriculumVitae?.message}
-            />
-          </div>
+        {/* Botón para enviar formulario */}
+        <div className="flex items-center justify-center">
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={isSubmitting}
+            className={"cursor-pointer"}
+          >
+            {isSubmitting ? "Enviando..." : "Enviar CV"}
+          </Button>
         </div>
-      </div>
-
-      {/* Botón para enviar formulario */}
-      <div className="flex items-center justify-center">
-        <Button
-          variant="primary"
-          type="submit"
-          disabled={isSubmitting}
-          className={"cursor-pointer"}
-        >
-          {isSubmitting ? "Enviando..." : "Enviar"}
-        </Button>
       </div>
     </div>
   );
