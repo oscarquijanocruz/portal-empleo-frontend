@@ -19,16 +19,7 @@ import {
   Star,
 } from "lucide-react";
 
-/**
- * Módulo Vacantes — Todo en uno (Dashboard, filtros, crear/editar, detalle, kanban, candidatos, perfil candidato)
- * Pegar este archivo en app/vacantes/page.jsx
- * Reemplaza los stubs // TODO: INTEGRAR_BACKEND con llamadas a tu API
- * Requiere Tailwind CSS y lucide-react
- */
 
-/* -------------------------
-   Datos simulados (mock)
-   ------------------------- */
 const initialJobs = [
   {
     id: 1,
@@ -224,7 +215,7 @@ export default function VacantesPage() {
   }, []);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="bg-white rounded-lg shadow-md p-6 col-span-1">
       {/* Header */}
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
