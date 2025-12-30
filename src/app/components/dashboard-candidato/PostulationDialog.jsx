@@ -1,22 +1,43 @@
 // Dialog de postulacion
 "use client";
-import { FilePenLine, LinkIcon, X, Check } from "lucide-react";
+import { FilePenLine, LinkIcon, X, Check, CircleCheck } from "lucide-react";
 import Button from "../ui/Button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { mockJobs } from "@/app/data/mockData";
+import { useState } from "react";
+import Modal from "@/app/components/ui/Modal";
 
 export default function PostulationDialog({
   isOpen = false,
   onClose = () => {},
   onPostulate = () => {},
+  job = mockJobs // TODO:Esto es una demo, cambiar por datos reales del back cuando se tenga
 }) {
-
-
+  const router = useRouter();
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+  
   // Simular estado de autenticación y perfil completo
   const isLogin = true; // Simular usuario logueado o no
   const completedProfile = true; // Simular perfil completo o incompleto
-  const jobs = mockJobs.slice(0, 1); // TODO:Esto es una demo, cambiar por datos reales del back cuando se tenga
+  const jobs = mockJobs.slice(0, 1); //   TODO:Esto es una demo, cambiar por datos reales del back cuando se tenga
+
+
+  const handlePostulate = () => {
+    if(isLogin && completedProfile) {
+      setIsSuccessModalOpen(true);
+    } else {
+      setIsWarningModalOpen(true);
+    }
+
+    // Validar que no haya postulado antes
+    if (jobs.some((job) => job.status_vacante === "Postulado")) {
+      notify.error("Ya has postulado", "No puedes postularte más de una vez");
+      return;
+    }
+  };
 
   return (
     <div>
@@ -42,7 +63,7 @@ export default function PostulationDialog({
               &#8203;
             </span>
             <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-              <div className="justify-end mb-2 items-end">
+              <div className="mb-4 grid justify-items-end">
                 <X
                   size={20}
                   onClick={onClose}
@@ -88,41 +109,44 @@ export default function PostulationDialog({
                         </div>
                       </div>
                       <div className="mt-5 sm:mt-6 grid grid-cols-2 gap-3 justify-center">
-                        <Link href="/dashboard/candidato/mi-perfil">
-                          <Button
-                            type="button"
-                            variant="primary"
-                            className={
-                              "w-full h-30 rounded-sm place-items-center text-md space-y-1"
-                            }
-                            onClick={onPostulate}
-                          >
-                            <LinkIcon size={30} className="mb-1 text-white" />
-                            Vincular a través de Mentory
-                          </Button>
-                        </Link>
+                        <Button
+                          type="button"
+                          variant="primary"
+                          className={"w-full h-40 text-md space-y-1 font-semibold justify-items-center"}
+                          onClick={handlePostulate}
+                          style={{display: "grid"}}
+                        >
+                          <LinkIcon size={30} className="text-white" />
+                          Vincular a través de Mentory
+                          <p className="text-xs text-white">
+                            Rápido y sencillo de una sola vez
+                          </p>
+                        </Button>
+
                         <Link href="/dashboard/candidato/buscar-empleos/postulate-job-form-manual">
                           <Button
                             type="button"
                             variant="secondary"
-                            className={
-                              "w-full h-30 rounded-sm items-center justify-center text-md space-y-1"
-                            }
+                            className={"w-full h-40 text-md space-y-1 font-semibold justify-items-center"}
                             onClick={onClose}
+                            style={{display: "grid"}}
                           >
                             <FilePenLine
                               size={30}
-                              className="mb-1 text-sky-900"
+                              className="text-sky-900"
                             />
                             Subir de forma manual
+                            <p className="text-xs text-gray">
+                              Sube tu CV en archivo PDF
+                            </p>
                           </Button>
                         </Link>
                       </div>
                       <div className="mt-6 text-sm text-gray-600 space-y-2 flex-col">
                         <p className="flex">
                           {" "}
-                          <Check size={20} className="text-sky-900 mr-1" /> Tus
-                          datos son seguros
+                          <Check size={20} className="text-sky-900 mr-1" />
+                          Tus datos son seguros
                         </p>
                         <p className="flex">
                           {" "}
@@ -133,20 +157,60 @@ export default function PostulationDialog({
                     </div>
                   ))}
               </div>
+
               {/* Pantalla de exito al postularse */}
-              {completedProfile && isLogin && (
-                <div className="mt-6 text-sm text-gray-600 space-y-2 flex-col">
-                  <p className="flex">
-                    {" "}
-                    <Check size={20} className="text-sky-900 mr-1" /> Tus datos
-                    son seguros
+              {completedProfile && isLogin ? (
+                <Modal
+                  isOpen={isSuccessModalOpen}
+                  onClose={() => setIsSuccessModalOpen(false)}
+                  title="¡Postulación Exitosa!"
+                  variant="success"
+                onConfirm={null}
+                >
+                  <div className="flex flex-col items-center justify-center p-2">
+                    <h1 className="mb-2 font-semibold">¡Se ha postulado correctamente!</h1>
+                    <div className="items-center text-center grid grid-cols-2 gap-2 m-4">
+                      <div>
+                        <h2>Puedes editar la postulación</h2>
+                        <Link
+                          href="/dashboard/candidato/mi-perfil"
+                          className="text-blue-600 hover:underline"
+                        >
+                          <Button type="primary" size="lg">
+                            {" "}
+                            Editar mi CV
+                          </Button>
+                        </Link>
+                      </div>
+                      <div>
+                        <h2>Puedes ver el estado de la postulacion</h2>
+                        <Link
+                          href={`/dashboard/candidato/mis-empleos?jobId=${jobs[0].id}`}
+                          className="text-blue-600 hover:underline"
+                        >
+                          <Button type="secondary" size="lg">
+                            {" "}
+                            Mis empleos
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </Modal>
+              ) : (
+                <Modal
+                  isOpen={isWarningModalOpen}
+                  onClose={() => setIsWarningModalOpen(false)}
+                  title="Postulacion incompleta"
+                  variant="warning-yellow"
+                  confirmText="Okay"
+                  onConfirm={() => router.push("/dashboard/candidato/mi-perfil")}
+                >
+                  <p>
+                    Completa tu perfil para poder postularte a este trabajo:{" "}
+                    {job.titulo}
                   </p>
-                  <p className="flex">
-                    {" "}
-                    <Check size={20} className="text-sky-900 mr-1" /> Puedes
-                    editar tu postulación
-                  </p>
-                </div>
+                </Modal>
               )}
             </div>
           </div>

@@ -8,15 +8,18 @@ import StepPersonalInfo from "../mi-perfil/information-form/StepPersonalInfo";
 import StepProfesional from "../mi-perfil/information-form/StepProfesional";
 import StepExperience from "../mi-perfil/information-form/StepExperience";
 import StepDoc from "../mi-perfil/information-form/StepDoc";
+import { mockUsers } from "@/app/data/mockUsers";
 import {
   CircleCheck,
   CircleChevronLeft,
   CircleChevronRight,
+  User2,
 } from "lucide-react";
 
 export default function MiPerfilPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const { notify } = useNotification();
+  const usuario = mockUsers[0]; // TODO: Cambiar por datos reales del back cuando se tenga
 
   const methods = useForm({
     mode: "onChange",
@@ -283,6 +286,31 @@ export default function MiPerfilPage() {
           <p className="text-sm sm:text-base text-gray-600">
             Actualiza tu información personal y profesional
           </p>
+        </div>
+
+        <div className="my-8">
+          <div
+            className="flex w-full h-auto grow items-center justify-between gap-2 rounded-md p-3 text-sm font-medium bg-blue-50 md:flex-none md:justify-start md:p-2 md:px-3 group "
+          >
+            <div className="flex items-center gap-2 text-left overflow-hidden">
+              <div className="w-30 h-30 shrink-0 bg-blue-900 rounded-full flex items-center justify-center">
+                <User2 size={60} className="text-white stroke-1" />
+              </div>
+              <div className="hidden md:block overflow-hidden">
+                <div className="grid">
+                  <span className="text-xl font-semibold truncate">
+                    {usuario.nombre}
+                  </span>
+                  <span className="text-md text-gray-600 truncate">
+                    {usuario.puesto}
+                  </span>
+                  <span className="text-md text-gray-600 truncate">
+                    {usuario.ciudad}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* FormProvider pasa el context a todos los hijos */}

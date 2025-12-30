@@ -12,7 +12,7 @@ function Modal({
     variant = "default", // 'default' | 'warning-red' | 'success' | 'warning-yellow' | 'info'
     onConfirm = null, // Si se proporciona, muestra botones OK/Cancel
     confirmText = "Okay",
-    cancelText = "Cancelar",
+    cancelText = "Cancelar"
 }) {
     const modalRef = useRef(null);
     const previouslyFocused = useRef(null);
