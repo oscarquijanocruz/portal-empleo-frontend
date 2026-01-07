@@ -789,6 +789,26 @@ export default function UserManagementWithInterviews() {
             {/* drawer / modal */}
             <div className="relative ml-auto w-full md:w-[95%] lg:w-[90%] bg-white overflow-hidden max-h-screen rounded-l-3xl shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
               {/* header */}
+              {/* Barra de progreso */}
+                  <div className="bg-white border-b">
+                    <div className="flex items-center justify-between mb-1">
+                    
+                    </div>
+
+                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-500
+        ${
+          calculateProgress() < 40
+            ? "bg-red-500"
+            : calculateProgress() < 70
+            ? "bg-yellow-500"
+            : "bg-green-500"
+        }`}
+                        style={{ width: `${calculateProgress()}%` }}
+                      />
+                    </div>
+                  </div>
               <div
                 className="sticky top-0 z-10 flex items-start justify-between gap-4 px-8 py-6
                       bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900"
@@ -846,31 +866,7 @@ export default function UserManagementWithInterviews() {
 
                 {/* tab content */}
                 <div className="space-y-4">
-                  {/* Barra de progreso */}
-                  <div className="bg-white border-b">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-400">
-                        Progreso de la entrevista
-                      </span>
-                      <span className="text-sm font-semibold text-blue-600">
-                        {calculateProgress()}%
-                      </span>
-                    </div>
-
-                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full transition-all duration-500
-        ${
-          calculateProgress() < 40
-            ? "bg-red-500"
-            : calculateProgress() < 70
-            ? "bg-yellow-500"
-            : "bg-green-500"
-        }`}
-                        style={{ width: `${calculateProgress()}%` }}
-                      />
-                    </div>
-                  </div>
+                  
                   {/* 1: Información personal */}
                   {activeTab === "Información personal" && (
                     <section>
