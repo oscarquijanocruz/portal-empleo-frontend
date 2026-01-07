@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 
+
 const usuariosIniciales = [
   {
     id: 1,
@@ -77,7 +78,9 @@ const usuariosIniciales = [
     inconvenienteEmpresa: "NP",
     comentarios: "Podría ir a entrevista jueves o viernes",
     entrevistas: [],
+    
   },
+  
 ];
 const scoreMap = {
   "Muy deficiente": 1,
@@ -420,7 +423,22 @@ export default function UserManagementWithInterviews() {
 
     return Math.round((completed / total) * 100);
   };
+const [isContratacionOpen, setIsContratacionOpen] = useState(false);
+const [selectedContratado, setSelectedContratado] = useState(null);
 
+function Info({ label, value }) {
+  return (
+    <div className="flex flex-col gap-1 rounded-lg bg-gray-50 p-3">
+      <span className="text-xs text-gray-500">{label}</span>
+      <span className="font-medium text-gray-800">
+        {value || "-"}
+      </span>
+    </div>
+  );
+}
+
+
+  
   return (
     <div className="min-h-screen bg-gray-100 ">
       <div className="max-w-[1400px] mx-auto bg-white rounded-2xl shadow-md border border-gray-200 p-6">
@@ -528,83 +546,148 @@ export default function UserManagementWithInterviews() {
         </div>
 
         {/* TABLA */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
-              <tr>
-                <th className="p-4 text-left">Nombre</th>
-                <th className="p-4 text-left">Tipo</th>
-                <th className="p-4 text-left">Estado</th>
-                <th className="p-4 text-left">Teléfono</th>
-                <th className="p-4 text-center">Entrevistas</th>
-                <th className="p-4 text-right">Acciones</th>
-              </tr>
-            </thead>
+        {/* TABLA */}
+<div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+  <table className="w-full text-sm">
+    <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
+      <tr>
+        <th className="p-4 text-left">Nombre</th>
+        <th className="p-4 text-left">Tipo</th>
+        <th className="p-4 text-left">Estado</th>
+        <th className="p-4 text-left">Teléfono</th>
+        <th className="p-4 text-center">Entrevistas</th>
+        <th className="p-4 text-right">Acciones</th>
+      </tr>
+    </thead>
 
-            <tbody>
-              {filtered.map((u) => (
-                <tr key={u.id} className="border-t hover:bg-gray-50 transition">
-                  <td className="p-4 font-medium text-gray-800">{u.nombre}</td>
+    <tbody>
+      {filtered.map((u) => (
+        <tr key={u.id} className="border-t hover:bg-gray-50 transition">
+          <td className="p-4 font-medium text-gray-800">{u.nombre}</td>
 
-                  <td className="p-4 text-gray-600">{u.tipo}</td>
+          <td className="p-4 text-gray-600">{u.tipo}</td>
 
-                  <td className="p-4">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium
-                    ${
-                      u.estado === "Contratado"
-                        ? "bg-green-100 text-green-700"
-                        : u.estado === "En proceso"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                    >
-                      {u.estado}
-                    </span>
-                  </td>
+          <td className="p-4">
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-medium
+              ${
+                u.estado === "Contratado"
+                  ? "bg-green-100 text-green-700"
+                  : u.estado === "En proceso"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
+              {u.estado}
+            </span>
+          </td>
 
-                  <td className="p-4 text-gray-600">{u.telefono ?? "-"}</td>
+          <td className="p-4 text-gray-600">{u.telefono ?? "-"}</td>
 
-                  <td className="p-4 text-center font-medium">
-                    {(u.entrevistas || []).length}
-                  </td>
+          <td className="p-4 text-center font-medium">
+            {(u.entrevistas || []).length}
+          </td>
 
-                  <td className="p-4 text-right">
-                    <div className="inline-flex gap-2">
-                      <button
-                        title="Editar"
-                        onClick={() => openEditModal(u)}
-                        className="p-2 rounded-lg border hover:bg-blue-50 text-blue-600"
-                      >
-                        <Pencil size={16} />
-                      </button>
+          <td className="p-4 text-right">
+            <div className="inline-flex gap-2">
 
-                      <button
-                        title="Entrevistas"
-                        onClick={() => openInterviewModal(u)}
-                        className="p-2 rounded-lg border hover:bg-purple-50 text-purple-600"
-                      >
-                        <FileText size={16} />
-                      </button>
+              {/* EDITAR */}
+              <button
+                title="Editar"
+                onClick={() => openEditModal(u)}
+                className="p-2 rounded-lg border hover:bg-blue-50 text-blue-600"
+              >
+                <Pencil size={16} />
+              </button>
 
-                      <button
-                        title="Eliminar"
-                        onClick={() =>
-                          setUsuarios((prev) =>
-                            prev.filter((x) => x.id !== u.id)
-                          )
-                        }
-                        className="p-2 rounded-lg border hover:bg-red-50 text-red-600"
-                      >
-                        <Trash size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              {/* ENTREVISTAS (SOLO SI NO ESTÁ CONTRATADO) */}
+              {u.estado !== "Contratado" && (
+                <button
+                  title="Entrevistas"
+                  onClick={() => openInterviewModal(u)}
+                  className="p-2 rounded-lg border hover:bg-purple-50 text-purple-600"
+                >
+                  <FileText size={16} />
+                </button>
+              )}
+
+              {/* VER CONTRATACIÓN (SOLO CONTRATADOS) */}
+              {u.estado === "Contratado" && (
+                <button
+                  title="Ver contratación"
+                  onClick={() => {
+                    setSelectedContratado(u);
+                    setIsContratacionOpen(true);
+                  }}
+                  className="p-2 rounded-lg border hover:bg-green-50 text-green-600"
+                >
+                  <UserCheck size={16} />
+                </button>
+              )}
+
+              {/* ELIMINAR */}
+              <button
+                title="Eliminar"
+                onClick={() =>
+                  setUsuarios((prev) =>
+                    prev.filter((x) => x.id !== u.id)
+                  )
+                }
+                className="p-2 rounded-lg border hover:bg-red-50 text-red-600"
+              >
+                <Trash size={16} />
+              </button>
+
+            </div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+{isContratacionOpen && selectedContratado && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center">
+
+    {/* Overlay */}
+    <div
+      className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      onClick={() => setIsContratacionOpen(false)}
+    />
+
+    {/* Modal */}
+    <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl p-6 space-y-4">
+
+      <h2 className="text-xl font-semibold text-gray-800">
+        Información de contratación
+      </h2>
+
+      <Info label="Nombre" value={selectedContratado.nombre} />
+      <Info label="Empresa" value={selectedContratado.contratacion?.empresa} />
+      <Info label="Puesto" value={selectedContratado.contratacion?.puesto} />
+      <Info label="Fecha de ingreso" value={selectedContratado.contratacion?.fechaIngreso} />
+      <Info label="Tipo de contrato" value={selectedContratado.contratacion?.tipoContrato} />
+      <Info label="Sueldo" value={selectedContratado.contratacion?.sueldo} />
+
+      <div>
+        <p className="text-sm text-gray-500">Comentarios</p>
+        <p className="text-gray-800">
+          {selectedContratado.contratacion?.comentarios || "—"}
+        </p>
+      </div>
+
+      <div className="flex justify-end pt-4">
+        <button
+          onClick={() => setIsContratacionOpen(false)}
+          className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
 
         {/* Edit modal (pequeño) */}
         {isEditOpen && selectedUser && editForm && (
