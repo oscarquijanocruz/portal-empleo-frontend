@@ -123,7 +123,7 @@ export default function PostulationDialog({
                           </p>
                         </Button>
 
-                        <Link href="/dashboard/candidato/buscar-empleos/postulate-job-form-manual">
+                        <Link href={`/dashboard/candidato/buscar-empleos/postulate-job-form-manual?jobId=${job.id}`}>
                           <Button
                             type="button"
                             variant="secondary"

@@ -290,7 +290,7 @@ export default function MiPerfilPage() {
 
         <div className="my-8">
           <div
-            className="flex w-full h-auto grow items-center justify-between gap-2 rounded-md p-3 text-sm font-medium bg-blue-50 md:flex-none md:justify-start md:p-2 md:px-3 group "
+            className="flex w-full h-auto grow items-center justify-between gap-2 rounded-md p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 group "
           >
             <div className="flex items-center gap-2 text-left overflow-hidden">
               <div className="w-30 h-30 shrink-0 bg-blue-900 rounded-full flex items-center justify-center">

@@ -1,7 +1,7 @@
 import Input from "@/app/components/ui/Input";
-import { File, Upload, User, X } from "lucide-react";
+import { File, Upload, User, X, Image as ImageIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import Checkbox from "@/app/components/ui/Checkbox";
 
@@ -10,6 +10,8 @@ export default function StepDoc() {
     register,
     formState: { errors },
     watch,
+    setValue,
+    clearErrors,
   } = useFormContext();
 
   // Estados locales para preview
@@ -17,60 +19,194 @@ export default function StepDoc() {
   const [cvPreview, setCvPreview] = useState(null);
   const [portafolioPreview, setPortafolioPreview] = useState(null);
 
+  // Estados para drag and drop
+  const [isDraggingFoto, setIsDraggingFoto] = useState(false);
+  const [isDraggingCV, setIsDraggingCV] = useState(false);
+  const [isDraggingPortafolio, setIsDraggingPortafolio] = useState(false);
+
+  // Refs para los inputs de file
+  const fotoPerfilInputRef = useRef(null);
+  const cvInputRef = useRef(null);
+  const portafolioInputRef = useRef(null);
+
+  // Handlers para click en áreas de drag and drop
+  const handleFotoPerfilClick = () => {
+    fotoPerfilInputRef.current?.click();
+  };
+
+  const handleCVClick = () => {
+    cvInputRef.current?.click();
+  };
+
+  const handlePortafolioClick = () => {
+    portafolioInputRef.current?.click();
+  };
+
   // Watch para checkboxes
   const notificaciones = watch("notificaciones");
   const perfilPublico = watch("perfilPublico");
   const recibirOfertas = watch("recibirOfertas");
 
+  // Función genérica para procesar archivo de foto
+  const processFotoFile = (file) => {
+    if (!file) return false;
+    
+    if (!file.type.startsWith("image/")) {
+      alert("Solo se permiten archivos de imagen");
+      return false;
+    }
+    
+    if (file.size > 5000000) {
+      alert("El archivo es muy grande. Máximo 5MB");
+      return false;
+    }
+    
+    const previewUrl = URL.createObjectURL(file);
+    setFotoPerfilPreview(previewUrl);
+    setValue("fotoPerfil", [file]);
+    clearErrors("fotoPerfil");
+    return true;
+  };
+
+  // Función genérica para procesar archivo de CV
+  const processCVFile = (file) => {
+    if (!file) return false;
+    
+    if (file.type !== "application/pdf") {
+      alert("Solo se permiten archivos PDF");
+      return false;
+    }
+    
+    if (file.size > 5000000) {
+      alert("El archivo es muy grande. Máximo 5MB");
+      return false;
+    }
+    
+    setCvPreview(file.name);
+    setValue("curriculumVitae", [file]);
+    clearErrors("curriculumVitae");
+    return true;
+  };
+
+  // Función genérica para procesar archivo de portafolio
+  const processPortafolioFile = (file) => {
+    if (!file) return false;
+    
+    const allowedTypes = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Solo se permiten archivos JPG, PNG o PDF");
+      return false;
+    }
+    
+    if (file.size > 5000000) {
+      alert("El archivo es muy grande. Máximo 5MB");
+      return false;
+    }
+    
+    setPortafolioPreview(file.name);
+    setValue("portfolioFile", [file]);
+    return true;
+  };
+
   // Manejar subida de foto de perfil con preview
   const handleFotoPerfilChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      // Validación de tamaño
-      if (file.size > 5000000) {
-        alert("El archivo es muy grande. Máximo 5MB");
-        return;
-      }
-      // Crear preview
-      const previewUrl = URL.createObjectURL(file);
-      setFotoPerfilPreview(previewUrl);
-    }
+    processFotoFile(file);
   };
 
   // Manejar subida de curriculum vitae
   const handleCurriculumVitaeChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5000000) {
-        alert("El archivo es muy grande. Máximo 5MB");
-        return;
-      }
-      setCvPreview(file.name);
-    }
+    processCVFile(file);
   };
 
   // Eliminar curriculum vitae
   const eliminarCV = () => {
     setCvPreview(null);
-    // Limpiar el input file
-    const fileInput = document.querySelector('input[name="curriculumVitae"]');
-    if (fileInput) {
-      fileInput.value = '';
+    if (cvInputRef.current) {
+      cvInputRef.current.value = '';
     }
-    // Limpiar el error del form si existe
-  clearErrors?.('curriculumVitae');
+    setValue("curriculumVitae", null);
+    clearErrors("curriculumVitae");
+  };
+
+  // Eliminar foto de perfil
+  const eliminarFoto = () => {
+    setFotoPerfilPreview(null);
+    if (fotoPerfilInputRef.current) {
+      fotoPerfilInputRef.current.value = '';
+    }
+    setValue("fotoPerfil", null);
+    clearErrors("fotoPerfil");
+  };
+
+  // Eliminar portafolio
+  const eliminarPortafolio = () => {
+    setPortafolioPreview(null);
+    if (portafolioInputRef.current) {
+      portafolioInputRef.current.value = '';
+    }
+    setValue("portfolioFile", null);
   };
 
   // Manejar subida de portafolio
   const handlePortafolioChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 500000000) {
-        alert("El archivo es muy grande. Máximo 50MB");
-        return;
-      }
-      setPortafolioPreview(file.name);
-    }
+    processPortafolioFile(file);
+  };
+
+  // Handlers para drag and drop - Foto de perfil
+  const handleDragOverFoto = (e) => {
+    e.preventDefault();
+    setIsDraggingFoto(true);
+  };
+
+  const handleDragLeaveFoto = (e) => {
+    e.preventDefault();
+    setIsDraggingFoto(false);
+  };
+
+  const handleDropFoto = (e) => {
+    e.preventDefault();
+    setIsDraggingFoto(false);
+    const file = e.dataTransfer.files[0];
+    processFotoFile(file);
+  };
+
+  // Handlers para drag and drop - CV
+  const handleDragOverCV = (e) => {
+    e.preventDefault();
+    setIsDraggingCV(true);
+  };
+
+  const handleDragLeaveCV = (e) => {
+    e.preventDefault();
+    setIsDraggingCV(false);
+  };
+
+  const handleDropCV = (e) => {
+    e.preventDefault();
+    setIsDraggingCV(false);
+    const file = e.dataTransfer.files[0];
+    processCVFile(file);
+  };
+
+  // Handlers para drag and drop - Portafolio
+  const handleDragOverPortafolio = (e) => {
+    e.preventDefault();
+    setIsDraggingPortafolio(true);
+  };
+
+  const handleDragLeavePortafolio = (e) => {
+    e.preventDefault();
+    setIsDraggingPortafolio(false);
+  };
+
+  const handleDropPortafolio = (e) => {
+    e.preventDefault();
+    setIsDraggingPortafolio(false);
+    const file = e.dataTransfer.files[0];
+    processPortafolioFile(file);
   };
 
   return (
@@ -83,12 +219,14 @@ export default function StepDoc() {
             Foto de Perfil
           </h2>
 
-          <div className="flex items-center space-x-6">
-            <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+          <div className="flex items-start space-x-6">
+            <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
               {fotoPerfilPreview ? (
                 <Image
                   src={fotoPerfilPreview}
                   alt="Foto de perfil"
+                  width={96}
+                  height={96}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -96,12 +234,14 @@ export default function StepDoc() {
               )}
             </div>
 
-            <div>
+            <div className="flex-1">
               <input
+                ref={fotoPerfilInputRef}
                 type="file"
                 accept="image/*"
                 onChange={handleFotoPerfilChange}
                 id="foto-perfil"
+                className="hidden"
                 {...register("fotoPerfil", {
                   validate: {
                     fileSize: (files) => {
@@ -117,20 +257,58 @@ export default function StepDoc() {
                   },
                 })}
               />
-              <label
-                htmlFor="foto-perfil"
-                className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer transition-colors"
+              
+              <div
+                onClick={handleFotoPerfilClick}
+                onDragOver={handleDragOverFoto}
+                onDragLeave={handleDragLeaveFoto}
+                onDrop={handleDropFoto}
+                className={`
+                  border-2 border-dashed rounded-lg p-6 cursor-pointer transition-all
+                  ${isDraggingFoto 
+                    ? 'border-blue-500 bg-blue-50' 
+                    : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
+                  }
+                  ${fotoPerfilPreview ? 'border-green-300 bg-green-50' : ''}
+                `}
               >
-                <Upload className="w-4 h-4" />
-                Subir Foto
-              </label>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <Upload className={`w-8 h-8 mb-2 ${isDraggingFoto ? 'text-blue-500' : 'text-gray-400'}`} />
+                  <p className="text-sm font-medium text-gray-700 mb-1">
+                    {fotoPerfilPreview ? 'Foto seleccionada' : 'Arrastra y suelta tu foto aquí'}
+                  </p>
+                  <p className="text-xs text-gray-500 mb-3">
+                    o haz clic para seleccionar
+                  </p>
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
+                  >
+                    <Upload className="w-4 h-4" />
+                    {fotoPerfilPreview ? 'Cambiar Foto' : 'Subir Foto'}
+                  </button>
+                  {fotoPerfilPreview && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        eliminarFoto();
+                      }}
+                      className="mt-2 text-sm text-red-600 hover:text-red-800 transition-colors"
+                    >
+                      Eliminar foto
+                    </button>
+                  )}
+                </div>
+              </div>
+              
               {errors.fotoPerfil && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-2">
                   {errors.fotoPerfil.message}
                 </p>
               )}
               {!errors.fotoPerfil && (
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 mt-2">
                   JPG, PNG o GIF (máx. 5MB)
                 </p>
               )}
@@ -145,15 +323,40 @@ export default function StepDoc() {
           </h2>
 
           <div className="space-y-4">
-            {/* Preview del archivo */}
-            <div className="w-full bg-gray-50 rounded-lg p-4">
-              {cvPreview ? (
+            <input
+              ref={cvInputRef}
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onChange={handleCurriculumVitaeChange}
+              id="curriculum-vitae"
+              className="hidden"
+              {...register("curriculumVitae", {
+                required: "Curriculum Vitae requerido",
+                validate: {
+                  fileSize: (files) => {
+                    if (!files?.[0]) return "Curriculum Vitae requerido";
+                    return files[0].size <= 5000000 || "Máximo 5MB";
+                  },
+                  fileType: (files) => {
+                    if (!files?.[0]) return true;
+                    return (
+                      files[0].type === "application/pdf" ||
+                      files[0].type === "application/msword" ||
+                      files[0].type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    );
+                  },
+                },
+              })}
+            />
+            
+            {cvPreview ? (
+              <div className="w-full bg-green-50 border-2 border-green-200 rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <File className="w-8 h-8 text-green-500" />
+                    <File className="w-8 h-8 text-green-600" />
                     <div>
-                      <p className="text-sm font-medium text-gray-700">{cvPreview}</p>
-                      <p className="text-xs text-gray-500">PDF subido correctamente</p>
+                      <p className="text-sm font-medium text-gray-900">{cvPreview}</p>
+                      <p className="text-xs text-green-600">PDF subido correctamente</p>
                     </div>
                   </div>
                   <button
@@ -165,57 +368,50 @@ export default function StepDoc() {
                     <X className="w-5 h-5" />
                   </button>
                 </div>
-              ) : (
-                <div className="flex items-center justify-center space-x-3 text-gray-500">
-                  <File className="w-8 h-8" />
-                  <span className="text-sm">Ningún archivo seleccionado</span>
-                </div>
-              )}
-            </div>
-
-            {/* Input file */}
-            <div>
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={handleCurriculumVitaeChange}
-                id="curriculum-vitae"
-                // className="hidden"
-                {...register("curriculumVitae", {
-                  required: "Curriculum Vitae requerido",
-                  validate: {
-                    fileSize: (files) => {
-                      if (!files?.[0]) return "Curriculum Vitae requerido";
-                      return files[0].size <= 5000000 || "Máximo 5MB";
-                    },
-                    fileType: (files) => {
-                      if (!files?.[0]) return true;
-                      return (
-                        files[0].type === "application/pdf" ||
-                        "Solo archivos PDF"
-                      );
-                    },
-                  },
-                })}
-              />
-              <label
-                htmlFor="curriculum-vitae"
-                className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer transition-colors"
+              </div>
+            ) : (
+              <div
+                onClick={handleCVClick}
+                onDragOver={handleDragOverCV}
+                onDragLeave={handleDragLeaveCV}
+                onDrop={handleDropCV}
+                className={`
+                  border-2 border-dashed rounded-lg p-8 cursor-pointer transition-all
+                  ${isDraggingCV 
+                    ? 'border-blue-500 bg-blue-50' 
+                    : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
+                  }
+                `}
               >
-                <Upload className="w-4 h-4" />
-                {cvPreview ? "Cambiar CV" : "Subir CV"}
-              </label>
-              {errors.curriculumVitae && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.curriculumVitae.message}
-                </p>
-              )}
-              {!errors.curriculumVitae && (
-                <p className="text-sm text-gray-500 mt-1">
-                  Solo PDF (máx. 5MB)
-                </p>
-              )}
-            </div>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <File className={`w-12 h-12 mb-3 ${isDraggingCV ? 'text-blue-500' : 'text-gray-400'}`} />
+                  <p className="text-base font-medium text-gray-700 mb-1">
+                    Arrastra y suelta tu CV aquí
+                  </p>
+                  <p className="text-sm text-gray-500 mb-4">
+                    o haz clic para seleccionar
+                  </p>
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
+                  >
+                    <Upload className="w-4 h-4" />
+                    Subir CV
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {errors.curriculumVitae && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.curriculumVitae.message}
+              </p>
+            )}
+            {!errors.curriculumVitae && !cvPreview && (
+              <p className="text-sm text-gray-500">
+                Solo PDF (máx. 5MB)
+              </p>
+            )}
           </div>
         </div>
 
@@ -244,32 +440,74 @@ export default function StepDoc() {
               />
             </div>
 
-            <div>
-              <input
-                type="file"
-                accept=".pdf,.jpg,.jpeg,.png"
-                onChange={handlePortafolioChange}
-                id="portfolio"
-                {...register("portfolioFile")}
-              />
-              <label
-                htmlFor="portfolio"
-                className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer transition-colors"
+            <input
+              ref={portafolioInputRef}
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png"
+              onChange={handlePortafolioChange}
+              id="portfolio"
+              className="hidden"
+              {...register("portfolioFile")}
+            />
+            
+            {portafolioPreview ? (
+              <div className="w-full bg-green-50 border-2 border-green-200 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <File className="w-8 h-8 text-green-600" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{portafolioPreview}</p>
+                      <p className="text-xs text-green-600">Archivo subido correctamente</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={eliminarPortafolio}
+                    className="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-50 transition-colors"
+                    title="Eliminar archivo"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div
+                onClick={handlePortafolioClick}
+                onDragOver={handleDragOverPortafolio}
+                onDragLeave={handleDragLeavePortafolio}
+                onDrop={handleDropPortafolio}
+                className={`
+                  border-2 border-dashed rounded-lg p-8 cursor-pointer transition-all
+                  ${isDraggingPortafolio 
+                    ? 'border-blue-500 bg-blue-50' 
+                    : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
+                  }
+                `}
               >
-                <Upload className="w-4 h-4" />
-                Subir Portafolio
-              </label>
-              {portafolioPreview && (
-                <p className="text-green-600 text-sm mt-1">
-                  ✓ {portafolioPreview}
-                </p>
-              )}
-              {!portafolioPreview && (
-                <p className="text-sm text-gray-500 mt-1">
-                  JPG, PNG o PDF (máx. 5MB)
-                </p>
-              )}
-            </div>
+                <div className="flex flex-col items-center justify-center text-center">
+                  <ImageIcon className={`w-12 h-12 mb-3 ${isDraggingPortafolio ? 'text-blue-500' : 'text-gray-400'}`} />
+                  <p className="text-base font-medium text-gray-700 mb-1">
+                    Arrastra y suelta tu portafolio aquí
+                  </p>
+                  <p className="text-sm text-gray-500 mb-4">
+                    o haz clic para seleccionar
+                  </p>
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-colors"
+                  >
+                    <Upload className="w-4 h-4" />
+                    Subir Portafolio
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {!portafolioPreview && (
+              <p className="text-sm text-gray-500">
+                JPG, PNG o PDF (máx. 5MB)
+              </p>
+            )}
           </div>
         </div>
 
