@@ -288,24 +288,25 @@ export default function MiPerfilPage() {
           </p>
         </div>
 
-        <div className="my-8">
-          <div
-            className="flex w-full h-auto grow items-center justify-between gap-2 rounded-md p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 group "
-          >
-            <div className="flex items-center gap-2 text-left overflow-hidden">
+        <div className="my-8 flex items-center justify-center">
+          <div className="bg-gradient-to-t from-amber-800 to-amber-100 grid grid-cols-1 w-1/2 h-auto items-center justify-between gap-2 rounded-2xl p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 group ">
+            <div className="gap-2 text-center grid place-items-center">
               <div className="w-30 h-30 shrink-0 bg-blue-900 rounded-full flex items-center justify-center">
                 <User2 size={60} className="text-white stroke-1" />
               </div>
-              <div className="hidden md:block overflow-hidden">
-                <div className="grid">
-                  <span className="text-xl font-semibold truncate">
+              <div className="py-4">
+                <div className="grid space-y-2 ">
+                  <span className="text-xl text-white font-semibold truncate">
                     {usuario.nombre}
                   </span>
-                  <span className="text-md text-gray-600 truncate">
+                  <span className="text-md text-white truncate">
                     {usuario.puesto}
                   </span>
-                  <span className="text-md text-gray-600 truncate">
+                  <span className="text-md text-white truncate">
                     {usuario.ciudad}
+                  </span>
+                  <span className="text-md text-white truncate">
+                    Miembro desde {new Date(usuario.createdAt).toLocaleDateString("es-ES")}
                   </span>
                 </div>
               </div>

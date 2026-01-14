@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 import {
   User2Icon,
   Star,
@@ -12,20 +12,24 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import Button from "@/app/components/ui/Button";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import Modal from "@/app/components/ui/Modal";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import Textarea from "@/app/components/ui/Textarea";
-import { useMessageFavorites } from '@/app/hooks/useMessageFavorites';
+import { useMessageFavorites } from "@/app/hooks/useMessageFavorites";
 
-export default function MessageDetail({ message }) {
+export default function MessageDetail({ message, onMessageDelete }) {
   //const [isFavorite, setIsFavorite] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   //const [isSilenced, setIsSilenced] = useState(false);
-  const { 
-    isFavorite, 
-    toggleFavorite, 
-    isLoading 
-  } = useMessageFavorites();
+  const { isFavorite, toggleFavorite, isLoading } = useMessageFavorites();
 
   if (!message) {
     return (
@@ -89,9 +93,23 @@ export default function MessageDetail({ message }) {
     return favorites;
   };
 
-  const handleDelete = (message) => {
-    console.log("Eliminar mensaje:", message.id);
-    onMessageDelete?.(message.id);
+  const handleOpenDeleteModal = () => {
+    if (!message) return;
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!message || !onMessageDelete) {
+      setIsDeleteModalOpen(false);
+      return;
+    }
+
+    onMessageDelete(message.id);
+    setIsDeleteModalOpen(false);
   };
 
   const handleSilence = () => {
@@ -164,8 +182,8 @@ export default function MessageDetail({ message }) {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  className="text-red-600"
-                  onClick={handleDelete}
+                  className="text-red-600 focus:text-red-600"
+                  onClick={handleOpenDeleteModal}
                 >
                   <Trash2 size={16} className="text-red-600" /> Eliminar
                 </DropdownMenuItem>
@@ -243,6 +261,23 @@ export default function MessageDetail({ message }) {
           </div>
         </div>
       </div>
+
+      {/* Modal de confirmación de eliminación */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        title="Eliminar conversación"
+        variant="warning-red"
+        onConfirm={handleConfirmDelete}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+      >
+        <p>
+          ¿Estás seguro de que deseas eliminar la conversación con{" "}
+          <strong>{message.sender.name}</strong>? Esta acción no se puede
+          deshacer.
+        </p>
+      </Modal>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { useMessageFavorites } from '@/app/hooks/useMessageFavorites';
 
 export default function MensajesPage() {
   const searchParams = useSearchParams();
+  const [messages, setMessages] = useState(mockMessages);
   const [selectedMessage, setSelectedMessage] = useState(mockMessages[0]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showOnlyCandidates, setShowOnlyCandidates] = useState(false);
@@ -23,7 +24,7 @@ export default function MensajesPage() {
     const messageId = searchParams.get("messageId");
     if (messageId) {
       // Find message by ID or by sender name matching
-      const specificMessage = mockMessages.find(
+      const specificMessage = messages.find(
         (msg) =>
           msg.id.toString() === messageId ||
           msg.sender.name.toLowerCase().includes(messageId.toLowerCase())
@@ -32,10 +33,10 @@ export default function MensajesPage() {
         setSelectedMessage(specificMessage);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, messages]);
 
   // Filter messages based on search term and candidate filter
-  const filteredMessages = mockMessages.filter((message) => {
+  const filteredMessages = messages.filter((message) => {
     const matchesSearch =
       message.sender.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       message.preview.toLowerCase().includes(searchTerm.toLowerCase());
@@ -64,6 +65,20 @@ export default function MensajesPage() {
 
   const handelSendMessage = (messageData) => {
     console.log("Enviando mensaje:", messageData);
+  };
+
+  // Función para eliminar mensaje en tiempo real
+  const handleDeleteMessage = (messageId) => {
+    // Calcular los mensajes actualizados
+    const updatedMessages = messages.filter((msg) => msg.id !== messageId);
+    
+    // Actualizar el estado de mensajes
+    setMessages(updatedMessages);
+    
+    // Si el mensaje eliminado era el seleccionado, seleccionar otro o limpiar
+    if (selectedMessage?.id === messageId) {
+      setSelectedMessage(updatedMessages.length > 0 ? updatedMessages[0] : null);
+    }
   };
 
   return (
@@ -135,7 +150,10 @@ export default function MensajesPage() {
 
         {/* Message Detail */}
         <div className="w-1/2 bg-white">
-          <MessageDetail message={selectedMessage} />
+          <MessageDetail 
+            message={selectedMessage} 
+            onMessageDelete={handleDeleteMessage}
+          />
         </div>
       </div>
     </div>

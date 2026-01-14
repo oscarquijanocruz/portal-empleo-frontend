@@ -71,9 +71,9 @@ export default function StepDoc() {
   // Función genérica para procesar archivo de CV
   const processCVFile = (file) => {
     if (!file) return false;
-    
-    if (file.type !== "application/pdf") {
-      alert("Solo se permiten archivos PDF");
+
+    if (file.type !== "application/pdf" && file.type !== "application/msword" && file.type !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+      alert("Solo se permiten archivos PDF y Word");
       return false;
     }
     

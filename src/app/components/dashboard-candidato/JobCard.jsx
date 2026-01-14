@@ -98,7 +98,7 @@ export default function JobCard({
                           ? "grayscale-100 opacity-70"
                           : ""
                       }`}
-                    />  
+                    />
                   </div>
                   <div
                     className={`flex-1 flex-col filter-grayscale ${
@@ -128,8 +128,21 @@ export default function JobCard({
                         </span>
                       )}
                     </div>
-                    <p className="text-blue-800 text-md font-medium">
+                    <p className="text-blue-800 text-md font-medium flex gap-1 items-center">
                       {job.empresa}
+                      <div className="flex justify-center items-center">
+                        <p className="content-center font-bold items-center justify-center">
+                          {job.isSponsored && (
+                            <Badge
+                              variant="primary"
+                              size="xs"
+                              className={"bg-sky-100 text-sky-950 text-[10px]"}
+                            >
+                              Patrocinado
+                            </Badge>
+                          )}
+                        </p>
+                      </div>
                     </p>
                     <div className="flex flex-row">
                       <p className="text-gray-500 text-sm">
@@ -173,19 +186,6 @@ export default function JobCard({
                       <Info size={22} />
                     </button>
                   </div>
-                  <div className="justify-right">
-                      <p className="content-center font-bold">
-                        {job.isSponsored && (
-                          <Badge
-                            variant="primary"
-                            size="xs"
-                            className={"bg-sky-100 text-sky-950 text-[9px]"}
-                          >
-                            Patrocinado
-                          </Badge>
-                        )}
-                      </p>
-                    </div>
                 </div>
 
                 {/* Popover de información */}
