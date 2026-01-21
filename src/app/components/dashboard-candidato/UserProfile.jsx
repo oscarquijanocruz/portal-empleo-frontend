@@ -12,12 +12,12 @@ export default function UserProfile() {
       <DropdownMenuTrigger asChild>
         <button 
           aria-label="Menú de usuario"
-          className="flex h-[84px] grow items-center justify-between gap-2 rounded-md p-3 text-sm font-medium bg-blue-100 hover:bg-blue-200 text-blue-900 transition-all md:flex-none md:justify-start md:p-2 md:px-3 group cursor-pointer">        
+          className="flex h-12 w-12 md:h-auto md:w-full items-center justify-center md:justify-start gap-2 rounded-lg p-2 md:p-3 text-sm font-medium bg-blue-100 hover:bg-blue-200 text-blue-900 transition-all duration-200 group cursor-pointer">        
           <div className="flex items-center gap-2 text-left overflow-hidden">
-            <div className="w-10 h-10 shrink-0 bg-blue-900 rounded-full flex items-center justify-center">
-              <User2 size={30} className="text-white stroke-1" />
+            <div className="w-8 h-8 md:w-10 md:h-10 shrink-0 bg-blue-900 rounded-full flex items-center justify-center">
+              <User2 className="w-4 h-4 md:w-5 md:h-5 text-white stroke-1" />
             </div>
-            <div className="hidden md:block overflow-hidden">
+            <div className="hidden md:block overflow-hidden min-w-0">
                 <div className="grid">
                   <span className="font-semibold truncate">{usuario.nombre}</span>
                   <span className="text-xs text-gray-600 truncate">{usuario.puesto}</span>

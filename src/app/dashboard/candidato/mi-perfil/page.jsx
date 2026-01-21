@@ -288,13 +288,13 @@ export default function MiPerfilPage() {
           </p>
         </div>
 
-        <div className="my-8 flex items-center justify-center">
-          <div className="bg-gradient-to-t from-amber-800 to-amber-100 grid grid-cols-1 w-1/2 h-auto items-center justify-between gap-2 rounded-2xl p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 group ">
-            <div className="gap-2 text-center grid place-items-center">
-              <div className="w-30 h-30 shrink-0 bg-blue-900 rounded-full flex items-center justify-center">
+        <div className="mb-8 mt-12 flex items-center justify-center">
+          <div className="bg-gradient-to-t from-amber-800 to-amber-100 grid grid-cols-1 w-3/4 h-auto items-center justify-between gap-2 rounded-2xl p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 group relative">
+            <div className="gap-2 text-center grid place-items-center pt-12">
+              <div className="w-25 h-25 shrink-0 bg-blue-900 rounded-full flex items-center justify-center absolute -top-10">
                 <User2 size={60} className="text-white stroke-1" />
               </div>
-              <div className="py-4">
+              <div className="pb-4 pt-8">
                 <div className="grid space-y-2 ">
                   <span className="text-xl text-white font-semibold truncate">
                     {usuario.nombre}
@@ -306,7 +306,9 @@ export default function MiPerfilPage() {
                     {usuario.ciudad}
                   </span>
                   <span className="text-md text-white truncate">
-                    Miembro desde {new Date(usuario.createdAt).toLocaleDateString("es-ES")}
+                    {/* TODO: Cambiar por fecha de creación */}
+                    Miembro desde 5 ago 2025
+                    {/*{new Date(usuario.createdAt).toLocaleDateString("es-ES")}*/}
                   </span>
                 </div>
               </div>

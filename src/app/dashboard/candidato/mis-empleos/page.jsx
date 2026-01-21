@@ -128,23 +128,21 @@ export default function MisEmpleosPage() {
       </div>
 
       {/* Tabs */}
-      <div className="mb-4 border-b border-gray-200">
-        <div className="flex space-x-5">
-          <Tabs
-            defaultValue="favoritos"
-            onValueChange={setActiveTab}
-            variant="underline"
-            className="flex-1"
-          >
-            <TabList className="font-medium">
-              <Tab value="favoritos">Favoritos ({counts.favoritos})</Tab>
-              <Tab value="postulados">Postulados ({counts.postulados})</Tab>
-              <Tab value="en_revision">En Revisión ({counts.en_revision})</Tab>
-              <Tab value="aceptados">Aceptados ({counts.aceptados})</Tab>
-              <Tab value="rechazados">Rechazados ({counts.rechazados})</Tab>
-            </TabList>
-          </Tabs>
-        </div>
+      <div className="mb-4 border-b border-gray-200 -mx-4 px-4 md:mx-0 md:px-0">
+        <Tabs
+          defaultValue="favoritos"
+          onValueChange={setActiveTab}
+          variant="underline"
+          className="w-full"
+        >
+          <TabList className="font-medium">
+            <Tab value="favoritos">Favoritos ({counts.favoritos})</Tab>
+            <Tab value="postulados">Postulados ({counts.postulados})</Tab>
+            <Tab value="en_revision">En Revisión ({counts.en_revision})</Tab>
+            <Tab value="aceptados">Aceptados ({counts.aceptados})</Tab>
+            <Tab value="rechazados">Rechazados ({counts.rechazados})</Tab>
+          </TabList>
+        </Tabs>
       </div>
 
       {/* Contenido */}

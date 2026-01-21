@@ -173,7 +173,7 @@ export default function SearchFilters({
       </div>
 
       {/* Filtros */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-2 text-sm">
         <Select
           placeholder="Modalidad"
           options={modalidadOptions}

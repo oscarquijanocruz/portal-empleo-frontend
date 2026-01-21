@@ -1,15 +1,18 @@
 //Logica de card jobs
 // TODO: Refactorizar este hook para que maneje todo mediante una llamada a la API: fetch('/api/jobs?q=...').
 "use client";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { mockJobs } from "../data/mockData";
 
-export const useJobs = (initialJobs = mockJobs) => {
+const JOBS_PER_PAGE = 20;
+
+export const useJobs = (initialJobs = mockJobs, currentPage = 1) => {
   // Estados principales
   const [selectedJob, setSelectedJob] = useState(initialJobs[0] || null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("para-ti");
   const [sortOrder, setSortOrder] = useState("");
+  const [page, setPage] = useState(currentPage);
 
   // Estados de filtros
   const [filters, setFilters] = useState({
@@ -82,6 +85,29 @@ export const useJobs = (initialJobs = mockJobs) => {
     }
   }, [initialJobs, searchTerm, filters, sortOrder]);
 
+  // Lógica de paginación
+  const totalPages = useMemo(() => {
+    return Math.ceil(filteredJobs.length / JOBS_PER_PAGE) || 1;
+  }, [filteredJobs.length]);
+
+  const paginatedJobs = useMemo(() => {
+    const startIndex = (page - 1) * JOBS_PER_PAGE;
+    const endIndex = startIndex + JOBS_PER_PAGE;
+    return filteredJobs.slice(startIndex, endIndex);
+  }, [filteredJobs, page]);
+
+  // Resetear a página 1 cuando cambian los filtros o búsqueda
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, filters, sortOrder]);
+
+  // Asegurar que la página actual no exceda el total de páginas
+  useEffect(() => {
+    if (page > totalPages && totalPages > 0) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
+
   // Handlers
   const handleSearch = useCallback((term) => {
     setSearchTerm(term);
@@ -113,12 +139,26 @@ export const useJobs = (initialJobs = mockJobs) => {
     setActiveTab(tab);
   }, []);
 
+  const handlePageChange = useCallback((newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  }, [totalPages]);
+
   // Reset selectedJob si no está en los trabajos filtrados
   useMemo(() => {
     if (selectedJob && !filteredJobs.find((job) => job.id === selectedJob.id)) {
       setSelectedJob(filteredJobs[0] || null);
     }
   }, [filteredJobs, selectedJob]);
+
+  // Sincronizar página con el parámetro currentPage
+  useEffect(() => {
+    const pageNumber = parseInt(currentPage, 10);
+    if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber !== page) {
+      setPage(pageNumber);
+    }
+  }, [currentPage, page]);
 
   return {
     // Estados
@@ -128,6 +168,10 @@ export const useJobs = (initialJobs = mockJobs) => {
     sortOrder,
     filters,
     filteredJobs,
+    paginatedJobs,
+    currentPage: page,
+    totalPages,
+    jobsPerPage: JOBS_PER_PAGE,
 
     // Handlers
     handleSearch,
@@ -136,6 +180,7 @@ export const useJobs = (initialJobs = mockJobs) => {
     handleJobSelect,
     handleSortChange,
     handleTabChange,
+    handlePageChange,
 
     // Setters directos (por si necesitas más control)
     setSelectedJob,

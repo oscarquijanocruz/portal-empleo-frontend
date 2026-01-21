@@ -57,7 +57,7 @@ export function Tab({
   
   const isActive = activeTab === value;
   
-  const baseClasses = "px-1 py-3 font-medium text-sm transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focues:border-sky-950";
+  const baseClasses = "px-2 md:px-1 py-2 md:py-3 font-medium text-xs md:text-sm transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focues:border-sky-950 whitespace-nowrap flex-shrink-0";
   
   const variantClasses = {
     underline: isActive 
@@ -112,7 +112,10 @@ export function TabContent({ value, children, className = "" }) {
 // Componente para agrupar las tabs
 export function TabList({ children, className = "" }) {
   return (
-    <div className={`tab-list flex space-x-6 ${className}`} role="tablist">
+    <div 
+      className={`tab-list flex space-x-3 md:space-x-6 overflow-x-auto scrollbar-hide pr-4 md:pr-0 ${className}`} 
+      role="tablist"
+    >
       {children}
     </div>
   );
