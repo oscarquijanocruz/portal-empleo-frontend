@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🌟 Frontend Portal de Empleo
 
-## Getting Started
+Este proyecto es el frontend para el sistema de Portal de Empleo, desarrollado con tecnologías modernas como **Next.js 15**, **React 19** y **Tailwind CSS 4**.
 
-First, run the development server:
+## 🚀 Cómo correr el proyecto
 
-```bash
+Sigue estos pasos para instalar y ejecutar el entorno de desarrollo en tu máquina local.
+
+### 1. Prerrequisitos
+Asegúrate de tener instalado **Node.js** (versión recomendada 18 o superior).
+
+### 2. Instalación de dependencias
+Ejecuta el siguiente comando en la raíz del proyecto para instalar las librerías necesarias:
+
+npm install
+# o si usas yarn
+yarn install
+# o pnpm
+pnpm install
+
+
+### 3. Ejecutar el servidor de desarrollo
+
+Para levantar el proyecto localmente, ejecuta:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+El servidor iniciará generalmente en [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔗 Rutas Principales del Proyecto
 
-## Learn More
+Una vez que el servidor esté corriendo, puedes acceder a las siguientes rutas clave en tu navegador:
 
-To learn more about Next.js, take a look at the following resources:
+### 👤 Dashboard del Candidato (Postulante)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* **Inicio del Dashboard:** `http://localhost:3000/dashboard/candidato`
+* **Buscar Empleos:** `http://localhost:3000/dashboard/candidato/buscar-empleos`
+* **Mis Postulaciones:** `http://localhost:3000/dashboard/candidato/mis-empleos`
+* **Mi Perfil:** `http://localhost:3000/dashboard/candidato/mi-perfil`
+* **Mensajes:** `http://localhost:3000/dashboard/candidato/mensajes`
+* **Notificaciones:** `http://localhost:3000/dashboard/candidato/notificaciones`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🛡️ Dashboard del Administrador
 
-## Deploy on Vercel
+* **Panel Principal:** `http://localhost:3000/dashboard-admin/administrador`
+* **Gestión de Usuarios:** `http://localhost:3000/dashboard-admin/administrador/usuarios`
+* **Gestión de Vacantes:** `http://localhost:3000/dashboard-admin/administrador/vacantes`
+* **Reportes:** `http://localhost:3000/dashboard-admin/administrador/reportes`
+* **Soporte Técnico:** `http://localhost:3000/dashboard-admin/administrador/soporte-tecnico`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🔐 Autenticación
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* **Iniciar Sesión:** `http://localhost:3000/auth/login`
+* **Registro Candidato:** `http://localhost:3000/auth/register/candidato`
+* **Registro Empresa:** `http://localhost:3000/auth/register/empresa`
+* **Registro Universidad:** `http://localhost:3000/auth/register/universidad`
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+* **[Next.js 15](https://nextjs.org/)**: Framework de React para producción (App Router).
+* **[React 19](https://react.dev/)**: Biblioteca para interfaces de usuario.
+* **[Tailwind CSS 4](https://tailwindcss.com/)**: Framework de utilidades CSS.
+* **Componentes UI**: Radix UI (Accordion, Dropdown, Dialog, etc.).
+* **Iconos**: Lucide React.
+* **Gráficos**: Recharts.
+* **Formularios**: React Hook Form.
+
+## 📁 Estructura del Proyecto
+
+src/
+├── app/
+│   ├── auth/                 # Rutas de autenticación (login, registros)
+│   ├── dashboard/            # Rutas del panel de Candidato y Universidad
+│   │   └── candidato/        # Vistas específicas del candidato
+│   ├── dashboard-admin/      # Rutas del panel de Administrador
+│   └── api/                  # Endpoints de API (ej. integración con IA)
+├── components/               # Componentes reutilizables UI
+└── lib/                      # Utilidades y funciones auxiliares
