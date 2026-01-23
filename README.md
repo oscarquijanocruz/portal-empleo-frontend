@@ -1,4 +1,4 @@
-# 🌟 Frontend Portal de Empleo
+# Frontend Portal de Empleo
 
 Este proyecto es el frontend para el sistema de Portal de Empleo, desarrollado con tecnologías modernas como **Next.js 15**, **React 19** y **Tailwind CSS 4**.
 
@@ -68,15 +68,3 @@ Una vez que el servidor esté corriendo, puedes acceder a las siguientes rutas c
 * **Iconos**: Lucide React.
 * **Gráficos**: Recharts.
 * **Formularios**: React Hook Form.
-
-## 📁 Estructura del Proyecto
-
-src/
-├── app/
-│   ├── auth/                 # Rutas de autenticación (login, registros)
-│   ├── dashboard/            # Rutas del panel de Candidato y Universidad
-│   │   └── candidato/        # Vistas específicas del candidato
-│   ├── dashboard-admin/      # Rutas del panel de Administrador
-│   └── api/                  # Endpoints de API (ej. integración con IA)
-├── components/               # Componentes reutilizables UI
-└── lib/                      # Utilidades y funciones auxiliares
